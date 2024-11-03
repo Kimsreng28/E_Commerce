@@ -58,7 +58,9 @@ export default {
                 password: this.password,
                 confirm_password: this.confirm_password
             };
-            axios.post('register',data)
+            axios.post('http://localhost:3000/register', data)
+
+
             .then(
                 res => {
                     console.log(res)

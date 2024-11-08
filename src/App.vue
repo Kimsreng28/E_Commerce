@@ -1,5 +1,9 @@
-<script></script>
-
 <template>
-  <div>start project</div>
+  <router-view></router-view>
 </template>
+
+<script>
+export default {
+  name: "App",
+};
+</script>

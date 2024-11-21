@@ -7,16 +7,25 @@ const router = createRouter({
       path: "/",
       name: "home",
       component: () => import("../views/HomeView.vue"),
+      meta: {
+        breadcrumb: "Home",
+      },
     },
     {
       path: "/contact",
       name: "contact",
       component: () => import("../views/ContactView.vue"),
+      meta: {
+        breadcrumb: "Contact",
+      },
     },
     {
       path: "/about",
       name: "about",
       component: () => import("../views/AboutView.vue"),
+      meta: {
+        breadcrumb: "About",
+      },
     },
     {
       path: "/signIn",
@@ -32,6 +41,43 @@ const router = createRouter({
       path: "/profile",
       name: "profile",
       component: () => import("../views/ProfileAccountView.vue"),
+      meta: {
+        breadcrumb: "Profile",
+      },
+    },
+    {
+      path: "/wishList",
+      name: "wishList",
+      component: () => import("../views/WishListView.vue"),
+      meta: {
+        breadcrumb: "WishList",
+      },
+    },
+    {
+      path: "/cart",
+      name: "cart",
+      component: () => import("../views/CartView.vue"),
+      meta: {
+        breadcrumb: "Cart",
+      },
+    },
+    {
+      path: "/category",
+      name: "category",
+      component: () => import("../views/CategoryView.vue"),
+      props: true,
+      meta: {
+        breadcrumb: "Category",
+      },
+    },
+    {
+      path: "/category/:id",
+      name: "productDetail",
+      component: () => import("../views/ProductDetailView.vue"),
+      props: true,
+      meta: {
+        breadcrumb: "Product Detail",
+      },
     },
   ],
 });

@@ -1,11 +1,20 @@
 <template>
   <nav class="breadcrumb">
     <ul>
+      <li>
+        <router-link to="/" class="breadcrumb-link">Home</router-link>
+        <span v-if="breadcrumbs.length > 0"> </span>
+      </li>
       <li v-for="(crumb, index) in breadcrumbs" :key="index">
-        <router-link v-if="index < breadcrumbs.length - 1" :to="crumb.path">
+        <router-link
+          v-if="index < breadcrumbs.length - 1"
+          :to="crumb.path"
+          class="breadcrumb-link"
+        >
           {{ crumb.name }}
         </router-link>
-        <span v-else>{{ crumb.name }}</span>
+        <span v-else class="breadcrumb-active">{{ crumb.name }}</span>
+        <span v-if="index < breadcrumbs.length - 1"> </span>
       </li>
     </ul>
   </nav>
@@ -21,12 +30,15 @@ export default {
     const route = useRoute();
     const router = useRouter();
 
-    // Generate breadcrumbs based on the current route
     const breadcrumbs = computed(() => {
       const pathArray = route.path.split("/").filter(Boolean);
+
       return pathArray.map((path, index) => {
         const fullPath = `/${pathArray.slice(0, index + 1).join("/")}`;
-        const routeName = router.resolve(fullPath).meta?.breadcrumb || path;
+        const routeMatch = router.resolve(fullPath);
+
+        // Use route's meta breadcrumb if available, or fallback to the path name
+        const routeName = routeMatch.meta?.breadcrumb || path;
 
         return {
           name: routeName.charAt(0).toUpperCase() + routeName.slice(1),
@@ -41,8 +53,16 @@ export default {
   },
 };
 </script>
-
 <style scoped>
+.breadcrumb-link {
+  font-weight: 500;
+  color: #cacaca;
+}
+.breadcrumb-link:hover {
+  text-decoration: underline;
+  background-color: rgb(255, 255, 255);
+  color: #ea0e0e;
+}
 .breadcrumb ul {
   display: flex;
   list-style: none;
@@ -54,7 +74,7 @@ export default {
   margin-right: 8px;
   font-size: 16px;
   font-family: Quicksand, sans-serif;
-  color: #000000;
+  color: #3d3939;
   cursor: pointer;
 }
 

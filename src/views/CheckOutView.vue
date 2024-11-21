@@ -1,8 +1,9 @@
 <template>
-  <div class="contactScreen">
+  <div class="checkoutScreen">
     <Navbar_Component />
     <Breadcrumb_Component />
-    <h1>Contact</h1>
+
+    <h1 style="font-family: Saira, sans-serif">Check Out</h1>
   </div>
 </template>
 
@@ -10,7 +11,7 @@
 import Breadcrumb_Component from "@/components/Breadcrumb_Component.vue";
 import Navbar_Component from "@/components/Navbar_Component.vue";
 export default {
-  name: "ContactView",
+  name: "CheckOutView",
   components: {
     Navbar_Component,
     Breadcrumb_Component,
@@ -19,7 +20,7 @@ export default {
 </script>
 
 <style scoped>
-.contactScreen {
+.checkoutScreen {
   width: 100%;
   height: 100vh;
   margin-top: 2%;

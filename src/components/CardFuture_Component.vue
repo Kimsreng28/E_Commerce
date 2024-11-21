@@ -62,6 +62,8 @@ export default {
 
 <style scoped>
 .cardFuture {
+  width: 400px;
+  height: 343px;
   display: flex;
   flex-direction: column;
   justify-content: start;
@@ -84,6 +86,10 @@ export default {
   font-family: Quicksand, sans-serif;
   color: #564949;
 }
+.titleCard p:hover {
+  color: #fbbc00;
+  transition: 0.5s;
+}
 .descriptionCard {
   display: flex;
   justify-content: center;
@@ -93,7 +99,7 @@ export default {
   margin-left: 3%;
 }
 .descriptionCard p {
-  font-size: 20px;
+  font-size: 18px;
   font-weight: bold;
   font-family: Quicksand, sans-serif;
   color: black;
@@ -104,6 +110,7 @@ export default {
   justify-content: space-between;
   align-items: center;
   margin-top: 10%;
+  margin-bottom: 5%;
   margin-left: 3%;
 }
 .imageCard img {

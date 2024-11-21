@@ -1,0 +1,56 @@
+import { defineStore } from "pinia";
+
+export const useCartStore = defineStore("cart", {
+  state: () => ({
+    cartItems: JSON.parse(localStorage.getItem("cart")) || [],
+  }),
+
+  actions: {
+    addToCart(product) {
+      this.cartItems.push(product);
+      this.saveToLocalStorage();
+    },
+    removeFromCart(productId) {
+      this.cartItems = this.cartItems.filter((item) => item.id !== productId);
+      this.saveToLocalStorage();
+    },
+    clearCart() {
+      this.cartItems = [];
+      this.saveToLocalStorage();
+    },
+
+    updateQuantity(productId, quantity) {
+      const product = this.cartItems.find((item) => item.id === productId);
+      if (product) {
+        product.quantity = quantity;
+        this.saveToLocalStorage();
+      }
+    },
+
+    saveToLocalStorage() {
+      localStorage.setItem("cart", JSON.stringify(this.cartItems));
+    },
+  },
+
+  getters: {
+    getCartItems: (state) => state.cartItems,
+
+    getSubtotal: (state) => {
+      return state.cartItems.reduce(
+        (total, item) => total + item.price * item.quantity,
+        0
+      );
+    },
+
+    getDiscount: (state) => {
+      return state.cartItems.reduce((totalDiscount, product) => {
+        if (product.discount) {
+          const itemDiscount =
+            (product.discount / 100) * product.price * product.quantity;
+          return totalDiscount + itemDiscount;
+        }
+        return totalDiscount;
+      }, 0);
+    },
+  },
+});

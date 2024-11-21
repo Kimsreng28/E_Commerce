@@ -67,6 +67,15 @@
   font-family: "Lato";
   src: url("../assets/fonts/Lato-Regular.ttf");
 }
+@font-face {
+  font-family: "Salsa";
+  src: url("../assets/fonts/Salsa-Regular.ttf");
+}
+@font-face {
+  font-family: "Saira";
+  src: url("../assets/fonts/Saira-VariableFont.ttf");
+  font-weight: bold;
+}
 
 body {
   min-height: 100vh;

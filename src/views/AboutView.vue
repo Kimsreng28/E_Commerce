@@ -1,16 +1,19 @@
 <template>
   <div class="aboutScreen">
     <Navbar_Component />
+    <Breadcrumb_Component />
     <h1>About</h1>
   </div>
 </template>
 
 <script>
+import Breadcrumb_Component from "@/components/Breadcrumb_Component.vue";
 import Navbar_Component from "@/components/Navbar_Component.vue";
 export default {
   name: "AboutView",
   components: {
     Navbar_Component,
+    Breadcrumb_Component,
   },
 };
 </script>

@@ -259,7 +259,7 @@ export default {
   font-family: Quicksand, sans-serif;
   font-weight: bold;
   background: -webkit-linear-gradient(#1b1c1b, #3a5fce);
-  -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 

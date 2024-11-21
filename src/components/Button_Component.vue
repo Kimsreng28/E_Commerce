@@ -57,7 +57,6 @@ export default {
   border-radius: 10px;
   cursor: pointer;
   box-shadow: inset 0 0px 0px #04ed84;
-
   -webkit-transition: ease-out 0.5s;
   -moz-transition: ease-out 0.5s;
 }

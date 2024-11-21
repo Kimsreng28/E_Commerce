@@ -146,12 +146,15 @@
         </div>
       </div>
     </div>
+
+    <Footer_Component style="margin-left: 1%" />
   </div>
 </template>
 
 <script>
 import Breadcrumb_Component from "@/components/Breadcrumb_Component.vue";
 import Button_Component from "@/components/Button_Component.vue";
+import Footer_Component from "@/components/Footer_Component.vue";
 import Navbar_Component from "@/components/Navbar_Component.vue";
 import { useUserSignupStore } from "@/stores/useUserSignupStore";
 import { onMounted, ref } from "vue";
@@ -164,6 +167,7 @@ export default {
     Navbar_Component,
     Breadcrumb_Component,
     Button_Component,
+    Footer_Component,
   },
   setup() {
     const userStore = useUserSignupStore();
@@ -352,14 +356,19 @@ export default {
   display: flex;
   justify-content: start;
   flex-direction: column;
-  margin-top: -0.5%;
+  background-color: #ede7e7;
+  border-radius: 10px;
+  padding: 1%;
 }
 
 .dashboardEdit {
   display: flex;
   width: 76%;
   height: auto;
+  padding: 1%;
+  border-radius: 10px;
   flex-direction: column;
+  background-color: #ede7e7;
 }
 .name {
   width: 100%;

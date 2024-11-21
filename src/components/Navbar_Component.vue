@@ -1,23 +1,65 @@
 <template>
   <div class="navBar">
     <div class="imgLogo">
-      <img src="../assets/images/Logo/LogoEcommerce.png" alt="" />
+      <img
+        src="../assets/images/Logo/LogoEcommerce.png"
+        alt=""
+        @click="this.$router.push('/')"
+      />
     </div>
     <div class="contents">
       <p @click="this.$router.push('/')">Home</p>
+      <p @click="this.$router.push('/category')">Shop</p>
       <p @click="this.$router.push('/contact')">Contact</p>
       <p @click="this.$router.push('/about')">About</p>
     </div>
     <div class="search">
       <span class="material-icons">search</span>
-      <input type="text" placeholder="Search product here..." />
+      <input
+        type="text"
+        placeholder="Search product here..."
+        @input="emitSearch"
+        v-model="searchQuery"
+      />
     </div>
 
     <div class="cart">
-      <span class="material-icons" id="cart">shopping_cart</span>
-      <span class="material-icons" id="favorite">favorite</span>
+      <!-- Cart -->
+      <span class="material-icons" id="cart" @click="this.$router.push('/cart')"
+        >shopping_cart</span
+      >
+
+      <span v-if="cartCount > 0" class="cart-count"
+        ><p>{{ cartCount }}</p></span
+      >
+
+      <!-- Wishlist -->
+      <span
+        class="material-icons"
+        id="favorite"
+        @click="$router.push('/wishlist')"
+        >favorite</span
+      ><span v-if="wishlistCount > 0" class="wishlist-count"
+        ><p>{{ wishlistCount }}</p></span
+      >
+
+      <!-- Account -->
       <p style="color: white">|</p>
-      <span class="material-icons" id="account" @click="handleAccountClick"
+
+      <!-- Profile Account -->
+      <span
+        v-if="isLoggedIn && profileImage"
+        class="profile-image"
+        @click="handleAccountClick"
+      >
+        <img :src="profileImage" alt="" />
+      </span>
+
+      <span
+        v-else
+        class="material-icons"
+        id="account"
+        @click="handleAccountClick"
         >account_circle</span
       >
     </div>
@@ -25,14 +67,20 @@
 </template>
 
 <script>
+import { useCartStore } from "@/stores/useCartStore";
 import { useUserSignupStore } from "@/stores/useUserSignupStore";
+import { useWishlistStore } from "@/stores/useWishlistStore";
+import { computed, onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
 export default {
   name: "NavbarComponent",
+  props: ["onSearch"],
 
-  setup() {
+  setup(props) {
     const authStore = useUserSignupStore();
     const router = useRouter();
+    const profileImage = ref(null);
+    const searchQuery = ref("");
 
     const handleAccountClick = () => {
       if (authStore.isLoggedIn) {
@@ -42,9 +90,38 @@ export default {
       }
     };
 
+    const emitSearch = () => {
+      props.onSearch(searchQuery.value);
+    };
+
+    onMounted(() => {
+      const storedImage = localStorage.getItem("profileImage");
+      if (storedImage) {
+        profileImage.value = storedImage;
+      }
+    });
+
     return {
       handleAccountClick,
+      emitSearch,
+      searchQuery,
+      profileImage,
+      isLoggedIn: computed(() => authStore.isLoggedIn),
+      wishlistCount: computed(() => useWishlistStore().wishlist.length),
+      cartCount: computed(() => useCartStore().cartItems.length),
     };
+  },
+
+  computed: {
+    wishlistCount() {
+      const store = useWishlistStore();
+      return store.wishlist.length;
+    },
+
+    cartCount() {
+      const store = useCartStore();
+      return store.cartItems.length;
+    },
   },
 };
 </script>
@@ -62,6 +139,7 @@ export default {
 .imgLogo img {
   width: auto;
   height: 40px;
+  cursor: pointer;
 }
 
 .contents {
@@ -127,6 +205,7 @@ export default {
 .cart {
   display: flex;
   align-items: center;
+
   gap: 1rem;
   cursor: pointer;
   border-radius: 5px;
@@ -159,5 +238,56 @@ export default {
   margin: 0;
   font-size: 18px;
   color: #000000;
+}
+.wishlist-count {
+  position: relative;
+  top: -10px;
+  right: 20px;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background-color: rgb(228, 21, 21);
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.wishlist-count p {
+  color: rgb(173, 169, 169);
+  font-size: 14px;
+}
+.cart-count {
+  position: relative;
+  top: -10px;
+  right: 20px;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background-color: rgb(228, 21, 21);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.cart-count p {
+  color: rgb(173, 169, 169);
+  font-size: 14px;
+}
+
+.profile-image img {
+  width: 27px;
+  height: 27px;
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: center;
+  border: 2px solid #f6f0f0;
+}
+.profile-image {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.material-icons {
+  cursor: pointer;
 }
 </style>

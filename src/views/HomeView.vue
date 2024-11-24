@@ -78,6 +78,7 @@
         height-button="50px"
         width-button="200px"
         icon="shopping_cart"
+        @click="this.$router.push('/category')"
       />
     </div>
 
@@ -127,6 +128,7 @@ import oneArrival from "../assets/images/Arrivals/2nd.jpg";
 import twoArrival from "../assets/images/Arrivals/3nd.jpg";
 import Service from "../assets/images/CardFuture/customer-service.png";
 import Coupon from "../assets/images/CardFuture/voucher.png";
+
 export default {
   name: "HomeView",
   components: {

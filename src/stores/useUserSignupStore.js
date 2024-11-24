@@ -5,6 +5,7 @@ export const useUserSignupStore = defineStore("userSignup", {
     // Define your state here
     // save user signUp in local storage
     users: JSON.parse(localStorage.getItem("users")) || [],
+    otpStorage: {},
 
     // save current user in local storage for sign in
     currentUser: JSON.parse(localStorage.getItem("currentUser")) || null,
@@ -21,8 +22,6 @@ export const useUserSignupStore = defineStore("userSignup", {
   },
 
   actions: {
-    // Define your actions here
-
     // save users to local storage
     saveUsersToLocalStorage() {
       localStorage.setItem("users", JSON.stringify(this.users));
@@ -67,6 +66,52 @@ export const useUserSignupStore = defineStore("userSignup", {
         this.saveCurrentUserToLocalStorage();
       } else {
         this.loginError = "Invalid email or password.";
+      }
+    },
+
+    //Forgot Password
+
+    generateOTP(length = 6) {
+      return Array.from({ length }, () => Math.floor(Math.random() * 10)).join(
+        ""
+      );
+    },
+
+    sendOTP(email) {
+      const user = this.users.find((user) => user.email === email);
+
+      if (user) {
+        const otp = this.generateOTP();
+        user.otp = otp; // Save OTP to the user object
+        this.otpStorage[email] = otp; // Save OTP in temporary storage
+        console.log(`OTP for ${email}: ${otp}`); // Simulate email sending
+        return { success: true, message: "OTP sent to your email." };
+      } else {
+        return { success: false, message: "Email not registered." };
+      }
+    },
+
+    verifyOTP(email, enteredOTP) {
+      const user = this.users.find((user) => user.email === email);
+
+      if (user && user.otp === enteredOTP) {
+        user.otp = null; // Clear OTP
+        delete this.otpStorage[email]; // Clear OTP after successful verification
+        return { success: true, message: "OTP verified successfully." };
+      } else {
+        return { success: false, message: "Invalid or expired OTP." };
+      }
+    },
+
+    resetPassword(email, newPassword) {
+      const user = this.users.find((user) => user.email === email);
+
+      if (user) {
+        user.password = newPassword;
+        this.saveUsersToLocalStorage();
+        return { success: true, message: "Password reset successfully." };
+      } else {
+        return { success: false, message: "Email not found." };
       }
     },
 

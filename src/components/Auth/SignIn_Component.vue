@@ -2,7 +2,7 @@
   <div class="containerSignIn">
     <div class="leftSide">
       <div class="logo">
-        <img src="../assets/images/Logo/LogoEcommerce.png" alt="" />
+        <img src="@/assets/images/Logo/LogoEcommerce.png" alt="" />
       </div>
       <div class="welcome">
         <p>Welcome Back</p>
@@ -45,7 +45,7 @@
           <input type="checkbox" id="remember" v-model="rememberMe" />
           <div class="box">
             <p>Remember me</p>
-            <h1>Forgot Password?</h1>
+            <h1 @click="$router.push('/resetPassword')">Forgot Password?</h1>
           </div>
         </div>
       </div>
@@ -63,7 +63,7 @@
         <p>E-commerce</p>
       </div>
       <div class="imageEcommerce">
-        <img src="../assets/images/Background/ecommerce-bg.png" alt="" />
+        <img src="@/assets/images/Background/ecommerce-bg.png" alt="" />
       </div>
     </div>
   </div>
@@ -233,10 +233,8 @@ input.error-border {
   justify-content: center;
   align-items: center;
   border-radius: 10px;
-  border: none;
   padding: 1%;
   gap: 5%;
-  align-items: center;
   width: 50%;
   background: #f2e9e9;
   border: 1px solid #d9d9d9;
@@ -291,7 +289,6 @@ input.error-border {
 .inputEmail input,
 .inputPassword input {
   border-radius: 10px;
-  border: none;
   padding: 1.5%;
   width: 50%;
   font-size: 14px;
@@ -351,10 +348,8 @@ input.error-border {
   justify-content: center;
   align-items: center;
   border-radius: 10px;
-  border: none;
   padding: 2%;
   gap: 5%;
-  align-items: center;
   cursor: pointer;
   width: 50%;
   color: #ffffff;

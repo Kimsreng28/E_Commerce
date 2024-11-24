@@ -2,7 +2,7 @@
   <div class="containerSignIn">
     <div class="leftSide">
       <div class="logo">
-        <img src="../assets//images/Logo/LogoEcommerce.png" alt="" />
+        <img src="@/assets//images/Logo/LogoEcommerce.png" alt="" />
       </div>
       <div class="welcome">
         <p>Register Now</p>
@@ -81,7 +81,7 @@
         <p>E-commerce</p>
       </div>
       <div class="imageEcommerce">
-        <img src="../assets/images/Background/ecommerce-bg.png" alt="" />
+        <img src="@/assets/images/Background/ecommerce-bg.png" alt="" />
       </div>
     </div>
   </div>
@@ -274,10 +274,8 @@ export default {
   justify-content: center;
   align-items: center;
   border-radius: 10px;
-  border: none;
   padding: 1%;
   gap: 5%;
-  align-items: center;
   width: 50%;
   background: #f2e9e9;
   border: 1px solid #d9d9d9;
@@ -350,7 +348,6 @@ export default {
 .inputPassword input,
 .inputName input {
   border-radius: 10px;
-  border: none;
   padding: 1.5%;
   width: 50%;
   font-size: 14px;
@@ -410,10 +407,8 @@ export default {
   justify-content: center;
   align-items: center;
   border-radius: 10px;
-  border: none;
   padding: 2%;
   gap: 5%;
-  align-items: center;
   cursor: pointer;
   width: 50%;
   color: #ffffff;

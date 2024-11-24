@@ -155,8 +155,10 @@ export default {
   methods: {
     changeTab(tab) {
       this.selectedTab = tab;
-      this.selectedColor = this.colors[0];
+      this.selectedSubCategory = null;
+      this.selectedColor = null;
       this.selectedSize = null;
+      this.priceValue = 100;
     },
     selectSubCategory(subCategory) {
       this.selectedSubCategory = subCategory;

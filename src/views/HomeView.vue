@@ -15,6 +15,7 @@
           height-button="50px"
           width-button="200px"
           icon="shopping_cart"
+          @click="this.$router.push('/category')"
         />
       </div>
       <div class="imgOne">

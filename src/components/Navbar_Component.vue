@@ -128,13 +128,14 @@ export default {
 
 <style scoped>
 .navBar {
-  width: 1440px;
+  width: 1510px;
   height: 10vh;
   display: flex;
   align-items: center;
   justify-content: space-between;
   flex-direction: row;
   padding: 2%;
+  
 }
 .imgLogo img {
   width: auto;

@@ -71,19 +71,21 @@ export default {
     // Initialize the router
     const router = useRouter();
     const store = useProductStore();
-    const allProducts = ref(store.products); // Assuming `products` is an array of products in your store
+    const allProducts = ref(store.products); // Assuming products is an array of products in your store
     const displayedCount = ref(6);
     const searchQuery = ref("");
     const filters = ref({
       tab: "Clothes",
       color: null,
+      subCategory: null,
       size: null,
       price: 100,
     });
 
     const filteredProducts = computed(() => {
       return store.products.filter((product) => {
-        const matchesTab = product.category === filters.value.tab;
+        const matchesTab =
+          product.category === filters.value.tab || filters.value.tab === "All";
         const matchesSubCategory =
           !filters.value.subCategory ||
           product.subCategory === filters.value.subCategory;
@@ -112,9 +114,10 @@ export default {
       filters.value = newFilters;
     };
 
-    const displayedProducts = computed(() =>
-      filteredProducts.value.slice(0, displayedCount.value)
-    );
+    // Display products based on current filters and displayedCount
+    const displayedProducts = computed(() => {
+      return filteredProducts.value.slice(0, displayedCount.value);
+    });
 
     // Function to navigate to product detail by ID
     const goToProductDetail = (productId) => {
@@ -127,6 +130,8 @@ export default {
       const nextIndex = displayedCount.value + 3;
       displayedProducts.value = allProducts.value.slice(0, nextIndex);
       displayedCount.value = nextIndex;
+      console.log("Next index: ", nextIndex);
+      console.log("Displayed products: ", displayedProducts.value);
     };
 
     return {

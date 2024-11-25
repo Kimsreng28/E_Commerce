@@ -67,6 +67,14 @@ const router = createRouter({
       },
     },
     {
+      path: "/checkout",
+      name: "checkout",
+      component: () => import("../views/CheckOutView.vue"),
+      meta: {
+        breadcrumb: "CheckOut",
+      },
+    },
+    {
       path: "/category",
       name: "category",
       component: () => import("../views/CategoryView.vue"),

@@ -42,6 +42,15 @@
         colorButton="#FFFFFF"
         @click="moveAllToShop"
       />
+      <Button_Component
+        class="btnCheckOut"
+        name-button="Process To Check Out"
+        backgroundColor-button="#564949"
+        height-button="60px"
+        width-button="300px"
+        color-button="#FFFFFF"
+        @click="this.$router.push('/checkout')"
+      />
     </div>
 
     <Footer_Component class="footer" />

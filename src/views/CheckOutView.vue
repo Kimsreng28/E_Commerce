@@ -4,6 +4,11 @@
     <Breadcrumb_Component />
 
     <h1 style="font-family: Saira, sans-serif">Check Out</h1>
+
+    <div class="container">
+      <div class="left"></div>
+      <div class="right"></div>
+    </div>
   </div>
 </template>
 
@@ -25,5 +30,33 @@ export default {
   height: 100vh;
   margin-top: 2%;
   box-sizing: border-box;
+}
+h1 {
+  padding: 2%;
+  margin-left: 1%;
+}
+.container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: start;
+  align-items: center;
+}
+.left {
+  width: 50%;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  align-items: center;
+}
+
+.right {
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  align-items: center;
 }
 </style>

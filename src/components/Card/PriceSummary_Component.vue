@@ -43,15 +43,6 @@
       <p>Total:</p>
       <p>${{ calculatedTotalPrice }}</p>
     </div>
-
-    <Button_Component
-      class="btnCheckOut"
-      name-button="Process To Check Out"
-      backgroundColor-button="#564949"
-      height-button="60px"
-      width-button="300px"
-      color-button="#FFFFFF"
-    />
   </div>
 </template>
 
@@ -207,9 +198,5 @@ export default {
   font-weight: 700;
   color: #131212;
   font-family: Quicksand, sans-serif;
-}
-
-.btnCheckOut {
-  margin-top: 5%;
 }
 </style>

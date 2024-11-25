@@ -358,7 +358,7 @@ export default {
 }
 
 .serviceFeature {
-  width: 1440px;
+  width: 96%;
   height: 100%;
   margin-top: 2%;
   margin-left: 2%;

@@ -66,7 +66,7 @@ export default {
 
 <style scoped>
 .footer {
-  width: 100%;                      
+  width: 1440px;                      
   background-color: #faf5ec;      
   display: flex;
   flex-direction: column;

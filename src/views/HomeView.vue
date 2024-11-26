@@ -82,8 +82,16 @@
         @click="this.$router.push('/category')"
       />
     </div>
-
-    <div class="serviceFeature">
+  <div class="slider">
+    <div class="serviceFeature"
+    id="draggableContainer"
+        @mousedown="startDragging"
+        @mousemove="onDrag"
+        @mouseup="stopDragging"
+        @mouseleave="stopDragging"
+        @touchstart="startDragging"
+        @touchmove="onDrag"
+        @touchend="stopDragging">
       <div class="titleService">
         <p class="main">Trying The Best Experience</p>
         <p class="description">
@@ -103,7 +111,7 @@
         />
       </div>
     </div>
-
+  </div>
     <!-- Comments -->
     <div class="titleFeature">
       <p>What customers say about Fast Collection?</p>
@@ -155,6 +163,15 @@ export default {
         },
         {
           id: 2,
+          title: "Coupons",
+          description: "Give free when pay start from 20$ up.",
+          image: Coupon,
+          color: "#FAF5EC",
+          width: "546px",
+          height: "343px",
+        },
+        {
+          id: 3,
           title: "Coupons",
           description: "Give free when pay start from 20$ up.",
           image: Coupon,
@@ -218,6 +235,34 @@ export default {
       return store.getCategoriesByIds([1, 2, 3]);
     });
 
+    // Mouse drag scrolling logic
+    const isDragging = ref(false);
+    const startX = ref(0);
+    const scrollLeft = ref(0);
+    const container = ref(null);
+
+    const startDragging = (event) => {
+      isDragging.value = true;
+      startX.value = event.pageX || event.touches[0].pageX;
+      container.value = event.currentTarget;
+      scrollLeft.value = container.value.scrollLeft;
+      container.value.style.scrollBehavior = "auto"; // Disable smooth scroll during drag
+    };
+
+    const onDrag = (event) => {
+      if (!isDragging.value) return;
+      const x = event.pageX || event.touches[0].pageX;
+      const walk = x - startX.value;
+      container.value.scrollLeft = scrollLeft.value - walk;
+    };
+
+    const stopDragging = () => {
+      isDragging.value = false;
+      if (container.value) {
+        container.value.style.scrollBehavior = "smooth"; // Re-enable smooth scroll
+      }
+    };
+
     return {
       filteredProducts,
       filteredCategories,
@@ -225,6 +270,9 @@ export default {
       selectCategory,
       currentArrivalIndex,
       arrivals,
+      startDragging,
+      onDrag,
+      stopDragging,
     };
   },
 };
@@ -357,27 +405,49 @@ export default {
   gap: 2%;
 }
 
-.serviceFeature {
-  width: 96%;
+
+.slider{
+  width: 1400px;
   height: 100%;
+}
+
+.serviceFeature {
+  width: 100%;
+  height: 400px; /* Ensure the height is fixed */
   margin-top: 2%;
   margin-left: 2%;
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
-  align-items: center;
   gap: 2%;
+  overflow-x: auto; /* Enable horizontal scrolling */
+  overflow-y: hidden; /* Hide vertical overflow (optional) */
+  padding: 0; /* Avoid unnecessary space causing scroll issues */
+  box-sizing: border-box;
+  cursor: grab;
+  scroll-behavior: smooth;
+  user-select: none;
+  transition: all 0.3s;
+}
+
+.serviceFeature:active {
+  cursor: grabbing; /* Indication when dragging */
+}
+
+.serviceFeature::-webkit-scrollbar {
+  display: none; /* Hide scrollbar */
 }
 
 .titleService {
-  width: 20%;
-  height: 100%;
-  margin-top: 2%;
+  flex-shrink: 0; /* Prevent shrinking */
+  width: 20%; /* Fixed width */
+  height: 100%; /* Match parent height */
   display: flex;
   flex-direction: column;
-  justify-content: start;
-  align-items: start;
+  justify-content: flex-start;
+  align-items: flex-start;
   padding: 2%;
+  box-sizing: border-box;
 }
 .titleService .main {
   font-size: 24px;
@@ -393,13 +463,14 @@ export default {
 }
 
 .cardFeature {
-  width: 80%;
-  height: 100%;
-  margin-top: 2%;
+  flex-shrink: 0; /* Prevent shrinking */
+  min-width: 150%; /* Wider than the parent for horizontal scroll */
+  height: 100%; /* Match parent height */
   display: flex;
   flex-direction: row;
-  justify-content: start;
+  justify-content: flex-start;
   gap: 2%;
+  box-sizing: border-box;
 }
 
 .newArrivals {

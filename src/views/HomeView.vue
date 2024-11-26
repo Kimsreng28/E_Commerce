@@ -7,16 +7,9 @@
     <div class="showCase">
       <div class="title">
         <p>SHOW OUR NEW COLLECTION NOW!</p>
-        <Button_Component
-          class="btnCase"
-          name-button="Shop Now"
-          color-button="#FFFFFF"
-          background-color-button="#958383"
-          height-button="50px"
-          width-button="200px"
-          icon="shopping_cart"
-          @click="this.$router.push('/category')"
-        />
+        <Button_Component class="btnCase" name-button="Shop Now" color-button="#FFFFFF"
+          background-color-button="#958383" height-button="50px" width-button="200px" icon="shopping_cart"
+          @click="this.$router.push('/category')" />
       </div>
       <div class="imgOne">
         <img src="../assets/images/Home/model.png" alt="" />
@@ -30,12 +23,8 @@
     <div class="titleFeature">
       <p>New Arrival</p>
       <div class="newArrivals">
-        <Arrivals_Component
-          v-for="(arrival, index) in arrivals"
-          :key="arrival.id"
-          v-show="index === currentArrivalIndex"
-          :imageArrivals="arrival.image"
-        />
+        <Arrivals_Component v-for="(arrival, index) in arrivals" :key="arrival.id"
+          v-show="index === currentArrivalIndex" :imageArrivals="arrival.image" />
       </div>
     </div>
 
@@ -43,80 +32,40 @@
     <div class="titleFeature">
       <p>Explore Popular Categories</p>
       <div class="categories">
-        <CardCategory_Component
-          v-for="category in filteredCategories"
-          :key="category.id"
-          :image-category="category.images"
-          :name-category="category.title"
-          :class="category.title === selectedCategory ? 'selectedCategory' : ''"
-          @click="selectCategory(category)"
-        />
+        <CardCategory_Component v-for="category in filteredCategories" :key="category.id"
+          :image-category="category.images" :name-category="category.title"
+          :class="category.title === selectedCategory ? 'selectedCategory' : ''" @click="selectCategory(category)" />
       </div>
       <div class="products">
-        <ProductCard_Component
-          v-for="product in filteredProducts"
-          :id="product.id"
-          :key="product.id"
-          :name-product="product.title"
-          :image-product="product.image"
-          :rating-product="product.rating"
-          :price-product="product.price"
-          :size-product="product.size"
-          :color-product="product.color"
-          :stock-product="product.stock"
-          :description-product="product.description"
-          :discount-product="product.discount"
-          :image-details="product.imageDetails"
-          :old-price="product.oldPrice"
-          @click="goToProductDetail(product.id)"
-        />
+        <ProductCard_Component v-for="product in filteredProducts" :id="product.id" :key="product.id"
+          :name-product="product.title" :image-product="product.image" :rating-product="product.rating"
+          :price-product="product.price" :size-product="product.size" :color-product="product.color"
+          :stock-product="product.stock" :description-product="product.description" :discount-product="product.discount"
+          :image-details="product.imageDetails" :old-price="product.oldPrice" @click="goToProductDetail(product.id)" />
       </div>
-      <Button_Component
-        class="btnLoad"
-        name-button="View More"
-        color-button="#FFFFFF"
-        background-color-button="#958383"
-        height-button="50px"
-        width-button="200px"
-        icon="shopping_cart"
-        @click="this.$router.push('/category')"
-      />
+      <Button_Component class="btnLoad" name-button="View More" color-button="#FFFFFF" background-color-button="#958383"
+        height-button="50px" width-button="200px" icon="shopping_cart" @click="this.$router.push('/category')" />
     </div>
-  <div class="slider">
-    <div class="serviceFeature"
-    id="draggableContainer"
-        @mousedown="startDragging"
-        @mousemove="onDrag"
-        @mouseup="stopDragging"
-        @mouseleave="stopDragging"
-        @touchstart="startDragging"
-        @touchmove="onDrag"
+    <div class="slider">
+      <div class="serviceFeature" id="draggableContainer" @mousedown="startDragging" @mousemove="onDrag"
+        @mouseup="stopDragging" @mouseleave="stopDragging" @touchstart="startDragging" @touchmove="onDrag"
         @touchend="stopDragging">
-      <div class="titleService">
-        <p class="main">Trying The Best Experience</p>
-        <p class="description">
-          Easiest way to buy the new collections of clothes
-        </p>
+        <div class="titleService">
+          <p class="main">Trying The Best Experience</p>
+          <p class="description">
+            Easiest way to buy the new collections of clothes
+          </p>
+        </div>
+        <div class="cardFeature">
+          <CardFuture_Component v-for="cardFuture in cardFutures" :key="cardFuture.id" :title-card="cardFuture.title"
+            :description-card="cardFuture.description" :image-card="cardFuture.image" :color-card="cardFuture.color"
+            :width-card="cardFuture.width" :height-card="cardFuture.height" />
+        </div>
       </div>
-      <div class="cardFeature">
-        <CardFuture_Component
-          v-for="cardFuture in cardFutures"
-          :key="cardFuture.id"
-          :title-card="cardFuture.title"
-          :description-card="cardFuture.description"
-          :image-card="cardFuture.image"
-          :color-card="cardFuture.color"
-          :width-card="cardFuture.width"
-          :height-card="cardFuture.height"
-        />
-      </div>
-    </div>
-  </div>
-    <!-- Comments -->
-    <div class="titleFeature">
-      <p>What customers say about Fast Collection?</p>
     </div>
 
+    <!--Customer Review-->
+    <History/>
     <Footer_Component />
   </div>
 </template>
@@ -137,6 +86,7 @@ import oneArrival from "../assets/images/Arrivals/2nd.jpg";
 import twoArrival from "../assets/images/Arrivals/3nd.jpg";
 import Service from "../assets/images/CardFuture/customer-service.png";
 import Coupon from "../assets/images/CardFuture/voucher.png";
+import History from "@/components/ReviewHistory_Compoent.vue";
 
 export default {
   name: "HomeView",
@@ -148,6 +98,7 @@ export default {
     CardCategory_Component,
     Footer_Component,
     Arrivals_Component,
+    History,
   },
   data() {
     return {
@@ -280,9 +231,12 @@ export default {
 
 <style scoped>
 .selectedCategory {
-  background-color: #4c4040; /* Default background color */
-  color: white; /* Text color for selected category */
+  background-color: #4c4040;
+  /* Default background color */
+  color: white;
+  /* Text color for selected category */
 }
+
 .homeScreen {
   width: 100%;
   height: 100vh;
@@ -292,6 +246,7 @@ export default {
   flex-direction: column;
   gap: 10px;
 }
+
 .showCase {
   width: 100%;
   height: 645px;
@@ -315,6 +270,7 @@ export default {
   transition: all 0.3s;
   z-index: -1;
 }
+
 .imgOne img,
 .imgTwo img {
   width: 100%;
@@ -336,14 +292,13 @@ export default {
   margin-left: 2%;
   padding: 2%;
 }
+
 .title p {
   font-size: 60px;
   font-weight: bold;
-  background: -webkit-linear-gradient(
-    rgba(26, 28, 28, 1) 22%,
-    rgb(75, 79, 81) 55%,
-    rgb(43, 45, 43) 83%
-  );
+  background: -webkit-linear-gradient(rgba(26, 28, 28, 1) 22%,
+      rgb(75, 79, 81) 55%,
+      rgb(43, 45, 43) 83%);
   background-clip: text;
   -webkit-text-fill-color: transparent;
   font-family: Salsa, sans-serif;
@@ -360,16 +315,19 @@ export default {
   margin-left: 2%;
   margin-top: 2%;
 }
+
 .imgOne img {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
+
 .imgTwo {
   width: 30%;
   height: 90%;
   margin-left: 2%;
 }
+
 .imgTwo img {
   width: 100%;
   height: 100%;
@@ -385,12 +343,14 @@ export default {
   margin-top: 2%;
   padding: 2%;
 }
+
 .titleFeature p {
   font-size: 40px;
   font-weight: bold;
   color: #372f2f;
   font-family: Quicksand, sans-serif;
 }
+
 .categories,
 .products,
 .btnLoad {
@@ -406,23 +366,27 @@ export default {
 }
 
 
-.slider{
+.slider {
   width: 1400px;
   height: 100%;
 }
 
 .serviceFeature {
   width: 100%;
-  height: 400px; /* Ensure the height is fixed */
+  height: 400px;
+  /* Ensure the height is fixed */
   margin-top: 2%;
   margin-left: 2%;
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
   gap: 2%;
-  overflow-x: auto; /* Enable horizontal scrolling */
-  overflow-y: hidden; /* Hide vertical overflow (optional) */
-  padding: 0; /* Avoid unnecessary space causing scroll issues */
+  overflow-x: auto;
+  /* Enable horizontal scrolling */
+  overflow-y: hidden;
+  /* Hide vertical overflow (optional) */
+  padding: 0;
+  /* Avoid unnecessary space causing scroll issues */
   box-sizing: border-box;
   cursor: grab;
   scroll-behavior: smooth;
@@ -431,17 +395,22 @@ export default {
 }
 
 .serviceFeature:active {
-  cursor: grabbing; /* Indication when dragging */
+  cursor: grabbing;
+  /* Indication when dragging */
 }
 
 .serviceFeature::-webkit-scrollbar {
-  display: none; /* Hide scrollbar */
+  display: none;
+  /* Hide scrollbar */
 }
 
 .titleService {
-  flex-shrink: 0; /* Prevent shrinking */
-  width: 20%; /* Fixed width */
-  height: 100%; /* Match parent height */
+  flex-shrink: 0;
+  /* Prevent shrinking */
+  width: 20%;
+  /* Fixed width */
+  height: 100%;
+  /* Match parent height */
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -449,12 +418,14 @@ export default {
   padding: 2%;
   box-sizing: border-box;
 }
+
 .titleService .main {
   font-size: 24px;
   font-weight: bold;
   color: #372f2f;
   font-family: Quicksand, sans-serif;
 }
+
 .titleService .description {
   font-size: 18px;
   font-weight: 500;
@@ -463,9 +434,12 @@ export default {
 }
 
 .cardFeature {
-  flex-shrink: 0; /* Prevent shrinking */
-  min-width: 150%; /* Wider than the parent for horizontal scroll */
-  height: 100%; /* Match parent height */
+  flex-shrink: 0;
+  /* Prevent shrinking */
+  min-width: 150%;
+  /* Wider than the parent for horizontal scroll */
+  height: 100%;
+  /* Match parent height */
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
@@ -486,10 +460,12 @@ export default {
   background-color: #faf5ec;
   box-shadow: 0 5px 5px rgba(0, 0, 0, 0.1);
 }
+
 .arrivalImage {
   position: absolute;
   opacity: 0;
-  transition: opacity 1s ease-in-out; /* Smooth fade-in */
+  transition: opacity 1s ease-in-out;
+  /* Smooth fade-in */
 }
 
 .arrivalImage.active {

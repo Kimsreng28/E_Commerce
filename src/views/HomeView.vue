@@ -23,8 +23,7 @@
     <div class="titleFeature">
       <p>New Arrival</p>
       <div class="newArrivals">
-        <Arrivals_Component v-for="(arrival, index) in arrivals" :key="arrival.id"
-          v-show="index === currentArrivalIndex" :imageArrivals="arrival.image" />
+        <Arrivals_Component :arrivals="arrivalsData" />
       </div>
     </div>
 
@@ -84,9 +83,11 @@ import { computed, onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
 import oneArrival from "../assets/images/Arrivals/2nd.jpg";
 import twoArrival from "../assets/images/Arrivals/3nd.jpg";
+import thirdArrival from "../assets/images/Arrivals/1st.jpg";
 import Service from "../assets/images/CardFuture/customer-service.png";
 import Coupon from "../assets/images/CardFuture/voucher.png";
 import History from "@/components/ReviewHistory_Compoent.vue";
+
 
 export default {
   name: "HomeView",
@@ -142,7 +143,7 @@ export default {
 
     const currentArrivalIndex = ref(0);
 
-    const arrivals = [
+    const arrivalsData = [
       {
         id: 1,
         image: oneArrival,
@@ -150,6 +151,10 @@ export default {
       {
         id: 2,
         image: twoArrival,
+      },
+      {
+        id: 3,
+        image: thirdArrival,
       },
     ];
 
@@ -220,7 +225,7 @@ export default {
       goToProductDetail,
       selectCategory,
       currentArrivalIndex,
-      arrivals,
+      arrivalsData,
       startDragging,
       onDrag,
       stopDragging,

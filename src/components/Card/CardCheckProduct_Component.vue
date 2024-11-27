@@ -182,6 +182,7 @@ export default {
   display: flex;
   justify-content: start;
   align-items: center;
+  margin-top: 2%;
 }
 .size p {
   color: #000000;
@@ -191,6 +192,7 @@ export default {
 }
 
 .color {
+  margin-top: 2%;
   width: 100%;
   height: 20%;
   display: inline-flex;
@@ -211,6 +213,7 @@ export default {
   display: flex;
   justify-content: start;
   align-items: center;
+  margin-top: 2%;
 }
 .price p {
   color: #000000;
@@ -261,6 +264,7 @@ export default {
   align-items: center;
   border: 1px solid #000000;
   border-radius: 5px;
+  margin-top: 5%;
 }
 .number {
   width: 100%;

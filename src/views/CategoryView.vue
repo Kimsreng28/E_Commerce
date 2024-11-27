@@ -94,12 +94,30 @@ export default {
         const matchesSize =
           !filters.value.size || product.size.includes(filters.value.size);
         const matchesPrice = product.price <= filters.value.price;
+        const matchesSearch =
+          !searchQuery.value ||
+          product.title
+            .toLowerCase()
+            .includes(searchQuery.value.toLowerCase()) ||
+          product.description
+            .toLowerCase()
+            .includes(searchQuery.value.toLowerCase());
+
+        console.log(`Checking product ${product.title}:`, {
+          matchesTab,
+          matchesSubCategory,
+          matchesColor,
+          matchesSize,
+          matchesPrice,
+          matchesSearch,
+        });
 
         return (
           matchesTab &&
           matchesSubCategory &&
           matchesColor &&
           matchesSize &&
+          matchesSearch &&
           matchesPrice
         );
       });
@@ -147,7 +165,7 @@ export default {
 
 <style scoped>
 .categoryScreen {
-  width: 94%;
+  width: 100%;
   height: 100vh;
   margin-top: 2%;
   box-sizing: border-box;
@@ -167,7 +185,7 @@ h1 {
 }
 .select {
   width: 30%;
-  height: 100%;
+  height: 1021px;
   display: flex;
   flex-direction: column;
   margin-left: 2%;

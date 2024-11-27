@@ -188,7 +188,7 @@ export default {
   width: 20%;
   border-radius: 5px;
   background-color: #665d5d;
-  color: #efebeb;
+  color: #fffbfb;
 }
 .productCard {
   display: flex;

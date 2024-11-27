@@ -24,8 +24,6 @@ export const useProductStore = defineStore("product", {
         stock: 5,
         category: "Shoes",
         subCategory: "Sneakers",
-        selectColor: "#A0BCE0",
-        selectSize: "36",
       },
       {
         id: 2,
@@ -130,6 +128,7 @@ export const useProductStore = defineStore("product", {
           "https://png.pngtree.com/png-vector/20240715/ourmid/pngtree-sports-shoes-png-image_13082777.png",
         ],
         category: "Clothes",
+        subCategory: "Shorts",
       },
       {
         id: 7,

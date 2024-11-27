@@ -30,12 +30,7 @@
     <div class="titleFeature">
       <p>New Arrival</p>
       <div class="newArrivals">
-        <Arrivals_Component
-          v-for="(arrival, index) in arrivals"
-          :key="arrival.id"
-          v-show="index === currentArrivalIndex"
-          :imageArrivals="arrival.image"
-        />
+        <Arrivals_Component :arrivals="arrivalsData" />
       </div>
     </div>
 
@@ -48,7 +43,7 @@
           :key="category.id"
           :image-category="category.images"
           :name-category="category.title"
-          :class="category.title === selectedCategory ? 'selectedCategory' : ''"
+          :class="{ selectedCategory: category.title === selectedCategory }"
           @click="selectCategory(category)"
         />
       </div>
@@ -83,32 +78,45 @@
       />
     </div>
 
-    <div class="serviceFeature">
-      <div class="titleService">
-        <p class="main">Trying The Best Experience</p>
-        <p class="description">
-          Easiest way to buy the new collections of clothes
-        </p>
-      </div>
-      <div class="cardFeature">
-        <CardFuture_Component
-          v-for="cardFuture in cardFutures"
-          :key="cardFuture.id"
-          :title-card="cardFuture.title"
-          :description-card="cardFuture.description"
-          :image-card="cardFuture.image"
-          :color-card="cardFuture.color"
-          :width-card="cardFuture.width"
-          :height-card="cardFuture.height"
-        />
+    <!-- Service Feature -->
+    <div class="container">
+      <div
+        class="serviceFeature"
+        id="draggableContainer"
+        @mousedown="startDragging"
+        @mousemove="onDrag"
+        @mouseup="stopDragging"
+        @mouseleave="stopDragging"
+        @touchstart="startDragging"
+        @touchmove="onDrag"
+        @touchend="stopDragging"
+      >
+        <div class="titleService">
+          <p class="main">Trying The Best Experience</p>
+          <p class="description">
+            Easiest way to buy the new collections of clothes
+          </p>
+        </div>
+        <div class="cardFeature">
+          <CardFuture_Component
+            v-for="cardFuture in cardFutures"
+            :key="cardFuture.id"
+            :title-card="cardFuture.title"
+            :description-card="cardFuture.description"
+            :image-card="cardFuture.image"
+            :color-card="cardFuture.color"
+            :width-card="cardFuture.width"
+            :height-card="cardFuture.height"
+            :cardId="cardFuture.id"
+          />
+        </div>
       </div>
     </div>
 
     <!-- Comments -->
-    <div class="titleFeature">
-      <p>What customers say about Fast Collection?</p>
-    </div>
+    <ReviewHistory_Component class="reviewHistory" />
 
+    <!-- Footer -->
     <Footer_Component />
   </div>
 </template>
@@ -121,10 +129,12 @@ import CardCategory_Component from "@/components/Category/CardCategory_Component
 import Footer_Component from "@/components/Footer_Component.vue";
 import Navbar_Component from "@/components/Navbar_Component.vue";
 import ProductCard_Component from "@/components/Product/ProductCard_Component.vue";
+import ReviewHistory_Component from "@/components/ReviewHistory_Component.vue";
 import { useCategoryStore } from "@/stores/useCategoryStore";
 import { useProductStore } from "@/stores/useProductStore";
-import { computed, onMounted, ref } from "vue";
+import { computed, ref } from "vue";
 import { useRouter } from "vue-router";
+import thirdArrival from "../assets/images/Arrivals/1st.jpg";
 import oneArrival from "../assets/images/Arrivals/2nd.jpg";
 import twoArrival from "../assets/images/Arrivals/3nd.jpg";
 import Service from "../assets/images/CardFuture/customer-service.png";
@@ -140,30 +150,7 @@ export default {
     CardCategory_Component,
     Footer_Component,
     Arrivals_Component,
-  },
-  data() {
-    return {
-      cardFutures: [
-        {
-          id: 1,
-          title: "24/7 Customer Service",
-          description: "Friendly 24/7 customer support",
-          image: Service,
-          color: "#FAF5EC",
-          width: "546px",
-          height: "343px",
-        },
-        {
-          id: 2,
-          title: "Coupons",
-          description: "Give free when pay start from 20$ up.",
-          image: Coupon,
-          color: "#FAF5EC",
-          width: "546px",
-          height: "343px",
-        },
-      ],
-    };
+    ReviewHistory_Component,
   },
   setup() {
     // Initialize the router
@@ -172,9 +159,7 @@ export default {
     // Reactive state for selected category
     const selectedCategory = ref("Clothes");
 
-    const currentArrivalIndex = ref(0);
-
-    const arrivals = [
+    const arrivalsData = ref([
       {
         id: 1,
         image: oneArrival,
@@ -183,15 +168,11 @@ export default {
         id: 2,
         image: twoArrival,
       },
-    ];
-
-    // Reactive state for current arrival index
-    onMounted(() => {
-      setInterval(() => {
-        currentArrivalIndex.value =
-          (currentArrivalIndex.value + 1) % arrivals.length; // Cycle through the images
-      }, 5000); // 5000ms = 5 seconds
-    });
+      {
+        id: 3,
+        image: thirdArrival,
+      },
+    ]);
 
     // Function to handle category selection
     const selectCategory = (category) => {
@@ -218,13 +199,75 @@ export default {
       return store.getCategoriesByIds([1, 2, 3]);
     });
 
+    const cardFutures = [
+      {
+        id: 1,
+        title: "24/7 Customer Service",
+        description: "Friendly 24/7 customer support",
+        image: Service,
+        color: "#FAF5EC",
+        width: "546px",
+        height: "343px",
+      },
+      {
+        id: 2,
+        title: "Coupons",
+        description: "Give free when pay start from 20$ up.",
+        image: Coupon,
+        color: "#FAF5EC",
+        width: "546px",
+        height: "343px",
+      },
+      {
+        id: 3,
+        title: "Coupons",
+        description: "Give free when pay start from 20$ up.",
+        image: Coupon,
+        color: "#FAF5EC",
+        width: "546px",
+        height: "343px",
+      },
+    ];
+
+    // Mouse drag scrolling logic
+    const isDragging = ref(false);
+    const startX = ref(0);
+    const scrollLeft = ref(0);
+    const container = ref(null);
+
+    const startDragging = (event) => {
+      isDragging.value = true;
+      startX.value = event.pageX || event.touches[0].pageX;
+      container.value = event.currentTarget;
+      scrollLeft.value = container.value.scrollLeft;
+      container.value.style.scrollBehavior = "auto"; // Disable smooth scroll during drag
+    };
+
+    const onDrag = (event) => {
+      if (!isDragging.value) return;
+      const x = event.pageX || event.touches[0].pageX;
+      const walk = x - startX.value;
+      container.value.scrollLeft = scrollLeft.value - walk;
+    };
+
+    const stopDragging = () => {
+      isDragging.value = false;
+      if (container.value) {
+        container.value.style.scrollBehavior = "smooth"; // Re-enable smooth scroll
+      }
+    };
+
     return {
       filteredProducts,
       filteredCategories,
       goToProductDetail,
       selectCategory,
-      currentArrivalIndex,
-      arrivals,
+      arrivalsData,
+      cardFutures,
+
+      startDragging,
+      onDrag,
+      stopDragging,
     };
   },
 };
@@ -232,8 +275,9 @@ export default {
 
 <style scoped>
 .selectedCategory {
-  background-color: #4c4040; /* Default background color */
-  color: white; /* Text color for selected category */
+  background-color: #4c4040;
+  color: white;
+  transition: all 0.3s ease-in-out;
 }
 .homeScreen {
   width: 100%;
@@ -357,27 +401,48 @@ export default {
   gap: 2%;
 }
 
-.serviceFeature {
-  width: 96%;
+.container {
+  width: 1400px;
   height: 100%;
+}
+
+.serviceFeature {
+  width: 100%;
+  height: 400px; /* Ensure the height is fixed */
   margin-top: 2%;
   margin-left: 2%;
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
-  align-items: center;
   gap: 2%;
+  overflow-x: auto; /* Enable horizontal scrolling */
+  overflow-y: hidden; /* Hide vertical overflow (optional) */
+  padding: 0; /* Avoid unnecessary space causing scroll issues */
+  box-sizing: border-box;
+  cursor: grab;
+  scroll-behavior: smooth;
+  user-select: none;
+  transition: all 0.3s;
+}
+
+.serviceFeature:active {
+  cursor: grabbing; /* Indication when dragging */
+}
+
+.serviceFeature::-webkit-scrollbar {
+  display: none; /* Hide scrollbar */
 }
 
 .titleService {
-  width: 20%;
-  height: 100%;
-  margin-top: 2%;
+  flex-shrink: 0; /* Prevent shrinking */
+  width: 20%; /* Fixed width */
+  height: 100%; /* Match parent height */
   display: flex;
   flex-direction: column;
-  justify-content: start;
-  align-items: start;
+  justify-content: flex-start;
+  align-items: flex-start;
   padding: 2%;
+  box-sizing: border-box;
 }
 .titleService .main {
   font-size: 24px;
@@ -393,13 +458,14 @@ export default {
 }
 
 .cardFeature {
-  width: 80%;
-  height: 100%;
-  margin-top: 2%;
+  flex-shrink: 0; /* Prevent shrinking */
+  min-width: 150%; /* Wider than the parent for horizontal scroll */
+  height: 100%; /* Match parent height */
   display: flex;
   flex-direction: row;
-  justify-content: start;
+  justify-content: flex-start;
   gap: 2%;
+  box-sizing: border-box;
 }
 
 .newArrivals {

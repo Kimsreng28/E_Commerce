@@ -24,6 +24,7 @@
         :height-button="button.height"
         :width-button="button.width"
         :color-button="button.color"
+        @click="navigateToDetailPage"
       />
     </div>
   </div>
@@ -56,6 +57,17 @@ export default {
     colorCard: String,
     widthCard: String,
     heightCard: String,
+    cardId: Number,
+  },
+  methods: {
+    navigateToDetailPage() {
+      // Navigate to the corresponding route based on the card ID
+      if (this.cardId === 1) {
+        this.$router.push({ path: "/service" }); // Navigate to Service page
+      } else if (this.cardId === 2) {
+        this.$router.push({ path: "/coupon" }); // Navigate to Coupon page
+      }
+    },
   },
 };
 </script>

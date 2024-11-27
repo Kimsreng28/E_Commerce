@@ -147,7 +147,7 @@
       </div>
     </div>
 
-    <Footer_Component style="margin-left: 1%" />
+    <Footer_Component style="margin-left: 1%; margin-top: 5%" />
   </div>
 </template>
 

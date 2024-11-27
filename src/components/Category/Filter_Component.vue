@@ -46,7 +46,10 @@
           @click="selectSubCategory(item)"
         >
           <p>{{ item }}</p>
-          <span class="material-icons">chevron_right</span>
+          <span v-if="selectedSubCategory !== item" class="material-icons"
+            >check_box_outline_blank</span
+          >
+          <span v-else class="material-icons">check_box</span>
         </div>
       </div>
 
@@ -65,6 +68,16 @@
             v-model="priceValue"
             class="range"
           />
+          <div class="price-input">
+            <input
+              type="number"
+              v-model.number="priceValue"
+              min="50"
+              max="200"
+              step="1"
+              class="price-text-input"
+            />
+          </div>
           <div class="price-values">
             <span>${{ priceValue }}</span>
           </div>
@@ -136,7 +149,7 @@ export default {
         Shoes: ["Sneakers", "Formal", "Boots", "Sandals", "Loafers"],
         Accessories: ["Watches", "Bags", "Belts", "Hats", "Glasses"],
       },
-      colors: ["#6d4c41", "#5d4037", "#8d6e63", "#d7ccc8", "#efebe9"],
+      colors: ["#A0BCE0", "#E07575", "#0FB763", "#9E9E9E", "#efebe9"],
       sizes: {
         Clothes: ["S", "M", "L", "XL"],
         Shoes: [28, 32, 36, 40, 44],
@@ -159,15 +172,19 @@ export default {
       this.selectedColor = null;
       this.selectedSize = null;
       this.priceValue = 100;
+      console.log("Selected Tab:", this.selectedTab);
     },
     selectSubCategory(subCategory) {
       this.selectedSubCategory = subCategory;
+      console.log("Selected SubCategory:", this.selectedSubCategory);
     },
     selectColor(color) {
       this.selectedColor = color;
+      console.log("Selected Color:", this.selectedColor);
     },
     selectSize(size) {
       this.selectedSize = size;
+      console.log("Selected Size:", this.selectedSize);
     },
     applyFilter() {
       this.$emit("apply-filter", {
@@ -193,7 +210,7 @@ export default {
 <style scoped>
 .filter {
   width: 326px;
-  height: 1500px;
+  height: 1021px;
   display: flex;
   flex-direction: column;
 }
@@ -283,6 +300,18 @@ export default {
 }
 .price-range input {
   width: 100%;
+}
+.price-input {
+  width: 50%;
+}
+.price-input input {
+  border-radius: 5px;
+  border: 0.5px solid #8f7979;
+  padding: 1.5%;
+  font-size: 16px;
+  font-weight: bold;
+  color: #383535;
+  font-family: Quicksand, sans-serif;
 }
 .price-values span {
   font-size: 20px;

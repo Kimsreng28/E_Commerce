@@ -205,7 +205,7 @@ export default {
     };
 
     const discountPrice = computed(() => {
-      return props.discountProduct ? `${props.discountProduct}%` : "0%";
+      return props.discountProduct ? `${props.discountProduct}` : "0%";
     });
     console.log("Sending discountPrice to PriceSummary:", discountPrice.value);
 
@@ -304,7 +304,7 @@ export default {
 
 .imagesOfProducts {
   width: 50%;
-  height: 650px;
+  height: 700px;
   display: flex;
   justify-content: start;
   align-items: start;
@@ -324,6 +324,8 @@ export default {
   border-radius: 5px;
   gap: 10px;
   padding: 10px;
+  cursor: pointer;
+  object-fit: cover;
 }
 .fourImages img {
   background-color: rgb(216, 216, 216);
@@ -343,7 +345,7 @@ export default {
 }
 .mainImage {
   background-color: #e9e7e7;
-  width: 80%;
+  width: 70%;
   height: 100%;
   display: flex;
   justify-content: center;
@@ -352,7 +354,7 @@ export default {
   border-radius: 5px;
 }
 .mainImage img {
-  width: 60%;
+  width: 80%;
   height: 50%;
   object-fit: cover;
   object-position: center;

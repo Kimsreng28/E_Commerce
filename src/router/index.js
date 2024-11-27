@@ -92,6 +92,22 @@ const router = createRouter({
         breadcrumb: "Product Detail",
       },
     },
+    {
+      path: "/coupon",
+      name: "coupon",
+      component: () => import("../views/CouponView.vue"),
+      meta: {
+        breadcrumb: "Coupon Service",
+      },
+    },
+    {
+      path: "/service",
+      name: "Service",
+      component: () => import("../views/ServiceView.vue"),
+      meta: {
+        breadcrumb: "Service",
+      },
+    },
   ],
 });
 

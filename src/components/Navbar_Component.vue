@@ -128,7 +128,7 @@ export default {
 
 <style scoped>
 .navBar {
-  width: 1440px;
+  width: 1510px;
   height: 10vh;
   display: flex;
   align-items: center;

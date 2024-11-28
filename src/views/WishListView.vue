@@ -35,6 +35,7 @@
       <CardWistList_Component
         v-for="item in wishlistItems"
         :key="item.id"
+        :id="item.id"
         :imageWistList="item.images"
         :discountProduct="item.productDiscount"
         :productName="item.title"

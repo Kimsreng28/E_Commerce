@@ -69,16 +69,11 @@ export default {
       default: 1,
     },
   },
-  methods: {
-    // Handle Remove From Wishlist
-    deleteItem() {
-      const store = useWishlistStore();
-      store.removeFromWishlist(this.id);
-    },
-  },
   setup(props) {
+    console.log("ID received in setup:", props.id);
     const cartStore = useCartStore();
     const router = useRouter();
+    const wishlistStore = useWishlistStore();
 
     // Default color and size
     const selectedColor = computed(() => {
@@ -111,10 +106,22 @@ export default {
       router.push("/cart");
     };
 
+    // Handle Remove From Wishlist
+    const deleteItem = () => {
+      console.log("Deleting item with ID:", props.id);
+      if (props.id !== undefined && props.id !== null) {
+        wishlistStore.removeFromWishlist(props.id);
+        alert("Product removed from wishlist!");
+      } else {
+        alert("Failed to remove product: Missing product ID.");
+      }
+    };
+
     return {
       handleAddToCart,
       selectedSize,
       selectedColor,
+      deleteItem,
     };
   },
 };

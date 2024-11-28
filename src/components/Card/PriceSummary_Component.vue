@@ -22,7 +22,7 @@
 
     <div class="discount">
       <p>Discount:</p>
-      <p>{{ discountPrice }}</p>
+      <p>${{ discountPrice.toFixed(2) }}</p>
     </div>
     <div class="hr">
       <hr />
@@ -70,11 +70,12 @@ export default {
     totalPrice: String,
   },
   setup(props) {
+    console.log("Received discountPrice:", props.discountPrice);
     const cartStore = useCartStore();
     const couponCode = ref("");
 
     // discount catch from DetailProduct
-    const discountPrice = ref(props.discountPrice);
+    const discountPrice = ref(parseFloat(props.discountPrice) || 0);
 
     const subtotalPrice = computed(() => cartStore.getSubtotal);
 

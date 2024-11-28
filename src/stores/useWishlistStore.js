@@ -16,8 +16,12 @@ export const useWishlistStore = defineStore("wishlist", {
     },
 
     removeFromWishlist(productId) {
-      this.wishlist = this.wishlist.filter((item) => item.id !== productId);
-      this.saveWishlistToLocalStorage();
+      if (productId) {
+        this.wishlist = this.wishlist.filter((item) => item.id !== productId);
+        this.saveWishlistToLocalStorage();
+      } else {
+        console.error("No product ID provided to remove from wishlist.");
+      }
     },
 
     clearWishlist() {

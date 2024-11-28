@@ -117,16 +117,25 @@ export default {
     // Handle Add To Wishlist
     const handleAddToWishlist = (event) => {
       event.stopPropagation();
-      const product = {
+
+      if (!userStore.isLoggedIn) {
+        alert("Please sign in or sign up to add items to your wishlist.");
+        router.push("/signIn");
+        return;
+      }
+      const productToAdd = {
         id: props.id,
         title: props.nameProduct,
         images: props.imageProduct,
         price: props.priceProduct,
         productDiscount: discountProduct.value,
         oldPrice: oldPrice.value,
+        colorProduct: props.colorProduct || [],
+        sizeProduct: props.sizeProduct || [],
       };
+      console.log("Adding to wishlist:", productToAdd);
 
-      wishlistStore.addToWishlist(product);
+      wishlistStore.addToWishlist(productToAdd);
       alert("Product added to wishlist!");
     };
 

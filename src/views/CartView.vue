@@ -13,7 +13,9 @@
           class="cardCheck"
           v-for="item in cartItems"
           :key="item.id"
+          :id="item.id"
           :imageProduct="item.image"
+          :discountProduct="item.discount"
           :nameProduct="item.name"
           :priceProduct="item.price"
           :quantity="item.quantity"
@@ -27,7 +29,7 @@
           titleSummary="Order summary"
           :subtotalPrice="subtotalPrice"
           :shippingPrice="shippingPrice"
-          :discountPrice="discountPrice"
+          :discountPrice="totalDiscountPrice"
           :totalPrice="totalPrice"
         />
       </div>
@@ -78,7 +80,37 @@ export default {
   computed: {
     cartItems() {
       const store = useCartStore();
-      return store.cartItems;
+      return store.cartItems.map((item) => {
+        console.log("Cart Item:", item); // Log each item
+        const discount = item.discount || "0%";
+        const discountPercentage = parseFloat(discount.replace("%", "")) || 0;
+        const discountPrice = (item.price * discountPercentage) / 100;
+        console.log(
+          "Discount Percentage:",
+          discountPercentage,
+          "Discount Price:",
+          discountPrice
+        );
+        return {
+          ...item,
+          discountPrice,
+        };
+      });
+    },
+    subtotalPrice() {
+      return this.cartItems.reduce(
+        (total, item) => total + item.price * item.quantity,
+        0
+      );
+    },
+    totalDiscountPrice() {
+      return this.cartItems.reduce(
+        (total, item) => total + item.discountPrice,
+        0
+      );
+    },
+    totalPrice() {
+      return this.subtotalPrice - this.totalDiscountPrice + this.shippingPrice;
     },
   },
   methods: {

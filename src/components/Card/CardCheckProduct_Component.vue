@@ -55,6 +55,7 @@ import { computed, ref } from "vue";
 export default {
   name: "CardCheckProduct_Component",
   props: {
+    id: Number,
     imageProduct: String,
     nameProduct: String,
     sizeProduct: Array,

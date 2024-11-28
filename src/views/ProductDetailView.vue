@@ -7,6 +7,7 @@
       class="pdDt"
       v-if="product"
       :key="product.id"
+      :id="product.id"
       :imageProduct="product.image"
       :nameProduct="product.title"
       :ratingProduct="product.rating"

@@ -158,6 +158,7 @@
 
 <script>
 import { useCartStore } from "@/stores/useCartStore";
+import { useCheckOut } from "@/stores/useCheckOut";
 import { useWishlistStore } from "@/stores/useWishlistStore";
 import { computed, ref } from "vue";
 import { useRouter } from "vue-router";
@@ -168,6 +169,7 @@ export default {
     Button_Component,
   },
   props: {
+    id: Number,
     imageDetails: Array,
     imageProduct: String,
     nameProduct: String,
@@ -185,6 +187,7 @@ export default {
     },
   },
   setup(props) {
+    const checkoutStore = useCheckOut();
     const cartStore = useCartStore();
     const wishlistStore = useWishlistStore();
     const router = useRouter();
@@ -262,7 +265,20 @@ export default {
 
     // Handle Go To Check Out
     const handleGoToCheckOut = () => {
-      console.log("Go to Check Out");
+      const product = {
+        id: props.id,
+        title: props.nameProduct,
+        images: props.imageProduct,
+        price: props.priceProduct,
+        productDiscount: discountPrice.value,
+        oldPrice: props.oldPrice,
+        quantity: quantity.value,
+        color: selectedColor.value,
+        size: selectedSize.value,
+      };
+
+      checkoutStore.addToCart(product);
+      router.push("/checkout");
     };
 
     return {

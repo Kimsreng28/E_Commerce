@@ -81,6 +81,7 @@ export default {
         ? props.colorProduct[0]
         : "#A0BCE0"; // Default color
     });
+
     const selectedSize = computed(() => {
       return props.sizeProduct && props.sizeProduct.length > 0
         ? props.sizeProduct[0]

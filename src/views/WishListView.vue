@@ -31,8 +31,9 @@
       </div>
     </div>
 
-    <div class="wishList">
+    <div class="wishList" v-if="wishlistItems.length > 0">
       <CardWistList_Component
+        class="cardWistList"
         v-for="item in wishlistItems"
         :key="item.id"
         :id="item.id"
@@ -41,6 +42,8 @@
         :productName="item.title"
         :oldPrice="item.oldPrice"
         :currentPrice="item.price"
+        :colorProduct="Array.isArray(item.color) ? item.color : [item.color]"
+        :sizeProduct="item.size"
       />
     </div>
 
@@ -66,6 +69,7 @@ import Footer_Component from "@/components/Footer_Component.vue";
 import Navbar_Component from "@/components/Navbar_Component.vue";
 import { useWishlistStore } from "@/stores/useWishlistStore";
 import { computed, ref } from "vue";
+import { useRouter } from "vue-router";
 
 export default {
   name: "WishListView",
@@ -78,6 +82,7 @@ export default {
   },
   setup() {
     const wishlistStore = useWishlistStore();
+    const router = useRouter();
 
     // Access wishlist data from the store
     const wishlistItems = computed(() => wishlistStore.wishlist);
@@ -96,10 +101,15 @@ export default {
       }
     };
 
+    const goToCategoryProduct = () => {
+      router.push("/category");
+    };
+
     return {
       wishlistItems,
       sortWishlist,
       selectedSort,
+      goToCategoryProduct,
     };
   },
   methods: {
@@ -132,6 +142,18 @@ export default {
   flex-direction: row;
   flex-wrap: wrap;
   gap: 2%;
+}
+
+.cardWistList {
+  border: none;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  background-color: white;
+  border-radius: 8px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.cardWistList:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
 }
 
 .title {
@@ -195,6 +217,9 @@ export default {
   border-radius: 10px;
 }
 .footer {
+  margin-top: 5%;
+}
+.view {
   margin-top: 5%;
 }
 </style>

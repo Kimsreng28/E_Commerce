@@ -49,6 +49,7 @@
       </div>
       <div class="products">
         <ProductCard_Component
+          class="productCard"
           v-for="product in filteredProducts"
           :id="product.id"
           :key="product.id"
@@ -274,6 +275,17 @@ export default {
 </script>
 
 <style scoped>
+.productCard {
+  border: none;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  background-color: white;
+  border-radius: 8px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.productCard:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
 .selectedCategory {
   background-color: #4c4040;
   color: white;

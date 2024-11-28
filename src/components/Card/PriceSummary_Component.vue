@@ -28,6 +28,10 @@
       <hr />
     </div>
 
+    <div class="discount">
+      <p>Coupon:</p>
+    </div>
+
     <div class="coupon">
       <input type="text" placeholder="Coupon Code" v-model="couponCode" />
       <Button_Component
@@ -36,12 +40,13 @@
         height-button="60px"
         width-button="245px"
         color-button="#FFFFFF"
+        @click="applyCoupon"
       />
     </div>
 
     <div class="totalPrice">
       <p>Total:</p>
-      <p>${{ calculatedTotalPrice }}</p>
+      <p>${{ calculatedTotalPrice.toFixed(2) }}</p>
     </div>
   </div>
 </template>
@@ -60,7 +65,7 @@ export default {
     titleSummary: String,
     subtotalPrice: String,
     shippingPrice: {
-      type: Number,
+      type: String,
       default: 0,
     },
     discountPrice: {
@@ -68,11 +73,15 @@ export default {
       default: "0%",
     },
     totalPrice: String,
+    couponPrice: {
+      type: Number,
+      default: 0,
+    },
   },
   setup(props) {
-    console.log("Received discountPrice:", props.discountPrice);
     const cartStore = useCartStore();
     const couponCode = ref("");
+    const couponPrice = ref(0);
 
     // discount catch from DetailProduct
     const discountPrice = ref(parseFloat(props.discountPrice) || 0);
@@ -81,19 +90,27 @@ export default {
 
     // Compute total price
     const calculatedTotalPrice = computed(() => {
-      const discount = parseFloat(props.discountPrice) || 0;
-      return subtotalPrice.value + props.shippingPrice - discount;
+      return (
+        subtotalPrice.value +
+        props.shippingPrice -
+        discountPrice.value -
+        couponPrice.value
+      );
     });
-    console.log("Received discountPrice:", props.discountPrice);
 
-    // Apply a discount based on coupon code
+    // Apply a discount based on the coupon code
     const applyCoupon = () => {
-      if (couponCode.value === "DISCOUNT10") {
-        props.discountPrice = subtotalPrice.value * 0.1; // 10% discount
-        alert("Coupon Applied! 10% discount.");
+      if (couponCode.value === "DISCOUNT50") {
+        couponPrice.value = subtotalPrice.value * 0.5; // Apply 50% discount
+        alert("Coupon Applied! 50% discount.");
       } else {
         alert("Invalid coupon code!");
+        couponPrice.value = 0; // Reset coupon if invalid
       }
+    };
+    // Handle the coupon code received from CardDiscount
+    const handleCouponGenerated = (generatedCoupon) => {
+      couponCode.value = generatedCoupon; // Store generated coupon code
     };
 
     return {
@@ -102,6 +119,7 @@ export default {
       couponCode,
       discountPrice,
       applyCoupon,
+      handleCouponGenerated,
     };
   },
 };

@@ -147,7 +147,7 @@
       </div>
     </div>
 
-    <Footer_Component style="margin-left: 1%" />
+    <Footer_Component class="footer" />
   </div>
 </template>
 
@@ -294,7 +294,7 @@ export default {
 
 <style scoped>
 .profileContainer {
-  width: 100%;
+  width: 96%;
   height: 100vh;
   margin-top: 2%;
   box-sizing: border-box;
@@ -347,8 +347,9 @@ export default {
   margin-top: 5%;
   margin-left: 2.5%;
   gap: 2%;
+  margin-bottom: 5%;
   display: flex;
-  justify-content: start;
+  justify-content: center;
   flex-direction: row;
 }
 

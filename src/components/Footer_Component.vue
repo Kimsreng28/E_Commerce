@@ -66,14 +66,14 @@ export default {
 
 <style scoped>
 .footer {
-  width: 1510px;                      
+  width: 1519px;                      
   background-color: #faf5ec;      
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   padding: 2% 0;                  
-  box-sizing: border-box;         
+  box-sizing: border-box;    
 }
 
 .container {

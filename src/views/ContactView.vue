@@ -41,7 +41,7 @@
 
 
 
-    <Footer_Component />
+    <Footer_Component class="footer" />
   </div>
 </template>
 
@@ -61,7 +61,7 @@ export default {
 
 <style scoped>
 .contactScreen {
-  width: 100%;
+  width: 98%;
   height: 100vh;
   margin-top: 2%;
   box-sizing: border-box;

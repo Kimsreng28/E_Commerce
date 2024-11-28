@@ -93,7 +93,7 @@ export default {
 
 <style scoped>
 .cartScreen {
-  width: 100%;
+  width: 98%;
   height: 100vh;
   margin-top: 2%;
   box-sizing: border-box;

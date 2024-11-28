@@ -43,7 +43,7 @@
       />
     </div>
 
-    <Footer_Component />
+    <Footer_Component style="margin-left: 4px;"/>
   </div>
 </template>
 
@@ -181,7 +181,7 @@ h1 {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  align-items: centers;
+  justify-content: center;
 }
 .select {
   width: 30%;

@@ -345,10 +345,10 @@ export default {
 }
 .fourImages img {
   background-color: rgb(216, 216, 216);
-  width: 90%;
+  width: 80%;
   cursor: pointer;
   border-radius: 5px;
-  height: 90%;
+  height: 80%;
   object-fit: cover;
 }
 .fourImages img.selected {

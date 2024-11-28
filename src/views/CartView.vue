@@ -55,7 +55,7 @@
       />
     </div>
 
-    <Footer_Component class="footer" />
+    <Footer_Component style="margin-left: 4px;"/>
   </div>
 </template>
 
@@ -148,7 +148,7 @@ export default {
   color: #564949;
 }
 .cartCheck {
-  width: 100%;
+  width: 98%;
   height: auto;
   display: flex;
   flex-direction: row;

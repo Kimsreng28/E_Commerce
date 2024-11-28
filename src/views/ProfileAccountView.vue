@@ -147,7 +147,7 @@
       </div>
     </div>
 
-    <Footer_Component style="margin-left: 1%; margin-top: 5%" />
+    <Footer_Component style="margin-left: 4px;"/>
   </div>
 </template>
 
@@ -294,7 +294,7 @@ export default {
 
 <style scoped>
 .profileContainer {
-  width: 100%;
+  width: 96%;
   height: 100vh;
   margin-top: 2%;
   box-sizing: border-box;
@@ -303,7 +303,7 @@ export default {
 }
 
 .navWithName {
-  width: 98%;
+  width: 100%;
   margin-top: 2%;
   display: flex;
   flex-direction: row;
@@ -344,12 +344,15 @@ export default {
 
 .showInfo {
   width: 100%;
-  margin-top: 5%;
+  margin-top: 2%;
   margin-left: 2.5%;
   gap: 2%;
   display: flex;
-  justify-content: start;
+  justify-content: center;
+  align-content: center;
   flex-direction: row;
+  margin-bottom: 2%;
+  flex-grow: 1;
 }
 
 .select {

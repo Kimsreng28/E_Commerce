@@ -46,7 +46,7 @@
       <img src="../assets/images/Contact/Qr Code.png" alt="" width="15%" />
     </div>
 
-    <Footer_Component />
+    <Footer_Component style="margin-left: 4px;"/>
   </div>
 </template>
 
@@ -106,7 +106,7 @@ p {
 }
 
 .contacts {
-  width: 100%;
+  width: 98%;
   display: flex;
   justify-content: space-around;
   align-items: center;

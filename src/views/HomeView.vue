@@ -117,7 +117,7 @@
     <ReviewHistory_Component class="reviewHistory" />
 
     <!-- Footer -->
-    <Footer_Component />
+    <Footer_Component style="margin-left: 4px;"/>
   </div>
 </template>
 

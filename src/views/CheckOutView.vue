@@ -9,17 +9,20 @@
       <div class="left"></div>
       <div class="right"></div>
     </div>
+    <Footer_Component style="margin-left: 4px;"/>
   </div>
 </template>
 
 <script>
 import Breadcrumb_Component from "@/components/Breadcrumb_Component.vue";
 import Navbar_Component from "@/components/Navbar_Component.vue";
+import Footer_Component from "@/components/Footer_Component.vue";
 export default {
   name: "CheckOutView",
   components: {
     Navbar_Component,
     Breadcrumb_Component,
+    Footer_Component
   },
 };
 </script>
@@ -42,6 +45,7 @@ h1 {
   flex-direction: row;
   justify-content: start;
   align-items: center;
+  flex-grow: 1;
 }
 .left {
   width: 50%;

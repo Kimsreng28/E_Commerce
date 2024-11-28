@@ -15,6 +15,7 @@
         :button-color="card.buttonColor"
       />
     </div>
+    <Footer_Component style="margin-left: 4px;"/>
   </div>
 </template>
 
@@ -22,13 +23,14 @@
 import Breadcrumb_Component from "@/components/Breadcrumb_Component.vue";
 import CardDiscount from "@/components/CardDiscount.vue";
 import Navbar_Component from "@/components/Navbar_Component.vue";
-
+import Footer_Component from "@/components/Footer_Component.vue";
 export default {
   name: "CouponView",
   components: {
     Navbar_Component,
     Breadcrumb_Component,
     CardDiscount,
+    Footer_Component
   },
 
   data() {
@@ -65,5 +67,6 @@ h1 {
   display: flex;
   justify-content: center;
   align-items: start;
+  flex-grow: 1;
 }
 </style>

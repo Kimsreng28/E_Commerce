@@ -21,7 +21,7 @@
       :stock="product.stock"
     />
 
-    <Footer_Component class="footer" />
+    <Footer_Component style="margin-left: 4px;"/>
   </div>
 </template>
 
@@ -74,6 +74,7 @@ export default {
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
+  flex-grow: 1;
 }
 .pdDt {
   width: 100%;
@@ -81,5 +82,6 @@ export default {
   justify-content: center;
   align-items: center;
   margin-left: 2%;
+  
 }
 </style>

@@ -7,15 +7,8 @@
     <div class="title">
       <p>Wish List</p>
 
-      <Button_Component
-        class="btnStyle"
-        name-button="Move All To Shop"
-        backgroundColor-button="#FFFFFF"
-        height-button="50px"
-        width-button="200px"
-        color-button="#958383"
-        @click="moveAllToShop"
-      />
+      <Button_Component class="btnStyle" name-button="Move All To Shop" backgroundColor-button="#FFFFFF"
+        height-button="50px" width-button="200px" color-button="#958383" @click="moveAllToShop" />
     </div>
 
     <div class="showItemCount">
@@ -30,34 +23,18 @@
         </select>
       </div>
     </div>
-
-    <div class="wishList" v-if="wishlistItems.length > 0">
-      <CardWistList_Component
-        class="cardWistList"
-        v-for="item in wishlistItems"
-        :key="item.id"
-        :id="item.id"
-        :imageWistList="item.images"
-        :discountProduct="item.productDiscount"
-        :productName="item.title"
-        :oldPrice="item.oldPrice"
-        :currentPrice="item.price"
-        :colorProduct="Array.isArray(item.color) ? item.color : [item.color]"
-        :sizeProduct="item.size"
-      />
+    <div class="content">
+      <div class="wishList" v-if="wishlistItems.length > 0">
+        <CardWistList_Component class="cardWistList" v-for="item in wishlistItems" :key="item.id" :id="item.id"
+          :imageWistList="item.images" :discountProduct="item.productDiscount" :productName="item.title"
+          :oldPrice="item.oldPrice" :currentPrice="item.price"
+          :colorProduct="Array.isArray(item.color) ? item.color : [item.color]" :sizeProduct="item.size" />
+      </div>
     </div>
+    <Button_Component class="view" name-button="View All" backgroundColor-button="#958383" height-button="50px"
+        width-button="200px" color-button="#FFFFFF" @click="goToCategoryProduct" />
 
-    <Button_Component
-      class="view"
-      name-button="View All"
-      backgroundColor-button="#958383"
-      height-button="50px"
-      width-button="200px"
-      color-button="#FFFFFF"
-      @click="goToCategoryProduct"
-    />
-
-    <Footer_Component class="footer" />
+    <Footer_Component style="margin-left: 4px;" />
   </div>
 </template>
 
@@ -125,12 +102,19 @@ export default {
 
 <style scoped>
 .wishListPage {
-  width: 100%;
+  width: 98%;
   height: 100vh;
   margin-top: 2%;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
+
+
+}
+.content{
+  display: flex;
+  flex-grow: 1;
+
 }
 
 .wishList {
@@ -151,6 +135,7 @@ export default {
   border-radius: 8px;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
+
 .cardWistList:hover {
   transform: translateY(-5px);
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
@@ -165,12 +150,14 @@ export default {
   justify-content: space-between;
   align-items: center;
 }
+
 .title p {
   font-family: Quicksand, sans-serif;
   font-size: 32px;
   font-weight: bold;
   color: #564949;
 }
+
 .showItemCount {
   width: 95%;
   margin-top: 2%;
@@ -180,6 +167,7 @@ export default {
   justify-content: space-between;
   align-items: center;
 }
+
 .showItemCount p {
   font-family: Quicksand, sans-serif;
   font-size: 16px;
@@ -216,10 +204,13 @@ export default {
   border: 1px solid #564949;
   border-radius: 10px;
 }
+
 .footer {
   margin-top: 5%;
 }
+
 .view {
   margin-top: 5%;
+
 }
 </style>

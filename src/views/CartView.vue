@@ -31,6 +31,7 @@
           :shippingPrice="shippingPrice"
           :discountPrice="totalDiscountPrice"
           :totalPrice="totalPrice"
+          :coupon-price="couponPrice"
         />
       </div>
     </div>
@@ -77,6 +78,12 @@ export default {
     CardCheckProduct_Component,
     PriceSummary_Component,
   },
+  data() {
+    return {
+      couponCode: "", // Coupon code input
+      couponPrice: 0, // Variable to store the applied coupon price
+    };
+  },
   computed: {
     cartItems() {
       const store = useCartStore();
@@ -97,6 +104,9 @@ export default {
         };
       });
     },
+    shippingPrice() {
+      return 0.25;
+    },
     subtotalPrice() {
       return this.cartItems.reduce(
         (total, item) => total + item.price * item.quantity,
@@ -110,7 +120,12 @@ export default {
       );
     },
     totalPrice() {
-      return this.subtotalPrice - this.totalDiscountPrice + this.shippingPrice;
+      return (
+        this.subtotalPrice -
+        this.totalDiscountPrice +
+        this.shippingPrice -
+        this.couponPrice
+      );
     },
   },
   methods: {

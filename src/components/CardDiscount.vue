@@ -16,7 +16,18 @@
     </div>
 
     <div class="button-get">
-      <button :style="{ backgroundColor: buttonColor }">Get It Now</button>
+      <button
+        :style="{ backgroundColor: buttonColor }"
+        @click="generateCouponCode"
+      >
+        Get It Now
+      </button>
+    </div>
+
+    <div v-if="couponCode" class="couponCode">
+      <p>
+        Your coupon code: <strong>{{ couponCode }}</strong>
+      </p>
     </div>
   </div>
 </template>
@@ -39,11 +50,24 @@ export default {
       required: true,
     },
   },
+  data() {
+    return {
+      couponCode: null,
+    };
+  },
   computed: {
     containerStyle() {
       return {
         background: `linear-gradient(180deg, ${this.gradientStart} 0%, ${this.gradientEnd} 100%)`,
       };
+    },
+  },
+  methods: {
+    generateCouponCode() {
+      // Fixed coupon code for 50% discount
+      this.couponCode = "DISCOUNT50";
+      this.$emit("couponGenerated", this.couponCode); // Emit the coupon code to the parent
+      alert(`Coupon code generated: ${this.couponCode}`);
     },
   },
 };
@@ -170,5 +194,11 @@ export default {
 .button-get button:hover {
   transform: scale(1.03);
   filter: brightness(90%);
+}
+.couponCode {
+  margin-top: 20px;
+  font-size: 18px;
+  color: #333;
+  font-family: Quicksand, sans-serif;
 }
 </style>

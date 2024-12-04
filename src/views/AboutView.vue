@@ -2,15 +2,8 @@
   <div class="aboutScreen">
     <Navbar_Component />
     <Breadcrumb_Component />
-<<<<<<< Updated upstream
-    <h1>About</h1>
     <div>
-      
-
-      
     </div>
-    <Footer_Component style="margin-left: 4px;"/>
-=======
     <div>
       <div class="content">
         <div class="line">
@@ -35,7 +28,7 @@
     </div>
     </div>
     <Footer_Component class="footer" style="margin-top: 200px;"/>
->>>>>>> Stashed changes
+
   </div>
 
 </template>
@@ -49,11 +42,7 @@ export default {
   components: {
     Navbar_Component,
     Breadcrumb_Component,
-<<<<<<< Updated upstream
-    Footer_Component
-=======
     Footer_Component,
->>>>>>> Stashed changes
   },
 };
 </script>

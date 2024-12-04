@@ -173,13 +173,7 @@ export default {
         id: 3,
         image: thirdArrival,
       },
-<<<<<<< Updated upstream
     ]);
-=======
-    ];
-
- 
->>>>>>> Stashed changes
 
     // Function to handle category selection
     const selectCategory = (category) => {
@@ -497,14 +491,10 @@ export default {
   background-color: #faf5ec;
  
 }
-<<<<<<< Updated upstream
 .arrivalImage {
   position: absolute;
   opacity: 0;
   transition: opacity 1s ease-in-out; /* Smooth fade-in */
 }
-=======
-
->>>>>>> Stashed changes
 
 </style>

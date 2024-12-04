@@ -7,11 +7,7 @@
       :transition="500"
       :autoplay="3000"
     >
-<<<<<<< Updated upstream
-      <slide v-for="(arrival, index) in arrivals" :key="arrival.id">
-=======
       <slide v-for="arrival in arrivals" :key="arrival.id">
->>>>>>> Stashed changes
         <div class="arrival-slide">
           <img
             :src="arrival.image"

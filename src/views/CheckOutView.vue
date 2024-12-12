@@ -8,6 +8,8 @@
     <div class="container">
       <div class="left">
       <Location_Component />
+      <br>
+      <PaymentMethod_Component />
       </div>
       <div class="right"></div>
     </div>
@@ -20,13 +22,15 @@ import Breadcrumb_Component from "@/components/Breadcrumb_Component.vue";
 import Navbar_Component from "@/components/Navbar_Component.vue";
 import Footer_Component from "@/components/Footer_Component.vue";
 import Location_Component from "@/components/Checkout/Location_Component.vue";
+import PaymentMethod_Component from "@/components/Checkout/PaymentMethod_Component.vue";
 export default {
   name: "CheckOutView",
   components: {
     Navbar_Component,
     Breadcrumb_Component,
     Footer_Component,
-    Location_Component
+    Location_Component,
+    PaymentMethod_Component,
   },
 };
 </script>

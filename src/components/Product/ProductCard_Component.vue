@@ -12,7 +12,7 @@
       </div>
 
       <div class="image">
-        <img :src="imageProduct" alt="" />
+        <img :src="'http://localhost:5173/'+ imageProduct" alt="" />
       </div>
     </div>
 
@@ -184,21 +184,6 @@ export default {
 </script>
 
 <style scoped>
-.discount {
-  width: 80%;
-  display: flex;
-  justify-content: start;
-  align-items: center;
-}
-.discount p {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 20%;
-  border-radius: 5px;
-  background-color: #665d5d;
-  color: #fffbfb;
-}
 .productCard {
   display: flex;
   flex-direction: column;
@@ -209,7 +194,9 @@ export default {
   background-color: #d9d6d6;
   border-radius: 10px;
 }
+
 .productImage {
+  position: relative; /* Ensures absolute children are positioned relative to this */
   display: flex;
   justify-content: center;
   flex-direction: column;
@@ -218,38 +205,60 @@ export default {
   height: 350px;
   border-top-right-radius: 10px;
   border-top-left-radius: 10px;
-  background-color: #d9d9d9;
+  background-color: #edebeb;
 }
-.wishlist {
+
+.discount {
+  position: absolute;
+  top: 10px;
+  right: 250px;
   display: flex;
-  justify-content: end;
   align-items: center;
-  width: 100%;
-  margin-right: 5%;
-  margin-top: 2%;
+  justify-content: center;
+  background-color: #665d5d;
+  color: #ffffff;
+  border-radius: 5px;
+  padding: 5px 8px;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.discount p {
+  margin: 0;
+  font-family: Arial, sans-serif;
+}
+
+.wishlist {
+  position: absolute;
+  top: 10px;
+  right: 10px;
 }
 
 .wishlist button {
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
   width: 40px;
   height: 40px;
   border: none;
-  background-color: #efebeb;
-  border-radius: 10px;
-  box-shadow: 0 5px 5px rgba(0, 0, 0, 0.1);
+  background-color: #f0f0f0;
+  border-radius: 50%;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.3s ease;
 }
 
 .wishlist button span {
   font-size: 20px;
-  font-weight: bold;
   color: #564949;
+}
+
+.wishlist button:hover {
+  background-color: #e0e0e0;
+  cursor: pointer;
 }
 
 .wishlist button span:hover {
   color: #fa3307;
-  cursor: pointer;
 }
 
 .image {
@@ -261,15 +270,18 @@ export default {
   object-fit: cover;
   object-position: center;
 }
+
 .image img {
-  width: 80%;
+  width: 90%;
   height: 80%;
+  transition: transform 0.5s ease;
 }
+
 .image img:hover {
   cursor: pointer;
   transform: scale(1.1);
-  transition: transform 0.5s;
 }
+
 .productName {
   display: flex;
   flex-direction: column;
@@ -277,23 +289,19 @@ export default {
   justify-content: start;
   width: 100%;
   height: 130px;
-  border-radius: 10px;
   margin-left: 5%;
 }
+
 .name p {
   font-size: 24px;
-  font-family: Quicksand, sans-serif;
   font-weight: bold;
   color: #564949;
 }
 
 .rating {
   display: flex;
-  flex-direction: row;
   align-items: center;
-  width: 100%;
-  margin-top: 2%;
-  gap: 2%;
+  gap: 5px;
 }
 
 .star {
@@ -304,44 +312,29 @@ export default {
   color: #ffc107;
 }
 
-.half::before {
-  content: "★";
-  color: #ffc107;
-  position: absolute;
-  width: 50%;
-  overflow: hidden;
-}
-
-.rating p {
-  font-size: 16px;
-  font-family: Quicksand, sans-serif;
-  font-weight: bold;
-  color: #564949;
-}
 .price p {
   font-size: 18px;
-  font-family: Quicksand, sans-serif;
   font-weight: bold;
   color: #9e9e9e;
 }
+
 .buttonAdd {
   display: flex;
   justify-content: end;
-  align-items: center;
   width: 95%;
-  margin-top: -5%;
 }
 
 .buttonAdd button {
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
   width: 90px;
   height: 40px;
   border: none;
   background-color: #a89e9e;
   border-radius: 10px;
   box-shadow: 0 5px 5px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease;
 }
 
 .buttonAdd button:hover {
@@ -353,8 +346,4 @@ export default {
   color: #3a3636;
 }
 
-.buttonAdd button span:hover {
-  transform: scale(1.1);
-  transition: transform 0.5s;
-}
 </style>

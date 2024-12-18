@@ -125,7 +125,8 @@
       <!-- Apply Filter and Clear All -->
       <div class="actions">
         <button class="apply" @click="applyFilter">Apply Filter</button>
-        <button class="clear" @click="clearFilter">Clear All</button>
+        <button class="clear" @click="$emit('clear-filters')">Clear All</button>
+
       </div>
     </div>
   </div>
@@ -145,9 +146,9 @@ export default {
       selectedTab: "Clothes",
       priceValue: 100,
       subCategories: {
-        Clothes: ["T-shirts", "Shorts", "Shirts", "Hoodie", "Jeans"],
-        Shoes: ["Sneakers", "Formal", "Boots", "Sandals", "Loafers"],
-        Accessories: ["Watches", "Bags", "Belts", "Hats", "Glasses"],
+        Clothes: ["T-shirts", "Pants", "Shirts", "Jacket", "Full Outfit"],
+        Shoes: ["Flats", "Formal", "Boots", "Sport Shoes", "Loafers"],
+        Accessories: ["Rings", "Necklaces", "Earring & Bow", "Glasses"],
       },
       colors: ["#A0BCE0", "#E07575", "#0FB763", "#9E9E9E", "#efebe9"],
       sizes: {

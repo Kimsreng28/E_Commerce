@@ -8,7 +8,7 @@
 
     <div class="filterProduct">
       <div class="select">
-        <Filter_Component @apply-filter="handleFilterChange" />
+        <Filter_Component @apply-filter="handleFilterChange" @clear-filters="resetFilters"/>
       </div>
       <div class="showProduct">
         <ProductCard_Component
@@ -57,6 +57,7 @@ import ProductCard_Component from "@/components/Product/ProductCard_Component.vu
 import { useProductStore } from "@/stores/useProductStore";
 import { computed, ref } from "vue";
 import { useRouter } from "vue-router";
+
 export default {
   name: "CategoryView",
   components: {
@@ -68,24 +69,29 @@ export default {
     Footer_Component,
   },
   setup() {
-    // Initialize the router
     const router = useRouter();
     const store = useProductStore();
-    const allProducts = ref(store.products); // Assuming products is an array of products in your store
-    const displayedCount = ref(6);
+
+    const allProducts = ref(store.products); // List of all products
+    const displayedCount = ref(6); // Number of products to display initially
     const searchQuery = ref("");
-    const filters = ref({
-      tab: "Clothes",
+
+    // Default filters
+    const defaultFilters = {
+      tab: "All", // "All" means no category filtering
       color: null,
       subCategory: null,
       size: null,
       price: 100,
-    });
+    };
 
+    const filters = ref({ ...defaultFilters });
+
+    // Compute filtered products based on current filters and search query
     const filteredProducts = computed(() => {
-      return store.products.filter((product) => {
+      return allProducts.value.filter((product) => {
         const matchesTab =
-          product.category === filters.value.tab || filters.value.tab === "All";
+          filters.value.tab === "All" || product.category === filters.value.tab;
         const matchesSubCategory =
           !filters.value.subCategory ||
           product.subCategory === filters.value.subCategory;
@@ -103,15 +109,6 @@ export default {
             .toLowerCase()
             .includes(searchQuery.value.toLowerCase());
 
-        console.log(`Checking product ${product.title}:`, {
-          matchesTab,
-          matchesSubCategory,
-          matchesColor,
-          matchesSize,
-          matchesPrice,
-          matchesSearch,
-        });
-
         return (
           matchesTab &&
           matchesSubCategory &&
@@ -123,33 +120,38 @@ export default {
       });
     });
 
-    const handleSearch = (query) => {
-      searchQuery.value = query;
-    };
-
-    // Handle Filter Change
-    const handleFilterChange = (newFilters) => {
-      filters.value = newFilters;
-    };
-
-    // Display products based on current filters and displayedCount
+    // Compute displayed products (slice to show limited number)
     const displayedProducts = computed(() => {
       return filteredProducts.value.slice(0, displayedCount.value);
     });
 
-    // Function to navigate to product detail by ID
+    // Handle filter changes
+    const handleFilterChange = (newFilters) => {
+      filters.value = { ...filters.value, ...newFilters };
+      displayedCount.value = 6; // Reset displayed products count
+    };
+
+    // Reset all filters and search query
+    const resetFilters = () => {
+      filters.value = { ...defaultFilters };
+      searchQuery.value = "";
+      displayedCount.value = 6; // Reset displayed products count
+    };
+
+    // Handle search input
+    const handleSearch = (query) => {
+      searchQuery.value = query;
+      displayedCount.value = 6; // Reset displayed products count
+    };
+
+    // Navigate to product detail page
     const goToProductDetail = (productId) => {
-      console.log("Navigating to product detail with ID:", productId);
       router.push({ name: "productDetail", params: { id: productId } });
     };
 
-    // Function to load more products
+    // Load more products
     const loadMoreProducts = () => {
-      const nextIndex = displayedCount.value + 3;
-      displayedProducts.value = allProducts.value.slice(0, nextIndex);
-      displayedCount.value = nextIndex;
-      console.log("Next index: ", nextIndex);
-      console.log("Displayed products: ", displayedProducts.value);
+      displayedCount.value = filteredProducts.value.length;
     };
 
     return {
@@ -158,6 +160,7 @@ export default {
       loadMoreProducts,
       handleSearch,
       handleFilterChange,
+      resetFilters,
     };
   },
 };
@@ -166,43 +169,60 @@ export default {
 <style scoped>
 .categoryScreen {
   width: 100%;
-  height: 100vh;
   margin-top: 2%;
   box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 h1 {
   padding: 2%;
   margin-left: 1%;
 }
+
 .filterProduct {
   width: 100%;
-  height: 100vh;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  justify-content: center;
+  margin-bottom: 2%;
 }
+
 .select {
   width: 30%;
-  height: 1021px;
   display: flex;
   flex-direction: column;
   margin-left: 2%;
 }
+
 .showProduct {
   width: 70%;
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 20px;
   margin-top: 2%;
 }
+
 .product-card {
   border: none;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   background-color: white;
   border-radius: 8px;
+  padding-bottom: 20px;
+  height: fit-content;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.product-card img {
+  width: 100%;
+  height: 100px; /* Fixed image height */
+  object-fit: cover; /* Prevents stretching */
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
 }
 
 .product-card:hover {
@@ -211,8 +231,13 @@ h1 {
 }
 
 .loadMore {
-  margin-left: 40%;
-  margin-top: 30%;
-  margin-bottom: 5%;
+  display: flex;
+  justify-content: center;
+  margin: 20px 0;
 }
+
+.footer {
+  margin-top: auto; /* Push footer to the bottom */
+}
+
 </style>

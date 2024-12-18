@@ -8,14 +8,14 @@
           <img
             v-for="img in imageDetails"
             :key="img"
-            :src="img"
+            :src=" 'http://localhost:5173/'+ img"
             alt=""
             @click="selectImage(img)"
             :class="{ selected: img === imageProduct }"
           />
         </div>
         <div class="mainImage">
-          <img :src="imageProduct" alt="" />
+          <img :src="'http://localhost:5173/'+ imageProduct" alt="" />
         </div>
       </div>
 
@@ -205,6 +205,7 @@ export default {
     const imageProduct = ref(props.imageProduct);
     const selectImage = (img) => {
       imageProduct.value = img;
+
     };
 
     const discountPrice = computed(() => {
@@ -348,8 +349,9 @@ export default {
   width: 80%;
   cursor: pointer;
   border-radius: 5px;
-  height: 80%;
+  height: 30%;
   object-fit: cover;
+  
 }
 .fourImages img.selected {
   border: 1px solid #4c4040;
@@ -370,9 +372,10 @@ export default {
   border-radius: 5px;
 }
 .mainImage img {
-  width: 80%;
-  height: 50%;
-  object-fit: cover;
+  width: 100%;
+  height: 80%;
+  max-height: 400px; /* Main image height */
+  object-fit: contain;
   object-position: center;
 }
 

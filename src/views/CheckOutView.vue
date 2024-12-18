@@ -6,7 +6,11 @@
     <h1 style="font-family: Saira, sans-serif">Check Out</h1>
 
     <div class="container">
-      <div class="left"></div>
+      <div class="left">
+      <Location_Component />
+      <br>
+      <PaymentMethod_Component />
+      </div>
       <div class="right"></div>
     </div>
     <Footer_Component style="margin-left: 4px;"/>
@@ -17,12 +21,16 @@
 import Breadcrumb_Component from "@/components/Breadcrumb_Component.vue";
 import Navbar_Component from "@/components/Navbar_Component.vue";
 import Footer_Component from "@/components/Footer_Component.vue";
+import Location_Component from "@/components/Checkout/Location_Component.vue";
+import PaymentMethod_Component from "@/components/Checkout/PaymentMethod_Component.vue";
 export default {
   name: "CheckOutView",
   components: {
     Navbar_Component,
     Breadcrumb_Component,
-    Footer_Component
+    Footer_Component,
+    Location_Component,
+    PaymentMethod_Component,
   },
 };
 </script>
@@ -43,8 +51,8 @@ h1 {
   height: 100%;
   display: flex;
   flex-direction: row;
-  justify-content: start;
-  align-items: center;
+  justify-content: center;
+  align-items: start;
   flex-grow: 1;
 }
 .left {
@@ -53,7 +61,8 @@ h1 {
   display: flex;
   flex-direction: column;
   justify-content: start;
-  align-items: center;
+  align-items: start;
+  margin-left: 5%;
 }
 
 .right {
@@ -63,4 +72,5 @@ h1 {
   justify-content: start;
   align-items: center;
 }
+
 </style>

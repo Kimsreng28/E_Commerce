@@ -481,17 +481,15 @@ export default {
 }
 
 .newArrivals {
-  width: 1440px;
   height: 763px;
   display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  gap: 2%;
   margin-top: 2%;
   position: relative;
   background-color: #faf5ec;
-  box-shadow: 0 5px 5px rgba(0, 0, 0, 0.1);
+ 
 }
 .arrivalImage {
   position: absolute;
@@ -499,7 +497,4 @@ export default {
   transition: opacity 1s ease-in-out; /* Smooth fade-in */
 }
 
-.arrivalImage.active {
-  opacity: 1;
-}
 </style>

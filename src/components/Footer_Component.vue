@@ -27,7 +27,7 @@
         <div class="column">
           <p class="title">Information</p>
           <ul>
-            <li>About</li>
+            <li @click="this.$router.push('/about')">About</li>
             <li>Product</li>
             <li>Blog</li>
           </ul>

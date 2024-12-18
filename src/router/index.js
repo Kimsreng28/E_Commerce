@@ -100,6 +100,7 @@ const router = createRouter({
         breadcrumb: "Coupon Service",
       },
     },
+<<<<<<< HEAD
     // {
     //   path: "/service",
     //   name: "Service",
@@ -108,6 +109,8 @@ const router = createRouter({
     //     breadcrumb: "Service",
     //   },
     // },
+=======
+>>>>>>> 2bed8f10156df8942715d12671c12276a1e8d607
   ],
 });
 

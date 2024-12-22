@@ -136,7 +136,7 @@ export default {
 
 .image {
   width: 20%;
-  height: 100%;
+  height: 150px;
   display: flex;
   justify-content: center;
   align-items: center;

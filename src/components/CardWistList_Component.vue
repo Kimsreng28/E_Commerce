@@ -206,7 +206,7 @@ export default {
 
 .image img {
   width: 90%;
-  height: 50%;
+  height: auto;
   margin-right: 10px;
 }
 

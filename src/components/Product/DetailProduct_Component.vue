@@ -349,7 +349,7 @@ export default {
 }
 .mainImage img {
   width: 80%;
-  height: 50%;
+  height: auto;
   object-fit: cover;
   object-position: center;
 }

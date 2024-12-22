@@ -151,4 +151,78 @@ export default {
   font-size: 16px;
   color: #ff9800;
 }
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+  .reviewContainer {
+    gap: 15px;
+  }
+
+  .reviewCard {
+    flex: 0 0 45%; /* Two cards per row */
+    height: auto;
+  }
+
+  .reviewImage {
+    height: 180px; /* Adjust image height for better fit */
+  }
+}
+
+@media (max-width: 768px) {
+  .reviewTitle {
+    font-size: 20px;
+    margin-left: 20px;
+  }
+
+  .reviewContainer {
+    gap: 10px;
+    padding: 10px;
+  }
+
+  .reviewCard {
+    flex: 0 0 90%; /* One card per row */
+    height: auto;
+  }
+
+  .reviewImage {
+    height: 150px; /* Reduce image height */
+  }
+
+  .productName {
+    font-size: 14px;
+  }
+
+  .rating {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .reviewTitle {
+    font-size: 18px;
+    margin-left: 10px;
+  }
+
+  .reviewContainer {
+    gap: 8px;
+    padding: 5px;
+  }
+
+  .reviewCard {
+    flex: 0 0 85%; /* One card per row with more margin */
+    height: auto;
+  }
+
+  .reviewImage {
+    height: 130px; /* Further reduce image height for mobile */
+  }
+
+  .productName {
+    font-size: 12px;
+  }
+
+  .rating {
+    font-size: 12px;
+  }
+}
 </style>

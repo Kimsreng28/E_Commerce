@@ -12,7 +12,7 @@
       </div>
 
       <div class="image">
-        <img :src="imageProduct" alt="" />
+        <img :src="'http://localhost:5173/' + imageProduct" alt="" />
       </div>
     </div>
 
@@ -204,8 +204,9 @@ export default {
   flex-direction: column;
   align-items: center;
   justify-content: start;
-  width: 322px;
-  height: 500px;
+  width: 100%;
+  max-width: 322px;
+  height: auto;
   background-color: #d9d6d6;
   border-radius: 10px;
 }
@@ -356,5 +357,49 @@ export default {
 .buttonAdd button span:hover {
   transform: scale(1.1);
   transition: transform 0.5s;
+}
+
+/* Media Queries for Responsiveness */
+@media (max-width: 768px) {
+  .productCard {
+    width: 100%;
+    max-width: 280px; /* Slightly smaller for tablets */
+  }
+
+  .image {
+    height: 250px; /* Reduce image height for smaller screens */
+  }
+
+  .name p {
+    font-size: 16px; /* Adjust font size for text */
+  }
+
+  .price p {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .productCard {
+    width: 100%;
+    max-width: 100%; /* Take full width for small screens */
+  }
+
+  .image {
+    height: 200px; /* Smaller height for mobile */
+  }
+
+  .name p {
+    font-size: 14px; /* Further adjust text size */
+  }
+
+  .price p {
+    font-size: 12px;
+  }
+
+  .buttonAdd button {
+    width: 80px;
+    height: 35px;
+  }
 }
 </style>

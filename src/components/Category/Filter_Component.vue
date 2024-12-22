@@ -88,25 +88,6 @@
         <hr />
       </div>
 
-      <!-- Colors -->
-      <div class="filter-section">
-        <p>Colors</p>
-        <div class="colors">
-          <div
-            v-for="(color, index) in colors"
-            :key="index"
-            class="color"
-            :class="{ selected: selectedColor === color }"
-            :style="{ backgroundColor: color }"
-            @click="selectColor(color)"
-          ></div>
-        </div>
-      </div>
-
-      <div class="hr">
-        <hr />
-      </div>
-
       <!--Size-->
       <div class="filter-section">
         <p>Size</p>
@@ -209,10 +190,12 @@ export default {
 
 <style scoped>
 .filter {
-  width: 326px;
+  width: 100%;
+  max-width: 326px;
   height: 1021px;
   display: flex;
   flex-direction: column;
+  padding: 1%;
 }
 .tabs {
   width: 100%;
@@ -410,5 +393,50 @@ export default {
   background-color: #e12323;
   transition: all 0.5s ease;
   color: #ffffff;
+}
+
+/* Media Queries for Tablets and Mobile */
+@media (max-width: 768px) {
+  .tabs button {
+    flex: 1 1 calc(50% - 10px); /* 2 per row for tablets */
+  }
+
+  .sizes button {
+    flex: 1 1 calc(33.33% - 10px); /* 3 per row on tablets */
+  }
+
+  .price-range,
+  .actions {
+    gap: 8px; /* Reduce gaps for tablets */
+  }
+}
+
+@media (max-width: 480px) {
+  .tabs {
+    gap: 2px; /* Reduce gaps for mobile */
+  }
+
+  .tabs button {
+    flex: 1 1 calc(100% - 10px); /* Stack buttons on mobile */
+    font-size: 10px; /* Reduce font size */
+    padding: 6px;
+  }
+
+  .filters {
+    padding: 10px; /* Reduce padding for mobile */
+    gap: 15px; /* Smaller gaps between sections */
+  }
+
+  .sizes button {
+    flex: 1 1 calc(50% - 5px); /* Stack 2 per row for mobile */
+    max-width: 60px; /* Limit button width */
+    font-size: 10px; /* Smaller font */
+  }
+
+  .apply,
+  .clear {
+    height: 35px; /* Shorter buttons */
+    font-size: 12px; /* Smaller font */
+  }
 }
 </style>

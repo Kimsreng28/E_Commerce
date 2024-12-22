@@ -8,14 +8,14 @@
           <img
             v-for="img in imageDetails"
             :key="img"
-            :src="img"
+            :src="'http://localhost:5173/' + img"
             alt=""
             @click="selectImage(img)"
             :class="{ selected: img === imageProduct }"
           />
         </div>
         <div class="mainImage">
-          <img :src="imageProduct" alt="" />
+          <img :src="'http://localhost:5173/' + imageProduct" alt="" />
         </div>
       </div>
 
@@ -59,7 +59,7 @@
           <p>{{ descriptionProduct }}</p>
         </div>
         <hr />
-        <div class="colorSelection">
+        <div class="colorSelection" v-if="colorProduct.length > 0">
           <p>Colors:</p>
           <div class="colorOptions">
             <span
@@ -118,16 +118,6 @@
               @click="handleAddToCart"
             />
           </div>
-          <div class="buyNow">
-            <Button_Component
-              name-button="Buy Now"
-              color-button="#FFFFFF"
-              background-color-button="#958383"
-              height-button="45px"
-              width-button="140px"
-              @click="handleGoToCheckOut"
-            />
-          </div>
         </div>
 
         <div class="tellAbout">
@@ -158,7 +148,6 @@
 
 <script>
 import { useCartStore } from "@/stores/useCartStore";
-import { useCheckOut } from "@/stores/useCheckOut";
 import { useWishlistStore } from "@/stores/useWishlistStore";
 import { computed, ref } from "vue";
 import { useRouter } from "vue-router";
@@ -187,7 +176,6 @@ export default {
     },
   },
   setup(props) {
-    const checkoutStore = useCheckOut();
     const cartStore = useCartStore();
     const wishlistStore = useWishlistStore();
     const router = useRouter();
@@ -207,6 +195,7 @@ export default {
       imageProduct.value = img;
     };
 
+    // discount price
     const discountPrice = computed(() => {
       return props.discountProduct ? `${props.discountProduct}` : "0%";
     });
@@ -231,7 +220,7 @@ export default {
       const productToAdd = {
         id: props.id,
         name: props.nameProduct,
-        price: props.priceProduct,
+        price: parseFloat(props.priceProduct),
         image: imageProduct.value,
         quantity: quantity.value,
         color: selectedColor.value,
@@ -251,7 +240,7 @@ export default {
         id: props.id,
         title: props.nameProduct,
         images: props.imageProduct,
-        price: props.priceProduct,
+        price: parseFloat(props.priceProduct),
         productDiscount: discountPrice.value,
         oldPrice: props.oldPrice,
         quantity: quantity.value,
@@ -263,27 +252,8 @@ export default {
       alert("Product added to wishlist!");
     };
 
-    // Handle Go To Check Out
-    const handleGoToCheckOut = () => {
-      const product = {
-        id: props.id,
-        title: props.nameProduct,
-        images: props.imageProduct,
-        price: props.priceProduct,
-        productDiscount: discountPrice.value,
-        oldPrice: props.oldPrice,
-        quantity: quantity.value,
-        color: selectedColor.value,
-        size: selectedSize.value,
-      };
-
-      checkoutStore.addToCart(product);
-      router.push("/checkout");
-    };
-
     return {
       handleAddToWishlist,
-      handleGoToCheckOut,
       handleAddToCart,
       incrementQuantity,
       decrementQuantity,
@@ -302,7 +272,8 @@ export default {
 
 <style scoped>
 .productDetailComponent {
-  width: 1440px;
+  width: 100%;
+  max-width: 1440px;
   height: 100vh;
   display: flex;
   flex-direction: column;
@@ -317,6 +288,12 @@ export default {
   padding: 1%;
   gap: 4%;
 }
+.addToCart {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
 
 .imagesOfProducts {
   width: 50%;
@@ -328,6 +305,7 @@ export default {
   padding: 1%;
   gap: 1%;
 }
+
 .fourImages {
   background-color: #e9e7e7;
   width: 30%;
@@ -345,10 +323,10 @@ export default {
 }
 .fourImages img {
   background-color: rgb(216, 216, 216);
-  width: 90%;
+  width: 80%;
   cursor: pointer;
   border-radius: 5px;
-  height: 90%;
+  height: 80%;
   object-fit: cover;
 }
 .fourImages img.selected {
@@ -681,5 +659,77 @@ export default {
   background-color: #958383;
   color: white;
   border-color: #958383;
+}
+
+@media (max-width: 768px) {
+  .productDetail {
+    gap: 15px;
+  }
+
+  .fourImages img {
+    max-height: 60px;
+  }
+
+  .price p {
+    font-size: 20px;
+  }
+
+  .description p {
+    font-size: 14px;
+  }
+
+  .colorOption,
+  .sizeOption {
+    width: 25px;
+    height: 25px;
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .productDetailComponent {
+    padding: 5px;
+  }
+
+  .productDetail {
+    gap: 10px;
+  }
+
+  .fourImages img {
+    max-height: 50px;
+  }
+
+  .name p {
+    font-size: 20px;
+  }
+
+  .price p {
+    font-size: 18px;
+  }
+
+  .description p {
+    font-size: 12px;
+  }
+
+  .colorOption,
+  .sizeOption {
+    width: 20px;
+    height: 20px;
+    font-size: 12px;
+  }
+
+  .wishlist button {
+    width: 30px;
+    height: 30px;
+  }
+
+  .buttonIncrementAndDecrement button {
+    width: 30px;
+    height: 30px;
+  }
+
+  .buttonIncrementAndDecrement .number p {
+    font-size: 16px;
+  }
 }
 </style>

@@ -182,6 +182,7 @@ input.error-border {
 .leftSide {
   display: flex;
   flex-direction: column;
+  justify-content: center;
   width: 50%;
   height: auto;
   background-color: #f9eded;
@@ -191,6 +192,7 @@ input.error-border {
 .rightSide {
   width: 50%;
   height: auto;
+  justify-content: center;
   background: linear-gradient(180deg, #57bdf3 0%, #41a0d3 100%);
   border-radius: 1%;
   box-shadow: 0 7px 5px rgba(0, 0, 0, 0.1);

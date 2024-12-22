@@ -2,62 +2,72 @@
   <div class="wishListPage">
     <Navbar_Component />
 
-    <Breadcrumb_Component />
+    <div v-if="isLoading" class="load">
+      <LoadingView />
+    </div>
 
-    <div class="title">
-      <p>Wish List</p>
+    <div v-else>
+      <Breadcrumb_Component />
+
+      <div class="title">
+        <p>Wish List</p>
+
+        <Button_Component
+          class="btnStyle"
+          name-button="Move All To Shop"
+          backgroundColor-button="#FFFFFF"
+          height-button="50px"
+          width-button="200px"
+          color-button="#958383"
+          @click="moveAllToShop"
+        />
+      </div>
+
+      <div class="showItemCount">
+        <p>Showing List: {{ wishlistItems.length }} Item(s)</p>
+        <div class="sortBy">
+          <label for="sort-options">Sort By:</label>
+          <select
+            id="sort-options"
+            v-model="selectedSort"
+            @change="sortWishlist"
+          >
+            <option value="date">Time</option>
+            <option value="priceAsc">PriceLTH</option>
+            <option value="priceDesc">PriceHTL</option>
+            <option value="name">Name</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="wishList" v-if="wishlistItems.length > 0">
+        <CardWistList_Component
+          class="cardWistList"
+          v-for="item in wishlistItems"
+          :key="item.id"
+          :id="item.id"
+          :imageWistList="item.images"
+          :discountProduct="item.productDiscount"
+          :productName="item.title"
+          :oldPrice="item.oldPrice"
+          :currentPrice="item.price"
+          :colorProduct="Array.isArray(item.color) ? item.color : [item.color]"
+          :sizeProduct="item.size"
+        />
+      </div>
 
       <Button_Component
-        class="btnStyle"
-        name-button="Move All To Shop"
-        backgroundColor-button="#FFFFFF"
+        class="view"
+        name-button="View All"
+        backgroundColor-button="#958383"
         height-button="50px"
         width-button="200px"
-        color-button="#958383"
-        @click="moveAllToShop"
+        color-button="#FFFFFF"
+        @click="goToCategoryProduct"
       />
+
+      <Footer_Component class="footer" />
     </div>
-
-    <div class="showItemCount">
-      <p>Showing List: {{ wishlistItems.length }} Item(s)</p>
-      <div class="sortBy">
-        <label for="sort-options">Sort By:</label>
-        <select id="sort-options" v-model="selectedSort" @change="sortWishlist">
-          <option value="date">Time</option>
-          <option value="priceAsc">PriceLTH</option>
-          <option value="priceDesc">PriceHTL</option>
-          <option value="name">Name</option>
-        </select>
-      </div>
-    </div>
-
-    <div class="wishList" v-if="wishlistItems.length > 0">
-      <CardWistList_Component
-        class="cardWistList"
-        v-for="item in wishlistItems"
-        :key="item.id"
-        :id="item.id"
-        :imageWistList="item.images"
-        :discountProduct="item.productDiscount"
-        :productName="item.title"
-        :oldPrice="item.oldPrice"
-        :currentPrice="item.price"
-        :colorProduct="Array.isArray(item.color) ? item.color : [item.color]"
-        :sizeProduct="item.size"
-      />
-    </div>
-
-    <Button_Component
-      class="view"
-      name-button="View All"
-      backgroundColor-button="#958383"
-      height-button="50px"
-      width-button="200px"
-      color-button="#FFFFFF"
-      @click="goToCategoryProduct"
-    />
-
-    <Footer_Component class="footer" />
   </div>
 </template>
 
@@ -68,8 +78,9 @@ import CardWistList_Component from "@/components/CardWistList_Component.vue";
 import Footer_Component from "@/components/Footer_Component.vue";
 import Navbar_Component from "@/components/Navbar_Component.vue";
 import { useWishlistStore } from "@/stores/useWishlistStore";
-import { computed, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
+import LoadingView from "./LoadingView.vue";
 
 export default {
   name: "WishListView",
@@ -78,9 +89,16 @@ export default {
     Footer_Component,
     Breadcrumb_Component,
     Button_Component,
+    LoadingView,
     CardWistList_Component,
   },
   setup() {
+    const isLoading = ref(true);
+    onMounted(() => {
+      setTimeout(() => {
+        isLoading.value = false; // Set loading to false after 3 seconds
+      }, 1000);
+    });
     const wishlistStore = useWishlistStore();
     const router = useRouter();
 
@@ -110,6 +128,7 @@ export default {
       sortWishlist,
       selectedSort,
       goToCategoryProduct,
+      isLoading,
     };
   },
   methods: {
@@ -124,9 +143,15 @@ export default {
 </script>
 
 <style scoped>
+.load {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
 .wishListPage {
   width: 100%;
-  height: 100vh;
+  height: auto;
   margin-top: 2%;
   box-sizing: border-box;
   display: flex;
@@ -221,5 +246,59 @@ export default {
 }
 .view {
   margin-top: 5%;
+}
+/* Responsive Styles */
+@media (max-width: 1024px) {
+  .cardWistList {
+    flex: 1 1 calc(50% - 2%); /* Two items per row */
+  }
+}
+
+@media (max-width: 768px) {
+  .cardWistList {
+    flex: 1 1 100%; /* One item per row */
+  }
+
+  .title p {
+    font-size: 24px; /* Adjust title size */
+  }
+
+  .showItemCount p {
+    font-size: 14px; /* Adjust text size */
+  }
+
+  .sortBy select {
+    width: 70px; /* Adjust dropdown width */
+  }
+
+  .btnStyle {
+    width: 150px; /* Adjust button width */
+    height: 40px; /* Adjust button height */
+  }
+}
+
+@media (max-width: 480px) {
+  .title p {
+    font-size: 20px; /* Adjust title size */
+  }
+
+  .showItemCount p {
+    font-size: 12px; /* Adjust text size */
+  }
+
+  .sortBy label,
+  .sortBy select {
+    font-size: 12px; /* Adjust dropdown font size */
+  }
+
+  .btnStyle {
+    width: 100%; /* Full width button */
+    height: 40px;
+  }
+
+  .view {
+    width: 100%; /* Full width button */
+    height: 40px;
+  }
 }
 </style>

@@ -2,20 +2,24 @@ import { defineStore } from "pinia";
 
 export const useCheckOut = defineStore("checkOut", {
   state: () => ({
-    checkOut: JSON.parse(localStorage.getItem("checkOut")) || [],
+    checkOut: JSON.parse(localStorage.getItem("checkOut")) || [], // Ensure the key matches the one used in localStorage
   }),
 
   actions: {
-    addToCart(product) {
+    addToCheckOut(product) {
       this.checkOut.push(product);
+
       this.saveToLocalStorage();
     },
-    removeFromCart(productId) {
-      this.checkOut = this.checkOut.filter((item) => item.id !== productId);
-      this.saveToLocalStorage();
-    },
-    clearCart() {
+
+    clearCheckOut() {
       this.checkOut = [];
+
+      this.saveToLocalStorage();
+    },
+
+    deleteItem(id) {
+      this.checkOut = this.checkOut.filter((item) => item.id !== id);
       this.saveToLocalStorage();
     },
 
@@ -28,29 +32,7 @@ export const useCheckOut = defineStore("checkOut", {
     },
 
     saveToLocalStorage() {
-      localStorage.setItem("cart", JSON.stringify(this.checkOut));
-    },
-  },
-
-  getters: {
-    getCheckOut: (state) => state.checkOut,
-
-    getSubtotal: (state) => {
-      return state.checkOut.reduce(
-        (total, item) => total + item.price * item.quantity,
-        0
-      );
-    },
-
-    getDiscount: (state) => {
-      return state.checkOut.reduce((totalDiscount, product) => {
-        if (product.discount) {
-          const itemDiscount =
-            (product.discount / 100) * product.price * product.quantity;
-          return totalDiscount + itemDiscount;
-        }
-        return totalDiscount;
-      }, 0);
+      localStorage.setItem("checkOut", JSON.stringify(this.checkOut)); // Use the same key as in state
     },
   },
 });

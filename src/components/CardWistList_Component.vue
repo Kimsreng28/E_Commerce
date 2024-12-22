@@ -82,6 +82,7 @@ export default {
         : "#A0BCE0"; // Default color
     });
 
+    // Default size
     const selectedSize = computed(() => {
       return props.sizeProduct && props.sizeProduct.length > 0
         ? props.sizeProduct[0]
@@ -291,5 +292,87 @@ export default {
 /* Adjust layout when old price is hidden */
 .cardName .price .currentPrice {
   margin-left: 60%;
+}
+/* Responsive Styles */
+@media (max-width: 1024px) {
+  .cardWistList {
+    width: 280px;
+    height: auto;
+    padding: 10px;
+  }
+
+  .name p {
+    font-size: 16px;
+  }
+
+  .price .oldPrice p,
+  .price .currentPrice p {
+    font-size: 14px;
+  }
+
+  .image img {
+    width: 80%;
+    height: auto;
+  }
+}
+
+@media (max-width: 768px) {
+  .cardWistList {
+    width: 90%;
+    height: auto;
+  }
+
+  .name p {
+    font-size: 14px;
+  }
+
+  .price .oldPrice p,
+  .price .currentPrice p {
+    font-size: 12px;
+  }
+
+  .image img {
+    width: 70%;
+    height: auto;
+  }
+
+  .delete p {
+    font-size: 10px;
+  }
+
+  .delete button {
+    width: 25px;
+    height: 25px;
+  }
+}
+
+@media (max-width: 480px) {
+  .cardWistList {
+    width: 100%;
+    height: auto;
+  }
+
+  .name p {
+    font-size: 12px;
+  }
+
+  .price .oldPrice p,
+  .price .currentPrice p {
+    font-size: 10px;
+  }
+
+  .image img {
+    width: 60%;
+    height: auto;
+  }
+
+  .delete p {
+    font-size: 8px;
+  }
+
+  .delete button {
+    width: 20px;
+    height: 20px;
+  }
 }
 </style>

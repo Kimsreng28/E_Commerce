@@ -1,15 +1,83 @@
 <template>
   <div class="homeScreen">
     <!-- NAVBAR -->
-    <Navbar_Component />
+    <div v-if="isLoading" class="load">
+      <LoadingView />
+    </div>
 
-    <!-- Show Case -->
-    <div class="showCase">
-      <div class="title">
-        <p>SHOW OUR NEW COLLECTION NOW!</p>
+    <div v-else>
+      <Navbar_Component />
+      <!-- Show Case -->
+      <div class="showCase">
+        <div class="title">
+          <p>SHOW OUR NEW COLLECTION NOW!</p>
+          <Button_Component
+            class="btnCase"
+            name-button="Shop Now"
+            color-button="#FFFFFF"
+            background-color-button="#958383"
+            height-button="50px"
+            width-button="200px"
+            icon="shopping_cart"
+            @click="this.$router.push('/category')"
+          />
+        </div>
+        <div class="imgOne">
+          <img src="../assets/images/Home/model.png" alt="" />
+        </div>
+        <div class="imgTwo">
+          <img src="../assets/images/Home/showStyle.png" alt="" />
+        </div>
+      </div>
+
+      <!-- Feature Title -->
+      <div class="titleFeature">
+        <p>New Arrival</p>
+        <div class="newArrivals">
+          <Arrivals_Component :arrivals="arrivalsData" />
+        </div>
+      </div>
+
+      <!-- Feature Title -->
+      <div class="titleFeature">
+        <p>Explore Popular Categories</p>
+        <div class="categories">
+          <CardCategory_Component
+            v-for="category in filteredCategories"
+            :key="category.id"
+            :image-category="category.images"
+            :name-category="category.title"
+            :color-name="category.color"
+            :class="{ selectedCategory: category.title === selectedCategory }"
+            @click="handleCategorySelection(category)"
+          />
+        </div>
+        <div v-if="isProductLoading" class="productLoading">
+          <LoadingView />
+        </div>
+        <div v-else class="products">
+          <ProductCard_Component
+            class="productCard"
+            v-for="product in filteredProducts"
+            :id="product.id"
+            :key="product.id"
+            :name-product="product.title"
+            :image-product="product.image"
+            :rating-product="product.rating"
+            :price-product="product.price"
+            :size-product="product.size"
+            :color-product="product.color"
+            :stock-product="product.stock"
+            :description-product="product.description"
+            :discount-product="product.discount"
+            :image-details="product.imageDetails"
+            :old-price="product.oldPrice"
+            @click="goToProductDetail(product.id)"
+          />
+        </div>
         <Button_Component
-          class="btnCase"
-          name-button="Shop Now"
+          class="btnLoad"
+          name-button="View More"
           color-button="#FFFFFF"
           background-color-button="#958383"
           height-button="50px"
@@ -18,107 +86,52 @@
           @click="this.$router.push('/category')"
         />
       </div>
-      <div class="imgOne">
-        <img src="../assets/images/Home/model.png" alt="" />
-      </div>
-      <div class="imgTwo">
-        <img src="../assets/images/Home/showStyle.png" alt="" />
-      </div>
-    </div>
 
-    <!-- Feature Title -->
-    <div class="titleFeature">
-      <p>New Arrival</p>
-      <div class="newArrivals">
-        <Arrivals_Component :arrivals="arrivalsData" />
-      </div>
-    </div>
-
-    <!-- Feature Title -->
-    <div class="titleFeature">
-      <p>Explore Popular Categories</p>
-      <div class="categories">
-        <CardCategory_Component
-          v-for="category in filteredCategories"
-          :key="category.id"
-          :image-category="category.images"
-          :name-category="category.title"
-          :class="{ selectedCategory: category.title === selectedCategory }"
-          @click="selectCategory(category)"
-        />
-      </div>
-      <div class="products">
-        <ProductCard_Component
-          class="productCard"
-          v-for="product in filteredProducts"
-          :id="product.id"
-          :key="product.id"
-          :name-product="product.title"
-          :image-product="product.image"
-          :rating-product="product.rating"
-          :price-product="product.price"
-          :size-product="product.size"
-          :color-product="product.color"
-          :stock-product="product.stock"
-          :description-product="product.description"
-          :discount-product="product.discount"
-          :image-details="product.imageDetails"
-          :old-price="product.oldPrice"
-          @click="goToProductDetail(product.id)"
-        />
-      </div>
-      <Button_Component
-        class="btnLoad"
-        name-button="View More"
-        color-button="#FFFFFF"
-        background-color-button="#958383"
-        height-button="50px"
-        width-button="200px"
-        icon="shopping_cart"
-        @click="this.$router.push('/category')"
-      />
-    </div>
-
-    <!-- Service Feature -->
-    <div class="container">
-      <div
-        class="serviceFeature"
-        id="draggableContainer"
-        @mousedown="startDragging"
-        @mousemove="onDrag"
-        @mouseup="stopDragging"
-        @mouseleave="stopDragging"
-        @touchstart="startDragging"
-        @touchmove="onDrag"
-        @touchend="stopDragging"
-      >
-        <div class="titleService">
-          <p class="main">Trying The Best Experience</p>
-          <p class="description">
-            Easiest way to buy the new collections of clothes
-          </p>
-        </div>
-        <div class="cardFeature">
-          <CardFuture_Component
-            v-for="cardFuture in cardFutures"
-            :key="cardFuture.id"
-            :title-card="cardFuture.title"
-            :description-card="cardFuture.description"
-            :image-card="cardFuture.image"
-            :color-card="cardFuture.color"
-            :width-card="cardFuture.width"
-            :height-card="cardFuture.height"
-            :cardId="cardFuture.id"
-          />
+      <!-- Service Feature -->
+      <div class="container">
+        <div
+          class="serviceFeature"
+          id="draggableContainer"
+          @mousedown="startDragging"
+          @mousemove="onDrag"
+          @mouseup="stopDragging"
+          @mouseleave="stopDragging"
+          @touchstart="startDragging"
+          @touchmove="onDrag"
+          @touchend="stopDragging"
+        >
+          <div class="titleService">
+            <p class="main">Trying The Best Experience</p>
+            <p class="description">
+              Easiest way to buy the new collections of clothes
+            </p>
+          </div>
+          <div class="cardFeature">
+            <CardFuture_Component
+              v-for="cardFuture in cardFutures"
+              :key="cardFuture.id"
+              :title-card="cardFuture.title"
+              :description-card="cardFuture.description"
+              :image-card="cardFuture.image"
+              :color-card="cardFuture.color"
+              :width-card="cardFuture.width"
+              :height-card="cardFuture.height"
+              :cardId="cardFuture.id"
+            />
+          </div>
         </div>
       </div>
+
+      <!-- Comments -->
+      <div>
+        <ReviewHistory_Component class="reviewHistory" />
+      </div>
+
+      <!-- Footer -->
+      <div>
+        <Footer_Component />
+      </div>
     </div>
-
-    <!-- Comments -->
-    <ReviewHistory_Component class="reviewHistory" />
-
-    <!-- Footer -->
-    <Footer_Component />
   </div>
 </template>
 
@@ -133,13 +146,14 @@ import ProductCard_Component from "@/components/Product/ProductCard_Component.vu
 import ReviewHistory_Component from "@/components/ReviewHistory_Component.vue";
 import { useCategoryStore } from "@/stores/useCategoryStore";
 import { useProductStore } from "@/stores/useProductStore";
-import { computed, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
 import thirdArrival from "../assets/images/Arrivals/1st.jpg";
 import oneArrival from "../assets/images/Arrivals/2nd.jpg";
 import twoArrival from "../assets/images/Arrivals/3nd.jpg";
 import Service from "../assets/images/CardFuture/customer-service.png";
 import Coupon from "../assets/images/CardFuture/voucher.png";
+import LoadingView from "./LoadingView.vue";
 
 export default {
   name: "HomeView",
@@ -152,11 +166,21 @@ export default {
     Footer_Component,
     Arrivals_Component,
     ReviewHistory_Component,
+    LoadingView,
   },
   setup() {
+    const isLoading = ref(true);
+    const isProductLoading = ref(false);
+
+    onMounted(() => {
+      setTimeout(() => {
+        isLoading.value = false; // Set loading to false after 3 seconds
+      }, 1000);
+    });
     // Initialize the router
     const router = useRouter();
     const store = useProductStore();
+
     // Reactive state for selected category
     const selectedCategory = ref("Clothes");
 
@@ -175,10 +199,21 @@ export default {
       },
     ]);
 
-    // Function to handle category selection
-    const selectCategory = (category) => {
-      selectedCategory.value = category.title; // Set selected category title
-      console.log("Selected category:", category); // Debugging
+    const loadProducts = async (category) => {
+      isProductLoading.value = true; // Show loading spinner
+      selectedCategory.value = category.title;
+      await new Promise((resolve) => setTimeout(resolve, 1000)); // Simulate API call delay
+      filteredProducts.value = store
+        .getProductByCategory(category.title)
+        .slice(0, 4);
+      isProductLoading.value = false; // Hide loading spinner
+    };
+
+    // Category selection handler
+    const handleCategorySelection = async (category) => {
+      console.log("Selected category:", category.title);
+      selectedCategory.value = category.title; // Update selected category
+      await loadProducts(category); // Fetch products for the category
     };
 
     // Function to navigate to product detail by ID
@@ -262,19 +297,39 @@ export default {
       filteredProducts,
       filteredCategories,
       goToProductDetail,
-      selectCategory,
+
+      selectedCategory,
       arrivalsData,
       cardFutures,
 
       startDragging,
       onDrag,
       stopDragging,
+
+      isLoading,
+      isProductLoading,
+      handleCategorySelection,
     };
   },
 };
 </script>
 
 <style scoped>
+.productLoading {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 5%;
+  margin-left: 2%;
+}
+.load {
+  width: 1440px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
 .productCard {
   border: none;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
@@ -288,7 +343,7 @@ export default {
 }
 .selectedCategory {
   background-color: #4c4040;
-  color: white;
+  color: #fff;
   transition: all 0.3s ease-in-out;
 }
 .homeScreen {
@@ -414,8 +469,11 @@ export default {
 }
 
 .container {
-  width: 1400px;
-  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 1515px;
+  height: auto;
 }
 
 .serviceFeature {
@@ -481,17 +539,14 @@ export default {
 }
 
 .newArrivals {
-  width: 1440px;
   height: 763px;
   display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  gap: 2%;
   margin-top: 2%;
   position: relative;
   background-color: #faf5ec;
-  box-shadow: 0 5px 5px rgba(0, 0, 0, 0.1);
 }
 .arrivalImage {
   position: absolute;
@@ -499,7 +554,99 @@ export default {
   transition: opacity 1s ease-in-out; /* Smooth fade-in */
 }
 
-.arrivalImage.active {
-  opacity: 1;
+/* Media Queries for Responsiveness */
+@media (max-width: 1200px) {
+  .showCase {
+    flex-direction: column;
+    height: auto;
+  }
+  .title {
+    font-size: 20px;
+  }
+  .btnCase {
+    width: 100%;
+  }
+  .imgOne,
+  .imgTwo {
+    width: 90%;
+    margin-left: 0;
+    margin-top: 2%;
+  }
+  .productCard {
+    width: 100%;
+  }
+  .categories,
+  .products {
+    flex-direction: column;
+    width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .homeScreen {
+    padding: 0 10px;
+  }
+  .showCase {
+    flex-direction: column;
+    height: auto;
+  }
+  .title p {
+    font-size: 22px;
+  }
+  .btnCase {
+    width: 100%;
+  }
+  .imgOne,
+  .imgTwo {
+    width: 100%;
+    height: 250px;
+  }
+  .newArrivals {
+    flex-direction: column;
+    width: 100%;
+    height: auto;
+  }
+  .cardFeature {
+    flex-direction: column;
+    min-width: 100%;
+  }
+  .serviceFeature {
+    flex-direction: column;
+    height: auto;
+    gap: 10px;
+  }
+  .titleService {
+    width: 100%;
+    margin-bottom: 15px;
+  }
+  .titleService .main {
+    font-size: 18px;
+  }
+  .titleService .description {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .title p {
+    font-size: 18px;
+  }
+  .showCase {
+    flex-direction: column;
+    height: auto;
+  }
+  .btnCase {
+    width: 100%;
+  }
+  .imgOne,
+  .imgTwo {
+    width: 100%;
+    height: 200px;
+  }
+  .categories,
+  .products {
+    flex-direction: column;
+    width: 100%;
+  }
 }
 </style>

@@ -90,4 +90,44 @@ export default {
 .breadcrumb li:last-child::after {
   content: "";
 }
+
+/* Media Queries for Responsive Design */
+@media (max-width: 768px) {
+  .breadcrumb ul {
+    justify-content: center; /* Center align breadcrumbs on tablets */
+    font-size: 14px;
+  }
+
+  .breadcrumb li {
+    font-size: 14px;
+  }
+
+  .breadcrumb-link {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .breadcrumb {
+    padding: 8px 10px;
+  }
+
+  .breadcrumb ul {
+    justify-content: start; /* Align breadcrumbs to the left on smaller screens */
+    font-size: 12px;
+    gap: 3px;
+  }
+
+  .breadcrumb li {
+    font-size: 12px;
+  }
+
+  .breadcrumb-link {
+    font-size: 12px;
+  }
+
+  .breadcrumb li::after {
+    margin: 0 3px; /* Smaller spacing for the separator */
+  }
+}
 </style>

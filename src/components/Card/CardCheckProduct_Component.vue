@@ -12,7 +12,7 @@
         <div class="size">
           <p>Size: {{ sizeProduct }}</p>
         </div>
-        <div class="color">
+        <div class="color" v-if="color">
           <p>Color:</p>
           <div
             class="colorDisplay"
@@ -51,6 +51,7 @@
 
 <script>
 import { useCartStore } from "@/stores/useCartStore";
+import { useCheckOut } from "@/stores/useCheckOut";
 import { computed, ref } from "vue";
 export default {
   name: "CardCheckProduct_Component",
@@ -65,10 +66,16 @@ export default {
       type: Number,
       default: 1,
     },
+    fromCheckout: {
+      type: Boolean,
+      default: false,
+    },
   },
 
   setup(props) {
     const cartStore = useCartStore();
+    const checkoutStore = useCheckOut();
+
     const quantity = ref(props.quantity);
 
     const totalPrice = computed(() => props.priceProduct * quantity.value);
@@ -76,17 +83,23 @@ export default {
     const incrementQuantity = () => {
       quantity.value += 1;
       cartStore.updateQuantity(props.id, quantity.value);
+      checkoutStore.updateQuantity(props.id, quantity.value);
     };
 
     const decrementQuantity = () => {
       if (quantity.value > 1) {
         quantity.value -= 1;
         cartStore.updateQuantity(props.id, quantity.value);
+        checkoutStore.updateQuantity(props.id, quantity.value);
       }
     };
 
     const deleteItem = () => {
-      cartStore.removeFromCart(props.id);
+      if (props.fromCheckout) {
+        checkoutStore.deleteItem(props.id);
+      } else {
+        cartStore.deleteItem(props.id);
+      }
     };
 
     return {
@@ -156,7 +169,7 @@ export default {
   margin-top: 2%;
   margin-left: 5%;
   width: 40%;
-  height: 100%;
+  height: auto;
   display: flex;
   flex-direction: column;
   justify-content: start;
@@ -169,6 +182,7 @@ export default {
   display: flex;
   justify-content: start;
   align-items: center;
+  margin-bottom: 3%;
 }
 .name p {
   color: #000000;
@@ -184,6 +198,7 @@ export default {
   justify-content: start;
   align-items: center;
   margin-top: 2%;
+  margin-bottom: 3%;
 }
 .size p {
   color: #000000;
@@ -217,7 +232,7 @@ export default {
   margin-top: 2%;
 }
 .price p {
-  color: #000000;
+  color: #2fab16;
   font-family: Quicksand, sans-serif;
   font-weight: bold;
   font-size: 16px;
@@ -305,5 +320,75 @@ export default {
   color: #000000;
   font-weight: bold;
   font-size: 16px;
+}
+
+/* Media Queries for Responsiveness */
+@media (max-width: 768px) {
+  .cartCheck {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .image {
+    width: 100%;
+    margin: 0 auto;
+  }
+
+  .detail {
+    width: 100%;
+    flex-direction: column;
+  }
+
+  .set {
+    margin-left: 0;
+    align-items: flex-start;
+  }
+
+  .quantity {
+    width: 100%;
+    justify-content: flex-start;
+    align-items: flex-start;
+  }
+
+  .quantityProduct {
+    width: 100%;
+    margin-top: 2%;
+  }
+
+  .delete button span {
+    font-size: 14px;
+  }
+
+  .name p,
+  .size p,
+  .color p,
+  .price p {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .cartCheck {
+    padding: 3%;
+  }
+
+  .name p {
+    font-size: 14px;
+  }
+
+  .size p,
+  .color p,
+  .price p {
+    font-size: 12px;
+  }
+
+  .quantityProduct {
+    width: 100%;
+    margin-top: 5%;
+  }
+
+  .buttonIncrementAndDecrement button span {
+    font-size: 12px;
+  }
 }
 </style>

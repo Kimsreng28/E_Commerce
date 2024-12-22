@@ -75,7 +75,8 @@ export default {
 
 <style scoped>
 .cardDiscount {
-  width: 1309px;
+  width: 100%;
+  max-width: 1309px;
   height: 440px;
   display: flex;
   justify-content: space-around;
@@ -200,5 +201,101 @@ export default {
   font-size: 18px;
   color: #333;
   font-family: Quicksand, sans-serif;
+}
+/* Responsive Styles */
+@media (max-width: 1024px) {
+  .cardDiscount {
+    width: 90%;
+    height: auto;
+    flex-direction: column;
+    padding: 20px;
+  }
+
+  .saveUp h1,
+  .saveDown h1 {
+    font-size: 60px;
+  }
+
+  .discountTitle .dis {
+    font-size: 60px;
+  }
+
+  .discountTitle .off {
+    font-size: 30px;
+  }
+
+  .discountTitle .pro {
+    font-size: 40px;
+  }
+
+  .button-get button {
+    width: 180px;
+    height: 60px;
+    font-size: 20px;
+  }
+}
+
+@media (max-width: 768px) {
+  .cardDiscount {
+    width: 100%;
+    height: auto;
+    flex-direction: column;
+    padding: 15px;
+  }
+
+  .saveUp h1,
+  .saveDown h1 {
+    font-size: 50px;
+  }
+
+  .discountTitle .dis {
+    font-size: 50px;
+  }
+
+  .discountTitle .off {
+    font-size: 28px;
+  }
+
+  .discountTitle .pro {
+    font-size: 36px;
+  }
+
+  .button-get button {
+    width: 160px;
+    height: 50px;
+    font-size: 18px;
+  }
+}
+
+@media (max-width: 480px) {
+  .cardDiscount {
+    width: 100%;
+    height: auto;
+    flex-direction: column;
+    padding: 10px;
+  }
+
+  .saveUp h1,
+  .saveDown h1 {
+    font-size: 40px;
+  }
+
+  .discountTitle .dis {
+    font-size: 40px;
+  }
+
+  .discountTitle .off {
+    font-size: 24px;
+  }
+
+  .discountTitle .pro {
+    font-size: 30px;
+  }
+
+  .button-get button {
+    width: 140px;
+    height: 45px;
+    font-size: 16px;
+  }
 }
 </style>

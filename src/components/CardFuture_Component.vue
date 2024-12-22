@@ -132,4 +132,85 @@ export default {
   justify-content: center;
   align-items: center;
 }
+/* Responsive Styles */
+@media (max-width: 1024px) {
+  .cardFuture {
+    width: 90%;
+    height: auto;
+    padding: 15px;
+  }
+
+  .titleCard p {
+    font-size: 26px;
+  }
+
+  .descriptionCard p {
+    font-size: 16px;
+  }
+
+  .imageCard img {
+    width: 70px;
+    height: 70px;
+  }
+
+  .imageCard button {
+    width: 140px;
+    height: 45px;
+    font-size: 18px;
+  }
+}
+
+@media (max-width: 768px) {
+  .cardFuture {
+    width: 100%;
+    height: auto;
+    padding: 10px;
+  }
+
+  .titleCard p {
+    font-size: 22px;
+  }
+
+  .descriptionCard p {
+    font-size: 14px;
+  }
+
+  .imageCard img {
+    width: 60px;
+    height: 60px;
+  }
+
+  .imageCard button {
+    width: 130px;
+    height: 40px;
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .cardFuture {
+    width: 100%;
+    height: auto;
+    padding: 10px;
+  }
+
+  .titleCard p {
+    font-size: 20px;
+  }
+
+  .descriptionCard p {
+    font-size: 12px;
+  }
+
+  .imageCard img {
+    width: 50px;
+    height: 50px;
+  }
+
+  .imageCard button {
+    width: 120px;
+    height: 35px;
+    font-size: 14px;
+  }
+}
 </style>

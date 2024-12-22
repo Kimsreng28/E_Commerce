@@ -21,9 +21,12 @@
         @input="emitSearch"
         v-model="searchQuery"
       />
+      <span class="material-icons">shopping_cart</span>
     </div>
 
     <div class="cart">
+      <!-- Deployment History -->
+
       <!-- Cart -->
       <span class="material-icons" id="cart" @click="this.$router.push('/cart')"
         >shopping_cart</span
@@ -41,6 +44,14 @@
         >favorite</span
       ><span v-if="wishlistCount > 0" class="wishlist-count"
         ><p>{{ wishlistCount }}</p></span
+      >
+
+      <!-- Order History -->
+      <span
+        class="material-icons"
+        id="order_history"
+        @click="$router.push('/order')"
+        >history</span
       >
 
       <!-- Account -->
@@ -82,6 +93,7 @@ export default {
     const profileImage = ref(null);
     const searchQuery = ref("");
 
+    // function for control account
     const handleAccountClick = () => {
       if (authStore.isLoggedIn) {
         router.push("/profile");
@@ -90,10 +102,12 @@ export default {
       }
     };
 
+    // function for emit search event when user types
     const emitSearch = () => {
       props.onSearch(searchQuery.value);
     };
 
+    // load profile image from local storage when component mounts
     onMounted(() => {
       const storedImage = localStorage.getItem("profileImage");
       if (storedImage) {
@@ -128,7 +142,7 @@ export default {
 
 <style scoped>
 .navBar {
-  width: 1440px;
+  width: 1519px;
   height: 10vh;
   display: flex;
   align-items: center;
@@ -205,7 +219,6 @@ export default {
 .cart {
   display: flex;
   align-items: center;
-
   gap: 1rem;
   cursor: pointer;
   border-radius: 5px;
@@ -289,5 +302,68 @@ export default {
 
 .material-icons {
   cursor: pointer;
+}
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+  .navBar {
+    padding: 2% 1rem;
+  }
+
+  .contents {
+    gap: 1rem;
+  }
+
+  .search {
+    width: 200px;
+  }
+
+  .cart,
+  .contents {
+    gap: 0.5rem;
+  }
+
+  .cart span,
+  .material-icons {
+    font-size: 20px;
+  }
+}
+
+@media (max-width: 768px) {
+  .navBar {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: auto;
+    padding: 1rem;
+  }
+
+  .imgLogo img {
+    height: 30px;
+  }
+
+  .contents {
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+
+  .contents p {
+    font-size: 16px;
+  }
+
+  .search {
+    width: 80%;
+    margin-top: 1rem;
+  }
+
+  .cart {
+    margin-top: 1rem;
+  }
+
+  .profile-image img {
+    width: 25px;
+    height: 25px;
+  }
 }
 </style>

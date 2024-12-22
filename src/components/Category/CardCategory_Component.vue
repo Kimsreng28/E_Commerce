@@ -4,7 +4,7 @@
       <img :src="imageCategory" alt="" />
     </div>
     <div class="categoryName">
-      <p>{{ nameCategory }}</p>
+      <p :style="{ color: colorName }">{{ nameCategory }}</p>
     </div>
   </div>
 </template>
@@ -15,14 +15,16 @@ export default {
   props: {
     imageCategory: String,
     nameCategory: String,
+    colorName: String,
   },
 };
 </script>
 
 <style scoped>
 .cardCategory {
-  width: 160px;
-  height: 166px;
+  width: 100%;
+  max-width: 160px;
+  height: auto;
   border-radius: 10px;
   box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.1);
   display: flex;
@@ -32,6 +34,7 @@ export default {
   cursor: pointer;
   transition: all 0.3s ease;
   background-color: #f1f1f1;
+  padding: 2%;
 }
 
 .cardCategory:hover {
@@ -50,7 +53,7 @@ export default {
 .categoryImage img {
   object-fit: cover;
   width: 80%;
-  height: 805;
+  height: 80%;
   filter: drop-shadow(0 0 0.3rem #554e4f);
 }
 
@@ -58,10 +61,46 @@ export default {
   font-size: 16px;
   font-family: Quicksand, sans-serif;
   font-weight: bold;
-  color: #000000;
 }
 
 .cardCategory:hover p {
   color: #ffffff;
+}
+
+/* Media Queries for Responsiveness */
+@media (max-width: 768px) {
+  .cardCategory {
+    max-width: 140px; /* Slightly smaller width for tablets */
+    padding: 8px; /* Adjust padding */
+  }
+  .categoryImage {
+    width: 80px; /* Smaller image for tablets */
+    height: 80px;
+  }
+  .categoryImage img {
+    width: 70%; /* Adjust image size */
+    height: 70%;
+  }
+  .cardCategory p {
+    font-size: 14px; /* Smaller font for tablets */
+  }
+}
+
+@media (max-width: 480px) {
+  .cardCategory {
+    max-width: 120px; /* Further reduce width for mobile */
+    padding: 6px; /* Adjust padding for mobile */
+  }
+  .categoryImage {
+    width: 60px; /* Smaller image size for mobile */
+    height: 60px;
+  }
+  .categoryImage img {
+    width: 60%; /* Reduce image size for mobile */
+    height: 60%;
+  }
+  .cardCategory p {
+    font-size: 12px; /* Reduce font size for mobile */
+  }
 }
 </style>

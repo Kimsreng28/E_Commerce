@@ -1,12 +1,13 @@
 <template>
   <div class="arrivals">
     <carousel
-      :items-to-show="1.5"
+      :items-to-show="1.2"
       :wrap-around="true"
       :breakpoints="breakpoints"
-      :autoplay="4000"
+      :transition="500"
+      :autoplay="3000"
     >
-      <slide v-for="(arrival, index) in arrivals" :key="arrival.id">
+      <slide v-for="arrival in arrivals" :key="arrival.id">
         <div class="arrival-slide">
           <img
             :src="arrival.image"
@@ -48,17 +49,15 @@ export default {
 
 <style scoped>
 .arrivals {
-  width: 100%;
   height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
-  box-shadow: 0 5px 5px rgba(0, 0, 0, 0.1);
+  position: relative;
 }
 
 .carousel-container {
   display: flex;
-  justify-content: space-between; /* Ensure spacing between items */
 }
 
 .arrival-slide {
@@ -67,7 +66,7 @@ export default {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: 0 10px; /* Add horizontal padding to create space between slides */
+  transition: transform 0.3s ease;
 }
 
 .arrival-image {
@@ -76,6 +75,7 @@ export default {
   object-fit: cover;
   object-position: center;
   border-radius: 5px;
+  transition: transform 0.3s ease;
 }
 
 .arrival-title {
@@ -88,5 +88,32 @@ export default {
   background-color: rgba(0, 0, 0, 0.5);
   padding: 5px;
   border-radius: 5px;
+}
+
+.carousel__viewport {
+  perspective: 300px;
+}
+
+.carousel__track {
+  transform-style: preserve-3d;
+}
+
+.carousel__slide--sliding {
+  transition: 0.5s;
+}
+
+.carousel__slide--prev {
+  opacity: 0.2;
+  transform: rotateY(-2deg) scale(0.9);
+}
+
+.carousel__slide.carousel__slide--next {
+  opacity: 0.2;
+  transform: rotateY(2deg) scale(0.9);
+}
+
+.carousel__slide--active {
+  opacity: 1;
+  transform: rotateY(0) scale(1);
 }
 </style>

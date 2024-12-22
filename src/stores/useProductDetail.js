@@ -42,5 +42,15 @@ export const useProductDetailStore = defineStore("productDetail", {
     getProductDetailById: (state) => (id) => {
       return state.productDetail.find((product) => product.id === id);
     },
+    searchProducts: (state) => (query) => {
+      if (!query) return state.products;
+      const lowerCaseQuery = query.toLowerCase();
+      return state.products.filter(
+        (product) =>
+          product.title.toLowerCase().includes(lowerCaseQuery) ||
+          product.description.toLowerCase().includes(lowerCaseQuery)
+      );
+    },
+    // please make get product by product
   },
 });

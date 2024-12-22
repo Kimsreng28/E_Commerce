@@ -1,5 +1,4 @@
 import { createRouter, createWebHistory } from "vue-router";
-
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -73,7 +72,17 @@ const router = createRouter({
       meta: {
         breadcrumb: "CheckOut",
       },
+      props: true,
     },
+    {
+      path: "/order",
+      name: "ordered",
+      component: () => import("../views/OrderView.vue"),
+      meta: {
+        breadcrumb: "Ordered",
+      },
+    },
+
     {
       path: "/category",
       name: "category",
@@ -98,14 +107,6 @@ const router = createRouter({
       component: () => import("../views/CouponView.vue"),
       meta: {
         breadcrumb: "Coupon Service",
-      },
-    },
-    {
-      path: "/service",
-      name: "Service",
-      component: () => import("../views/ServiceView.vue"),
-      meta: {
-        breadcrumb: "Service",
       },
     },
   ],

@@ -66,44 +66,42 @@ export default {
 
 <style scoped>
 .footer {
-  width: 1440px;
-  height: 400px;
+  width: 1515px;
   background-color: #faf5ec;
   display: flex;
   flex-direction: column;
-  justify-content: start;
+  justify-content: center;
   align-items: center;
+  padding: 2% 0;
+  box-sizing: border-box;
 }
 
 .container {
-  width: 1440px;
-  height: 400px;
+  width: 80%;
   display: flex;
-  flex-direction: row;
   justify-content: space-between;
-  align-items: center;
-  padding: 2%;
+  align-items: flex-start;
+  flex-wrap: wrap;
 }
 
 .leftSide {
   width: 30%;
   display: flex;
   flex-direction: column;
-  justify-content: start;
-  align-items: center;
+  align-items: flex-start;
 }
 
 .rightSide {
-  width: 40%;
+  width: 60%;
   display: flex;
   justify-content: space-between;
-  align-items: center;
 }
 
 .column {
   display: flex;
   flex-direction: column;
-  align-items: start;
+  align-items: flex-start;
+  margin-right: 2rem; /* Space between columns */
 }
 
 .title {
@@ -133,23 +131,9 @@ export default {
   color: #554e4f;
 }
 
-.logo {
-  width: 100%;
-  display: flex;
-  justify-content: start;
-  align-items: center;
-}
-
 .logo img {
-  width: 274px;
-  height: 50px;
-}
-.description {
-  width: 100%;
-  display: flex;
-  justify-content: start;
-  align-items: center;
-  margin-left: 5%;
+  width: 180px; /* Adjusted logo size */
+  height: auto;
 }
 
 .description p {
@@ -157,31 +141,31 @@ export default {
   font-size: 16px;
   font-weight: 500;
   color: #7c7676;
+  margin: 1rem 0;
 }
+
 .contacts {
-  width: 100%;
   display: flex;
-  justify-content: start;
-  align-items: center;
-  flex-direction: row;
+  gap: 0.5rem; /* Consistent gap between buttons */
 }
+
 .contacts button {
+  width: 40px;
+  height: 40px;
+  background-color: #faf5ec;
+  border: 1px solid #bdc2c5;
+  border-radius: 50%;
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 50px;
-  height: 50px;
-  border: 1px solid #bdc2c5;
-  background-color: #faf5ec;
   box-shadow: 0 5px 5px rgba(0, 0, 0, 0.1);
-  border-radius: 50%;
-  margin: 5px;
+  transition: all 0.3s;
+  cursor: pointer;
 }
 
 .contacts button:hover {
   background-color: #bdc2c5;
   transform: scale(1.1);
-  transition: all 0.3s;
 }
 
 .contacts button img {
@@ -190,15 +174,111 @@ export default {
 }
 
 .copyright {
-  width: 100%;
+  width: 80%;
   display: flex;
   justify-content: start;
-  align-items: center;
-  margin-top: 5%;
-  margin-bottom: 5%;
-  margin-left: 5%;
+  align-items: start;
+  text-align: center; /* Centered copyright */
+  margin-top: 3rem;
 }
+
 .copyright p {
   font-family: Quicksand, sans-serif;
+  font-size: 14px;
+  color: #7c7676;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+  .container {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .leftSide,
+  .rightSide {
+    width: 100%; /* Full width on smaller screens */
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+
+  .contacts {
+    justify-content: center;
+  }
+
+  .column {
+    margin-bottom: 1rem; /* Spacing between columns */
+  }
+}
+
+@media (max-width: 768px) {
+  .leftSide,
+  .rightSide {
+    width: 100%; /* Full width on smaller screens */
+  }
+
+  .column {
+    margin-right: 0; /* Remove margin-right on small screens */
+    margin-bottom: 1.5rem;
+  }
+
+  .logo img {
+    width: 150px; /* Adjust logo size for small screens */
+  }
+
+  .description p {
+    font-size: 14px; /* Smaller font size for description */
+  }
+
+  .contacts button {
+    width: 35px;
+    height: 35px;
+  }
+
+  .copyright p {
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .footer {
+    padding: 4% 0; /* Increase top and bottom padding for mobile */
+  }
+
+  .container {
+    width: 90%;
+  }
+
+  .logo img {
+    width: 120px; /* Smaller logo for mobile */
+  }
+
+  .description p {
+    font-size: 12px; /* Even smaller description font */
+  }
+
+  .contacts button {
+    width: 30px;
+    height: 30px; /* Even smaller social media buttons */
+  }
+
+  .column {
+    width: 100%;
+    margin-bottom: 1rem;
+    text-align: center; /* Center-align columns for mobile */
+  }
+
+  .title {
+    font-size: 16px;
+  }
+
+  .column ul li {
+    font-size: 14px; /* Smaller font size for list items */
+  }
+
+  .copyright p {
+    font-size: 10px;
+  }
 }
 </style>

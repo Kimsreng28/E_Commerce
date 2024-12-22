@@ -2,152 +2,158 @@
   <div class="profileContainer">
     <Navbar_Component />
 
-    <!-- NAV WITH NAME -->
-    <div class="navWithName">
-      <Breadcrumb_Component />
-      <div class="welcome">
-        <p>Welcome to!</p>
-        <p style="color: #564949">{{ firstName }} {{ lastName }}</p>
-      </div>
+    <div v-if="isLoading" class="load">
+      <LoadingView />
     </div>
 
-    <!-- TITLE -->
-    <div class="titlePage">
-      <p>Manage My Account</p>
-    </div>
-
-    <div class="showInfo">
-      <div class="select">
-        <Button_Component
-          name-button="My Profile"
-          backgroundColor-button="#868181"
-          height-button="60px"
-          width-button="250px"
-          color-button="#FFFFFF"
-          icon="person"
-        />
-        <Button_Component
-          style="margin-top: 2%"
-          name-button="Logout"
-          backgroundColor-button="#E5E0E0"
-          height-button="60px"
-          width-button="250px"
-          color-button="#E41C1C"
-          icon="logout"
-          @click="handleLogout()"
-        />
+    <div v-else>
+      <!-- NAV WITH NAME -->
+      <div class="navWithName">
+        <Breadcrumb_Component />
+        <div class="welcome">
+          <p>Welcome to!</p>
+          <p style="color: #564949">{{ firstName }} {{ lastName }}</p>
+        </div>
       </div>
 
-      <!-- DASHBOARD -->
-      <div class="dashboardEdit">
-        <!-- EDIT PROFILE -->
-        <div class="edit">
-          <span class="material-icons">edit</span>
-          <p>Edit Your Profile</p>
-        </div>
+      <!-- TITLE -->
+      <div class="titlePage">
+        <p>Manage My Account</p>
+      </div>
 
-        <!-- UPLOAD IMAGE -->
-        <div class="uploadImage">
-          <img :src="profileImageUrl" alt="" />
-          <input type="file" @change="onImageUpload" v-if="isEditing" />
-        </div>
-
-        <!-- NAME -->
-        <div class="name">
-          <div class="firstName">
-            <label for=""> First Name *</label>
-            <input type="text" v-model="firstName" :readonly="!isEditing" />
-          </div>
-          <div class="lastName">
-            <label for=""> Last Name *</label>
-            <input type="text" v-model="lastName" :readonly="!isEditing" />
-          </div>
-        </div>
-
-        <!-- EMAIL -->
-        <div class="email">
-          <div class="emailInput">
-            <label for=""> Email *</label>
-            <input type="text" v-model="email" :readonly="!isEditing" />
-          </div>
-
-          <div class="address">
-            <label for=""> Address</label>
-            <input type="text" v-model="address" :readonly="!isEditing" />
-          </div>
-        </div>
-
-        <!-- PASSWORD -->
-        <div class="password">
-          <div class="currentPassword">
-            <label for=""> Current Password</label>
-            <input
-              type="password"
-              placeholder="Current Password"
-              v-model="currentPassword"
-              :readonly="!isEditing"
-            />
-          </div>
-
-          <div class="newPassword">
-            <label for=""> New Password</label>
-            <input
-              type="password"
-              placeholder="New Password"
-              v-model="newPassword"
-              :readonly="!isEditing"
-            />
-          </div>
-
-          <div class="confirmPassword">
-            <label for=""> Confirm Password</label>
-            <input
-              type="password"
-              placeholder="Confirm Password"
-              v-model="confirmPassword"
-              :readonly="!isEditing"
-            />
-          </div>
-        </div>
-
-        <!-- BUTTON -->
-        <div class="button">
+      <div class="showInfo">
+        <div class="select">
           <Button_Component
-            name-button="Edit"
-            backgroundColor-button="#958383"
-            height-button="50px"
-            width-button="200px"
+            name-button="My Profile"
+            backgroundColor-button="#868181"
+            height-button="60px"
+            width-button="250px"
             color-button="#FFFFFF"
-            icon="edit"
-            v-if="!isEditing"
-            @click="isEditing = true"
-          />
-        </div>
-        <div class="saveAndCancel" v-if="isEditing">
-          <Button_Component
-            name-button="Save"
-            backgroundColor-button="#958383"
-            height-button="50px"
-            width-button="150px"
-            color-button="#FFFFFF"
-            icon="save"
-            v-if="isEditing"
-            @click="saveInformation"
+            icon="person"
           />
           <Button_Component
-            name-button="Cancel"
-            backgroundColor-button="#958383"
-            height-button="50px"
-            width-button="150px"
+            style="margin-top: 2%"
+            name-button="Logout"
+            backgroundColor-button="#E5E0E0"
+            height-button="60px"
+            width-button="250px"
             color-button="#E41C1C"
-            icon="cancel"
-            @click="cancelEdit"
+            icon="logout"
+            @click="handleLogout()"
           />
         </div>
-      </div>
-    </div>
 
-    <Footer_Component style="margin-left: 1%; margin-top: 5%" />
+        <!-- DASHBOARD -->
+        <div class="dashboardEdit">
+          <!-- EDIT PROFILE -->
+          <div class="edit">
+            <span class="material-icons">edit</span>
+            <p>Edit Your Profile</p>
+          </div>
+
+          <!-- UPLOAD IMAGE -->
+          <div class="uploadImage">
+            <img :src="profileImageUrl" alt="" />
+            <input type="file" @change="onImageUpload" v-if="isEditing" />
+          </div>
+
+          <!-- NAME -->
+          <div class="name">
+            <div class="firstName">
+              <label for=""> First Name *</label>
+              <input type="text" v-model="firstName" :readonly="!isEditing" />
+            </div>
+            <div class="lastName">
+              <label for=""> Last Name *</label>
+              <input type="text" v-model="lastName" :readonly="!isEditing" />
+            </div>
+          </div>
+
+          <!-- EMAIL -->
+          <div class="email">
+            <div class="emailInput">
+              <label for=""> Email *</label>
+              <input type="text" v-model="email" :readonly="!isEditing" />
+            </div>
+
+            <div class="address">
+              <label for=""> Address</label>
+              <input type="text" v-model="address" :readonly="!isEditing" />
+            </div>
+          </div>
+
+          <!-- PASSWORD -->
+          <div class="password">
+            <div class="currentPassword">
+              <label for=""> Current Password</label>
+              <input
+                type="password"
+                placeholder="Current Password"
+                v-model="currentPassword"
+                :readonly="!isEditing"
+              />
+            </div>
+
+            <div class="newPassword">
+              <label for=""> New Password</label>
+              <input
+                type="password"
+                placeholder="New Password"
+                v-model="newPassword"
+                :readonly="!isEditing"
+              />
+            </div>
+
+            <div class="confirmPassword">
+              <label for=""> Confirm Password</label>
+              <input
+                type="password"
+                placeholder="Confirm Password"
+                v-model="confirmPassword"
+                :readonly="!isEditing"
+              />
+            </div>
+          </div>
+
+          <!-- BUTTON -->
+          <div class="button">
+            <Button_Component
+              name-button="Edit"
+              backgroundColor-button="#958383"
+              height-button="50px"
+              width-button="200px"
+              color-button="#FFFFFF"
+              icon="edit"
+              v-if="!isEditing"
+              @click="isEditing = true"
+            />
+          </div>
+          <div class="saveAndCancel" v-if="isEditing">
+            <Button_Component
+              name-button="Save"
+              backgroundColor-button="#958383"
+              height-button="50px"
+              width-button="150px"
+              color-button="#FFFFFF"
+              icon="save"
+              v-if="isEditing"
+              @click="saveInformation"
+            />
+            <Button_Component
+              name-button="Cancel"
+              backgroundColor-button="#958383"
+              height-button="50px"
+              width-button="150px"
+              color-button="#E41C1C"
+              icon="cancel"
+              @click="cancelEdit"
+            />
+          </div>
+        </div>
+      </div>
+
+      <Footer_Component style="margin-left: 1%; margin-top: 5%" />
+    </div>
   </div>
 </template>
 
@@ -160,6 +166,7 @@ import { useUserSignupStore } from "@/stores/useUserSignupStore";
 import { onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
 import defaultProfileImage from "../assets/images/CardFuture/profile.png";
+import LoadingView from "./LoadingView.vue";
 
 export default {
   name: "ProfileAccountView",
@@ -168,8 +175,15 @@ export default {
     Breadcrumb_Component,
     Button_Component,
     Footer_Component,
+    LoadingView,
   },
   setup() {
+    const isLoading = ref(true);
+    onMounted(() => {
+      setTimeout(() => {
+        isLoading.value = false;
+      }, 1000);
+    });
     const userStore = useUserSignupStore();
     const router = useRouter();
 
@@ -287,12 +301,19 @@ export default {
       isEditing,
       profileImageUrl,
       onImageUpload,
+      isLoading,
     };
   },
 };
 </script>
 
 <style scoped>
+.load {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
 .profileContainer {
   width: 100%;
   height: 100vh;
@@ -501,5 +522,54 @@ export default {
   gap: 2%;
   margin-top: 3%;
   margin-bottom: 3%;
+}
+
+@media (max-width: 768px) {
+  .profileContainer {
+    height: auto;
+    width: 768px;
+  }
+  .navWithName {
+    width: 98%;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .showInfo {
+    flex-direction: column;
+  }
+
+  .select {
+    width: 100%;
+  }
+
+  .dashboardEdit {
+    width: 100%;
+  }
+
+  .name,
+  .email,
+  .password {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .name .firstName,
+  .name .lastName,
+  .email .emailInput,
+  .email .address,
+  .password .currentPassword,
+  .password .newPassword,
+  .password .confirmPassword {
+    width: 100%;
+  }
+
+  .welcome p {
+    font-size: 14px;
+  }
+
+  .titlePage p {
+    font-size: 20px;
+  }
 }
 </style>

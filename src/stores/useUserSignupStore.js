@@ -19,6 +19,10 @@ export const useUserSignupStore = defineStore("userSignup", {
     isLoggedIn() {
       return !!this.currentUser;
     },
+    firstName: (state) => state.currentUser?.firstName || "",
+    lastName: (state) => state.currentUser?.lastName || "",
+    profileImage: (state) =>
+      localStorage.getItem("profileImage") || "default-image.png",
   },
 
   actions: {

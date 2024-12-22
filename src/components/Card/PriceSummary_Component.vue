@@ -53,6 +53,7 @@
 
 <script>
 import { useCartStore } from "@/stores/useCartStore";
+
 import { computed, ref } from "vue";
 import Button_Component from "../Button_Component.vue";
 
@@ -80,12 +81,15 @@ export default {
   },
   setup(props) {
     const cartStore = useCartStore();
+    // coupon code and price tracking
     const couponCode = ref("");
+    // coupon price tracking and calculation based on the coupon code applied or not.
     const couponPrice = ref(0);
 
     // discount catch from DetailProduct
     const discountPrice = ref(parseFloat(props.discountPrice) || 0);
 
+    // Compute subtotal price from the cart items
     const subtotalPrice = computed(() => cartStore.getSubtotal);
 
     // Compute total price
@@ -127,12 +131,14 @@ export default {
 
 <style scoped>
 .priceSummary {
-  width: 620px;
-  height: 660px;
+  width: 100%;
+  max-width: 625px;
+  height: auto;
   border-radius: 10px;
   border: 1px solid #564949;
   display: flex;
   flex-direction: column;
+  padding: 2%;
 }
 
 .titleSummary {
@@ -144,7 +150,7 @@ export default {
   padding: 2%;
 }
 .titleSummary p {
-  font-size: 26px;
+  font-size: 24px;
   font-weight: bold;
   color: #000000;
   font-family: Quicksand, sans-serif;
@@ -195,7 +201,8 @@ export default {
   border-radius: 10px;
   border: none;
   padding: 1.5%;
-  width: 50%;
+  width: 100%;
+  max-width: 60%;
   height: 60px;
   font-size: 14px;
   font-family: Quicksand, sans-serif;
@@ -217,5 +224,41 @@ export default {
   font-weight: 700;
   color: #131212;
   font-family: Quicksand, sans-serif;
+}
+
+/* Media Queries for Responsiveness */
+@media (max-width: 768px) {
+  .priceSummary {
+    padding: 4%; /* Add more padding for smaller screens */
+  }
+  .titleSummary p {
+    font-size: 20px; /* Further reduce title size */
+  }
+  .subtotalPrice p,
+  .shipping p,
+  .discount p,
+  .totalPrice p {
+    font-size: 14px; /* Reduce text size for smaller screens */
+  }
+  .coupon input {
+    max-width: 100%; /* Use full width for very small screens */
+    height: 40px; /* Reduce input height */
+  }
+  .totalPrice p {
+    font-size: 18px; /* Adjust total price size */
+  }
+}
+
+@media (max-width: 480px) {
+  .priceSummary {
+    flex-direction: column; /* Stack elements for very small screens */
+  }
+  .coupon {
+    flex-direction: column; /* Stack coupon elements */
+    gap: 10px; /* Add space between input and button */
+  }
+  .coupon input {
+    max-width: 100%; /* Full width for input */
+  }
 }
 </style>

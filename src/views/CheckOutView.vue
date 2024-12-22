@@ -1,62 +1,313 @@
 <template>
   <div class="checkoutScreen">
     <Navbar_Component />
-    <Breadcrumb_Component />
 
-    <h1 style="font-family: Saira, sans-serif">Check Out</h1>
+    <div class="load" v-if="isLoading">
+      <LoadingView />
+    </div>
 
-    <div class="container">
-      <div class="left"></div>
-      <div class="right"></div>
+    <div v-else>
+      <Breadcrumb_Component />
+
+      <div class="title">
+        <h1 style="font-family: Saira, sans-serif">Check Out</h1>
+        <span id="history" class="material-icons">deployed_history</span>
+      </div>
+
+      <div class="container">
+        <div class="left">
+          <Location_Component />
+          <PaymentMethod_Component
+            style="margin-top: 5%"
+            @update:paymentMethod="updatePaymentMethod"
+          />
+        </div>
+        <div class="right">
+          <CardCheckProduct_Component
+            style="margin-bottom: 3%"
+            class="cardCheck"
+            v-for="item in checkOutItems"
+            :key="item.id"
+            :id="item.id"
+            :imageProduct="item.image"
+            :discountProduct="item.discount"
+            :nameProduct="item.name"
+            :priceProduct="item.price"
+            :quantity="item.quantity"
+            :color-product="item.color"
+            :size-product="item.size"
+            :fromCheckout="true"
+          />
+          <PriceSummary_Component
+            titleSummary="Confirmed Payment"
+            :subtotalPrice="subtotalPrice"
+            :shippingPrice="shippingPrice"
+            :discountPrice="totalDiscountPrice"
+            :totalPrice="totalPrice"
+            :coupon-price="couponPrice"
+          />
+        </div>
+      </div>
+
+      <div class="payNow">
+        <Button_Component
+          name-button="Pay Now"
+          color-button="#FFFFFF"
+          background-color-button="#958383"
+          height-button="50px"
+          width-button="200px"
+          @click="handlePayNow"
+        />
+      </div>
+
+      <Footer_Component style="margin-top: 5%" />
+    </div>
+    <!-- Show Payment Success Component after Payment -->
+    <div class="showSuccess" v-if="isPaymentSuccess">
+      <PaymentSuccess_Component
+        :key="isPaymentSuccess"
+        :totalPrice="totalPrice"
+        :paymentMethod="selectedPaymentMethod"
+        :transactionId="transactionId"
+        :transactionDate="transactionDate"
+      />
     </div>
   </div>
 </template>
 
 <script>
 import Breadcrumb_Component from "@/components/Breadcrumb_Component.vue";
+import Button_Component from "@/components/Button_Component.vue";
+import CardCheckProduct_Component from "@/components/Card/CardCheckProduct_Component.vue";
+import PriceSummary_Component from "@/components/Card/PriceSummary_Component.vue";
+import Location_Component from "@/components/Checkout/Location_Component.vue";
+import PaymentMethod_Component from "@/components/Checkout/PaymentMethod_Component.vue";
+import PaymentSuccess_Component from "@/components/Checkout/PaymentSuccess_Component.vue";
+import Footer_Component from "@/components/Footer_Component.vue";
 import Navbar_Component from "@/components/Navbar_Component.vue";
+import { useCheckOut } from "@/stores/useCheckOut";
+import { onMounted, ref } from "vue";
+import { useRoute } from "vue-router";
+import LoadingView from "./LoadingView.vue";
 export default {
   name: "CheckOutView",
   components: {
     Navbar_Component,
     Breadcrumb_Component,
+    Location_Component,
+    PaymentMethod_Component,
+    CardCheckProduct_Component,
+    PriceSummary_Component,
+    Footer_Component,
+    Button_Component,
+    LoadingView,
+    PaymentSuccess_Component,
+  },
+  setup() {
+    const isLoading = ref(true);
+    const isPaymentSuccess = ref(false);
+    const selectedPaymentMethod = ref("");
+    const transactionId = ref("TXN123456789");
+    const transactionDate = ref(new Date().toLocaleString());
+
+    const route = useRoute();
+    const totalPrice = ref(parseFloat(route.query.totalPrice) || 0);
+
+    onMounted(() => {
+      setTimeout(() => {
+        isLoading.value = false; // Set loading to false after 3 seconds
+      }, 1000);
+    });
+
+    const updatePaymentMethod = (method) => {
+      console.log("Selected Payment Method:", method);
+      selectedPaymentMethod.value = method;
+    };
+
+    const handlePayNow = () => {
+      if (!selectedPaymentMethod.value) {
+        alert("Please select a payment method.");
+        return;
+      }
+
+      console.log(
+        "Processing payment with method:",
+        selectedPaymentMethod.value
+      );
+
+      // Simulate a successful payment
+      isPaymentSuccess.value = true;
+
+      // Generate a random transaction ID and set transaction date
+      transactionId.value = `TXN${Math.floor(Math.random() * 1000000000)}`;
+      transactionDate.value = new Date().toLocaleString();
+
+      // After successful payment, reset after 5 seconds
+      setTimeout(() => {
+        isPaymentSuccess.value = false; // Reset the payment success state after 5 seconds
+      }, 5000);
+    };
+
+    return {
+      isLoading,
+      isPaymentSuccess,
+      selectedPaymentMethod,
+      transactionId,
+      transactionDate,
+      updatePaymentMethod,
+      handlePayNow,
+      totalPrice,
+    };
+  },
+  computed: {
+    checkOutItems() {
+      const store = useCheckOut();
+      return store.checkOut.map((item) => {
+        // Assuming discount is a percentage (e.g., 10%)
+        const discountPercentage =
+          parseFloat(item.discount.replace("%", "")) || 0;
+        const discountPrice = (item.price * discountPercentage) / 100;
+        const finalPrice = item.price - discountPrice; // Applying discount to price
+
+        return {
+          ...item,
+          discountPrice,
+          finalPrice,
+        };
+      });
+    },
+    shippingPrice() {
+      return 0.25; // Set shipping price to 0 for now
+    },
+    subtotalPrice() {
+      return this.checkOutItems.reduce(
+        (total, item) => total + item.finalPrice * item.quantity, // Use final price
+        0
+      );
+    },
+    totalDiscountPrice() {
+      return this.checkOutItems.reduce(
+        (total, item) => total + item.discountPrice * item.quantity, // Discounted amount
+        0
+      );
+    },
   },
 };
 </script>
 
 <style scoped>
+.load {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
 .checkoutScreen {
   width: 100%;
   height: 100vh;
   margin-top: 2%;
   box-sizing: border-box;
+  position: relative;
 }
-h1 {
-  padding: 2%;
-  margin-left: 1%;
-}
-.container {
+.showSuccess {
+  position: absolute;
+  top: 30%;
+  left: 0;
   width: 100%;
   height: 100%;
   display: flex;
-  flex-direction: row;
-  justify-content: start;
   align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+.title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 2%;
+  margin-left: 1%;
+}
+
+#history {
+  cursor: pointer;
+  color: #7b7474;
+  font-size: 26px;
+}
+#history:hover {
+  transition: all 0.3s ease;
+  color: #d90f0f;
+}
+.container {
+  width: 100%;
+  height: auto;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: start;
+  padding: 2%;
 }
 .left {
   width: 50%;
+  margin-left: 5%;
   height: auto;
   display: flex;
   flex-direction: column;
   justify-content: start;
-  align-items: center;
+  align-items: start;
+}
+
+.cardCheck {
+  width: 624px;
+  height: 180px;
 }
 
 .right {
+  height: auto;
   width: 50%;
   display: flex;
   flex-direction: column;
   justify-content: start;
+  align-items: start;
+}
+.payNow {
+  width: 100%;
+  margin-left: 23%;
+  display: flex;
+  justify-content: center;
   align-items: center;
+  margin-top: 5%;
+}
+/* For mobile devices (max-width: 480px) */
+@media (max-width: 480px) {
+  .checkoutScreen {
+    margin-top: 5%; /* Adjust margin for mobile screens */
+  }
+
+  .cardCheck {
+    width: 100%; /* Ensure the cardCheck takes full width */
+    height: auto;
+  }
+
+  .payNow {
+    margin-left: 0;
+    margin-top: 20px; /* Adjust button positioning */
+    justify-content: center;
+  }
+
+  h1 {
+    font-size: 1.5rem; /* Smaller font size for mobile */
+  }
+
+  .container {
+    padding: 5%;
+    width: 100%;
+  }
+
+  .left,
+  .right {
+    width: 100%;
+    margin-left: 0;
+    margin-right: 0;
+  }
 }
 </style>

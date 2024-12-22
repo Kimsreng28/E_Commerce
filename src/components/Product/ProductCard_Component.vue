@@ -189,6 +189,7 @@ export default {
   display: flex;
   justify-content: start;
   align-items: center;
+  z-index: 1;
 }
 .discount p {
   display: flex;
@@ -206,9 +207,11 @@ export default {
   justify-content: start;
   width: 100%;
   max-width: 322px;
-  height: auto;
-  background-color: #d9d6d6;
+  background-color: #f5f5f5;
   border-radius: 10px;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  transition: transform 0.3s, box-shadow 0.3s;
 }
 .productImage {
   display: flex;
@@ -219,15 +222,15 @@ export default {
   height: 350px;
   border-top-right-radius: 10px;
   border-top-left-radius: 10px;
+  object-fit: cover;
   background-color: #d9d9d9;
 }
 .wishlist {
   display: flex;
-  justify-content: end;
+  justify-content: space-between;
   align-items: center;
   width: 100%;
-  margin-right: 5%;
-  margin-top: 2%;
+  padding: 2%;
 }
 
 .wishlist button {
@@ -254,8 +257,8 @@ export default {
 }
 
 .image {
-  width: 300px;
-  height: 600px;
+  width: 250px;
+  height: 500px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -264,7 +267,7 @@ export default {
 }
 .image img {
   width: 80%;
-  height: 80%;
+  height: auto;
 }
 .image img:hover {
   cursor: pointer;

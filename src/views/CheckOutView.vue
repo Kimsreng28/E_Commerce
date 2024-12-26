@@ -11,7 +11,6 @@
 
       <div class="title">
         <h1 style="font-family: Saira, sans-serif">Check Out</h1>
-        <span id="history" class="material-icons">deployed_history</span>
       </div>
 
       <div class="container">

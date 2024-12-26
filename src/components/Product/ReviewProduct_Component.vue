@@ -21,25 +21,28 @@
         </p>
       </div>
       <div v-if="selectedTab === 'RelateItems'">
-        <!-- Show product relate with product by category 4 products that related with product -->
-        <ProductCard_Component
-          class="productCard"
-          v-for="product in filterProductByCategory"
-          :id="product.id"
-          :key="product.id"
-          :name-product="product.title"
-          :image-product="product.image"
-          :rating-product="product.rating"
-          :price-product="product.price"
-          :size-product="product.size"
-          :color-product="product.color"
-          :stock-product="product.stock"
-          :description-product="product.description"
-          :discount-product="product.discount"
-          :image-details="product.imageDetails"
-          :old-price="product.oldPrice"
-        />
+        <div v-if="relatedProducts.length">
+          <ProductCard_Component
+            class="productCard"
+            v-for="product in relatedProducts"
+            :key="product.id"
+            :id="product.id"
+            :name-product="product.title"
+            :image-product="product.image"
+            :rating-product="product.rating"
+            :price-product="product.price"
+            :size-product="product.size"
+            :color-product="product.color"
+            :stock-product="product.stock"
+            :description-product="product.description"
+            :discount-product="product.discount"
+            :image-details="product.imageDetails"
+            :old-price="product.oldPrice"
+          />
+        </div>
+        <p v-else>No related items found for this category.</p>
       </div>
+
       <div class="reviews" v-if="selectedTab === 'Reviews'">
         <form @submit.prevent="addReview" class="review-form">
           <textarea
@@ -129,11 +132,13 @@ import { useReviewStore } from "@/stores/useReviewStore";
 import { useUserSignupStore } from "@/stores/useUserSignupStore";
 import { computed, onMounted, ref } from "vue";
 import ProductCard_Component from "./ProductCard_Component.vue";
+
 export default {
   name: "ReviewProduct_Component",
   components: {
     ProductCard_Component,
   },
+
   setup() {
     const reviewStore = useReviewStore();
     const productStore = useProductStore();
@@ -159,7 +164,7 @@ export default {
       return userSignupStore.lastName;
     });
 
-    //function for edit
+    // function for edit
     const editReview = (index) => {
       isEditing.value = true;
       editingIndex.value = index;
@@ -200,11 +205,22 @@ export default {
     const reviews = computed(() => {
       return reviewStore.reviews;
     });
+
     const newComment = ref("");
     const newRating = ref(0);
 
     // Function for adding a new review
     const addReview = () => {
+      console.log("Comment:", newComment.value);
+      console.log("Rating:", newRating.value);
+
+      if (!newComment.value || newRating.value <= 0) {
+        console.error(
+          "Invalid data: Missing comment, rating, product name, or product image."
+        );
+        return;
+      }
+
       try {
         reviewStore.addReview(newComment.value, newRating.value);
         newComment.value = "";
@@ -219,14 +235,13 @@ export default {
       reviewStore.loadReviews();
     });
 
-    // Get the product details from the store and update them when the store emits a change event
-    const filterProductByCategory = computed(() => {
-      return productStore.getProductByCategory().slice(0, 4);
+    const relatedProducts = computed(() => {
+      // Get the category from the store
+      return productStore.getProductByCategory(category);
     });
 
     return {
-      productStore,
-      filterProductByCategory,
+      relatedProducts,
       tabs,
       selectedTab,
       newComment,

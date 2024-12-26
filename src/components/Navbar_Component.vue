@@ -247,6 +247,10 @@ export default {
   color: rgb(10, 219, 238);
 }
 
+#order_history:hover {
+  color: rgb(10, 219, 238);
+}
+
 .cart p {
   margin: 0;
   font-size: 18px;

@@ -54,7 +54,6 @@ export const useProductStore = defineStore("product", {
         color: ["#A0BCE0", "#E07575", "#0FB763", "#9E9E9E"],
         imageDetails: [
           "src/assets/images/Product/Clothes/full_set.png",
-          "src/assets/images/Product/Clothes/full_set2.png",
           "src/assets/images/Product/Clothes/full_set3.png",
         ],
         stock: 5,
@@ -489,13 +488,12 @@ export const useProductStore = defineStore("product", {
       return this.products.find((product) => product.id === id);
     },
 
-    // Updated getProductByCategory function with console.log
     getProductByCategory(category) {
-      console.log("Filtering products for category:", category); // Log category input
+      console.log("Filtering products for category:", category);
       const filteredProducts = this.products.filter(
         (product) => product.category.toLowerCase() === category.toLowerCase()
       );
-      console.log("Filtered Products:", filteredProducts); // Log the filtered result
+      console.log("Filtered Products:", filteredProducts);
       return filteredProducts;
     },
   },
@@ -514,6 +512,5 @@ export const useProductStore = defineStore("product", {
           product.description.toLowerCase().includes(lowerCaseQuery)
       );
     },
-    getProductByProduct: (product) => () => {},
   },
 });

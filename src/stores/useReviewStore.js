@@ -17,6 +17,7 @@ export const useReviewStore = defineStore("review", {
   actions: {
     loadReviews() {
       const savedReviews = JSON.parse(localStorage.getItem("reviews")) || [];
+      console.log("Loaded reviews from localStorage:", savedReviews);
       this.reviews = savedReviews.map((review) => ({
         ...review,
         date: new Date(review.date), // Convert date back to a Date object
@@ -29,7 +30,7 @@ export const useReviewStore = defineStore("review", {
 
     addReview(comment, rating) {
       if (!comment || rating < 1 || rating > 5) {
-        throw new Error("Invalid comment or rating.");
+        throw new Error("Invalid comment, rating, product name, or image.");
       }
 
       const newReview = {
@@ -41,7 +42,6 @@ export const useReviewStore = defineStore("review", {
       this.reviews.push(newReview);
       this.saveReviews();
     },
-
     // Update an existing review by id
     updateReview(reviewId, updatedReview) {
       const index = this.reviews.findIndex((review) => review.id === reviewId);

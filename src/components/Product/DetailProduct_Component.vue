@@ -319,15 +319,14 @@ export default {
   gap: 10px;
   padding: 10px;
   cursor: pointer;
-  object-fit: cover;
 }
 .fourImages img {
   background-color: rgb(216, 216, 216);
   width: 80%;
   cursor: pointer;
   border-radius: 5px;
-  height: 80%;
-  object-fit: cover;
+  height: auto;
+  object-fit: contain;
 }
 .fourImages img.selected {
   border: 1px solid #4c4040;
@@ -347,11 +346,13 @@ export default {
   border: 1px solid #a29595;
   border-radius: 5px;
 }
+
 .mainImage img {
-  width: 80%;
-  height: auto;
-  object-fit: cover;
-  object-position: center;
+  width: auto; /* Adjusts based on the aspect ratio */
+  height: 100%; /* Ensures it fills the container's height */
+  max-width: 100%; /* Prevents overflow within the container */
+  object-fit: contain; /* Ensures the entire image is visible within the container */
+  object-position: center; /* Centers the image */
 }
 
 .detailOfProduct {

@@ -11,37 +11,22 @@
       @mouseup="stopDrag"
       @mouseleave="stopDrag"
     >
-      <div class="reviewCard">
+      <!-- Loop through reviews and display each one -->
+      <div class="reviewCard" v-for="review in reviews" :key="review.id">
         <img
           class="reviewImage"
-          src="@/assets/images/ReviewHistory/shoes.jpg"
+          :src="
+            review.image
+              ? 'http://localhost:5173/' + review.image
+              : '/path/to/default-image.jpg'
+          "
           alt=""
         />
+
         <div class="cardFooter">
-          <p class="productName">Kimsreng</p>
-          <p class="rating">⭐ 4.5</p>
-        </div>
-      </div>
-      <div class="reviewCard">
-        <img
-          class="reviewImage"
-          src="@/assets/images/ReviewHistory/shoes.jpg"
-          alt=""
-        />
-        <div class="cardFooter">
-          <p class="productName">Kimsreng</p>
-          <p class="rating">⭐ 4.5</p>
-        </div>
-      </div>
-      <div class="reviewCard">
-        <img
-          class="reviewImage"
-          src="@/assets/images/ReviewHistory/shoes.jpg"
-          alt=""
-        />
-        <div class="cardFooter">
-          <p class="productName">Kimsreng</p>
-          <p class="rating">⭐ 4.5</p>
+          <p class="productName">{{ review.productName }}</p>
+          <!-- Display product name -->
+          <p class="rating">⭐ {{ review.rating }}</p>
         </div>
       </div>
     </div>
@@ -49,30 +34,53 @@
 </template>
 
 <script>
+import { useReviewStore } from "@/stores/useReviewStore";
+import { computed, onMounted, ref } from "vue";
+
 export default {
   name: "ReviewHistoryComponent",
-  data() {
-    return {
-      isDragging: false,
-      startX: 0,
-      scrollLeft: 0,
+  setup() {
+    // State for dragging
+    const isDragging = ref(false);
+    const startX = ref(0);
+    const scrollLeft = ref(0);
+    const reviewStore = useReviewStore();
+
+    // Computed property to get reviews from the store
+    const reviews = computed(() => reviewStore.reviews);
+
+    // Methods for drag functionality
+    const startDrag = (e) => {
+      isDragging.value = true;
+      startX.value = e.clientX;
+      scrollLeft.value = e.target.scrollLeft;
     };
-  },
-  methods: {
-    startDrag(e) {
-      this.isDragging = true;
-      this.startX = e.clientX;
-      this.scrollLeft = this.$refs.reviewContainer.scrollLeft;
-    },
-    drag(e) {
-      if (!this.isDragging) return;
-      const x = e.clientX;
-      const walk = (x - this.startX) * 2; // Multiplier for scroll speed
-      this.$refs.reviewContainer.scrollLeft = this.scrollLeft - walk;
-    },
-    stopDrag() {
-      this.isDragging = false;
-    },
+
+    const drag = (e) => {
+      if (!isDragging.value) return;
+      const walk = (e.clientX - startX.value) * 2; // Multiplier for scroll speed
+      e.target.scrollLeft = scrollLeft.value - walk;
+    };
+
+    const stopDrag = () => {
+      isDragging.value = false;
+    };
+
+    // Load reviews when the component is mounted
+    onMounted(() => {
+      reviewStore.loadReviews();
+      console.log("Mounted, reviews loaded:", reviewStore.reviews);
+    });
+
+    return {
+      isDragging,
+      startX,
+      scrollLeft,
+      reviews,
+      startDrag,
+      drag,
+      stopDrag,
+    };
   },
 };
 </script>

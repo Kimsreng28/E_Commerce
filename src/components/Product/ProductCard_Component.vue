@@ -80,6 +80,9 @@ export default {
     sizeProduct: Array,
     stockProduct: String,
   },
+  mounted() {
+    console.log("Received product:", this.nameProduct); // Debugging the received data
+  },
 
   setup(props) {
     const wishlistStore = useWishlistStore();
@@ -158,13 +161,17 @@ export default {
           stock: stockProduct.value,
           productDiscount: discountProduct.value,
           oldPrice: oldPrice.value,
+          category: props.category,
         };
 
         productStore.addToProductDetail(product);
         alert("Go To Product Detail!");
 
         // Navigate to product detail by Id when click on product to detail
-        router.push({ name: "productDetail", params: { id: props.id } });
+        router.push({
+          name: "productDetail",
+          params: { id: props.id, category: props.category },
+        });
       }
     };
 
@@ -182,7 +189,6 @@ export default {
   },
 };
 </script>
-
 <style scoped>
 .discount {
   width: 80%;

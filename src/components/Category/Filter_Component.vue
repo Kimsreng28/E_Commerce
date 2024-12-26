@@ -147,34 +147,40 @@ export default {
     },
   },
   methods: {
-    changeTab(tab) {
+    changeTab(tab, autoApply = false) {
       this.selectedTab = tab;
       this.selectedSubCategory = null;
       this.selectedColor = null;
       this.selectedSize = null;
       this.priceValue = 100;
-      console.log("Selected Tab:", this.selectedTab);
+      if (autoApply) this.emitFilterWithLoading();
     },
-    selectSubCategory(subCategory) {
+    selectSubCategory(subCategory, autoApply = false) {
       this.selectedSubCategory = subCategory;
-      console.log("Selected SubCategory:", this.selectedSubCategory);
+      if (autoApply) this.emitFilterWithLoading();
     },
-    selectColor(color) {
+    selectColor(color, autoApply = false) {
       this.selectedColor = color;
-      console.log("Selected Color:", this.selectedColor);
+      if (autoApply) this.emitFilterWithLoading();
     },
-    selectSize(size) {
+    selectSize(size, autoApply = false) {
       this.selectedSize = size;
-      console.log("Selected Size:", this.selectedSize);
+      if (autoApply) this.emitFilterWithLoading();
+    },
+    emitFilterWithLoading() {
+      this.$emit("apply-filter", {
+        filters: {
+          tab: this.selectedTab,
+          subCategory: this.selectedSubCategory,
+          color: this.selectedColor,
+          size: this.selectedSize,
+          price: this.priceValue,
+        },
+        isLoading: true, // Signal to parent that loading is required
+      });
     },
     applyFilter() {
-      this.$emit("apply-filter", {
-        tab: this.selectedTab,
-        subCategory: this.selectedSubCategory,
-        color: this.selectedColor,
-        size: this.selectedSize,
-        price: this.priceValue,
-      });
+      this.emitFilterWithLoading();
     },
     clearFilter() {
       this.selectedColor = null;

@@ -11,21 +11,23 @@
       @mouseup="stopDrag"
       @mouseleave="stopDrag"
     >
-      <!-- Loop through reviews and display each one -->
-      <div class="reviewCard" v-for="review in reviews" :key="review.id">
+      <!-- Loop through displayed reviews -->
+      <div
+        class="reviewCard"
+        v-for="review in displayedReviews"
+        :key="review.id"
+      >
         <img
           class="reviewImage"
           :src="
-            review.image
-              ? 'http://localhost:5173/' + review.image
+            review.imageProduct
+              ? 'http://localhost:5173/' + review.imageProduct
               : '/path/to/default-image.jpg'
           "
           alt=""
         />
-
         <div class="cardFooter">
-          <p class="productName">{{ review.productName }}</p>
-          <!-- Display product name -->
+          <p class="command-product">{{ review.comment }}</p>
           <p class="rating">⭐ {{ review.rating }}</p>
         </div>
       </div>
@@ -40,14 +42,40 @@ import { computed, onMounted, ref } from "vue";
 export default {
   name: "ReviewHistoryComponent",
   setup() {
+    const reviewStore = useReviewStore();
+
     // State for dragging
     const isDragging = ref(false);
     const startX = ref(0);
     const scrollLeft = ref(0);
-    const reviewStore = useReviewStore();
 
-    // Computed property to get reviews from the store
-    const reviews = computed(() => reviewStore.reviews);
+    // Computed property for all reviews
+    const allReviews = computed(() => reviewStore.reviews);
+
+    // State for managing displayed reviews
+    const displayedReviews = ref([]);
+    const currentIndex = ref(0);
+
+    // Update displayed reviews every 5 items
+    const updateDisplayedReviews = () => {
+      if (!allReviews.value.length) return;
+
+      const start = currentIndex.value;
+      const end = start + 5;
+      displayedReviews.value = allReviews.value.slice(
+        start,
+        end > allReviews.value.length ? undefined : end
+      );
+
+      // Update the index for the next batch
+      currentIndex.value = end >= allReviews.value.length ? 0 : end;
+    };
+
+    // Start automatic updates
+    const startAutoUpdate = () => {
+      updateDisplayedReviews(); // Initial display
+      setInterval(updateDisplayedReviews, 5000); // Change every 5 seconds
+    };
 
     // Methods for drag functionality
     const startDrag = (e) => {
@@ -69,14 +97,14 @@ export default {
     // Load reviews when the component is mounted
     onMounted(() => {
       reviewStore.loadReviews();
-      console.log("Mounted, reviews loaded:", reviewStore.reviews);
+      startAutoUpdate();
     });
 
     return {
       isDragging,
       startX,
       scrollLeft,
-      reviews,
+      displayedReviews,
       startDrag,
       drag,
       stopDrag,
@@ -149,7 +177,7 @@ export default {
   margin-top: auto;
 }
 
-.productName {
+.command-product {
   font-size: 16px;
   font-weight: bold;
   color: #4a4a4a;

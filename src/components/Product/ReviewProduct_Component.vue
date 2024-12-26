@@ -130,7 +130,7 @@
 import { useProductStore } from "@/stores/useProductStore";
 import { useReviewStore } from "@/stores/useReviewStore";
 import { useUserSignupStore } from "@/stores/useUserSignupStore";
-import { computed, onMounted, ref } from "vue";
+import { computed, onMounted, ref, watch } from "vue";
 import ProductCard_Component from "./ProductCard_Component.vue";
 
 export default {
@@ -138,11 +138,17 @@ export default {
   components: {
     ProductCard_Component,
   },
-
-  setup() {
+  props: {
+    productId: {
+      type: String,
+      required: true,
+    },
+  },
+  setup(props) {
     const reviewStore = useReviewStore();
     const productStore = useProductStore();
     const userSignupStore = useUserSignupStore();
+
     const tabs = ["Details", "Relate Items", "Reviews"];
     const selectedTab = ref("Relate Items");
 
@@ -177,13 +183,15 @@ export default {
       if (editingIndex.value === null) return;
 
       const updatedReview = {
+        ...reviews.value[editingIndex.value],
         comment: editingComment.value,
         rating: editingRating.value,
-        date: new Date().toISOString(), // Ensure the date is updated when editing
+        date: new Date().toISOString(),
       };
 
-      const reviewId = reviews.value[editingIndex.value].id; // Get the id of the review being edited
-      reviewStore.updateReview(reviewId, updatedReview);
+      reviewStore.updateReview(updatedReview.id, updatedReview);
+
+      loadReviewsForProduct();
       cancelEdit();
     };
 
@@ -199,35 +207,34 @@ export default {
     const deleteReview = (index) => {
       const reviewId = reviews.value[index].id; // Get the id of the review to delete
       reviewStore.deleteReview(reviewId);
+
+      loadReviewsForProduct();
     };
 
     // Get the reviews from the store and update them when the store emits a change event
-    const reviews = computed(() => {
-      return reviewStore.reviews;
-    });
+    const reviews = ref([]);
 
     const newComment = ref("");
     const newRating = ref(0);
 
     // Function for adding a new review
     const addReview = () => {
-      console.log("Comment:", newComment.value);
-      console.log("Rating:", newRating.value);
-
       if (!newComment.value || newRating.value <= 0) {
-        console.error(
-          "Invalid data: Missing comment, rating, product name, or product image."
-        );
+        console.error("Invalid review data.");
         return;
       }
 
-      try {
-        reviewStore.addReview(newComment.value, newRating.value);
-        newComment.value = "";
-        newRating.value = 0;
-      } catch (error) {
-        console.error("Failed to add review:", error);
-      }
+      reviewStore.addReview({
+        productId: props.productId,
+        comment: newComment.value,
+        rating: newRating.value,
+        date: new Date().toISOString(),
+      });
+
+      // Refresh reviews after adding
+      loadReviewsForProduct();
+      newComment.value = "";
+      newRating.value = 0;
     };
 
     // Load the reviews when the component is mounted
@@ -239,6 +246,21 @@ export default {
       // Get the category from the store
       return productStore.getProductByCategory(category);
     });
+
+    const loadReviewsForProduct = () => {
+      const allReviews = reviewStore.reviews; // Assuming this gets all reviews
+      reviews.value = allReviews.filter(
+        (review) => review.productId === props.productId
+      );
+    };
+
+    watch(
+      () => props.productId,
+      (newId) => {
+        reviewStore.loadReviews(newId); // Reload reviews for the new product
+      },
+      { immediate: true }
+    );
 
     return {
       relatedProducts,

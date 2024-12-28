@@ -126,9 +126,9 @@ export default {
       selectedTab: "Clothes",
       priceValue: 100,
       subCategories: {
-        Clothes: ["T-shirts", "Shorts", "Shirts", "Hoodie", "Jeans"],
-        Shoes: ["Sneakers", "Formal", "Boots", "Sandals", "Loafers"],
-        Accessories: ["Watches", "Bags", "Belts", "Hats", "Glasses"],
+        Clothes: ["T-shirts", "Pants", "Shirts", "Jacket", "Full Outfit"],
+        Shoes: ["Flats", "Formal", "Boots", "Sport Shoes", "Loafers"],
+        Accessories: ["Rings", "Necklaces", "Earring & Bow", "Glasses"],
       },
       colors: ["#A0BCE0", "#E07575", "#0FB763", "#9E9E9E", "#efebe9"],
       sizes: {
@@ -147,49 +147,38 @@ export default {
     },
   },
   methods: {
-    changeTab(tab, autoApply = false) {
+    changeTab(tab) {
       this.selectedTab = tab;
       this.selectedSubCategory = null;
       this.selectedColor = null;
       this.selectedSize = null;
       this.priceValue = 100;
-      if (autoApply) this.emitFilterWithLoading();
+      
     },
-    selectSubCategory(subCategory, autoApply = false) {
+    selectSubCategory(subCategory) {
       this.selectedSubCategory = subCategory;
-      if (autoApply) this.emitFilterWithLoading();
     },
-    selectColor(color, autoApply = false) {
-      this.selectedColor = color;
-      if (autoApply) this.emitFilterWithLoading();
-    },
-    selectSize(size, autoApply = false) {
+    selectSize(size) {
       this.selectedSize = size;
-      if (autoApply) this.emitFilterWithLoading();
-    },
-    emitFilterWithLoading() {
-      this.$emit("apply-filter", {
-        filters: {
-          tab: this.selectedTab,
-          subCategory: this.selectedSubCategory,
-          color: this.selectedColor,
-          size: this.selectedSize,
-          price: this.priceValue,
-        },
-        isLoading: true, // Signal to parent that loading is required
-      });
     },
     applyFilter() {
-      this.emitFilterWithLoading();
+      this.$emit("apply-filter", {
+          tab: this.selectedTab,
+          subCategory: this.selectedSubCategory,
+          size: this.selectedSize,
+          price: this.priceValue,
+      });
     },
     clearFilter() {
-      this.selectedColor = null;
-      this.selectedSize = null;
-      this.selectedSubCategory = null;
-      this.priceValue = 100;
-      this.selectedTab = "Clothes";
-      this.applyFilter();
-    },
+    this.selectedTab = "Clothes"; // Reset to default tab
+    this.resetTabSpecificFilters();
+    this.$emit("clear-filter"); // Emit clear filter event
+  },
+  resetTabSpecificFilters() {
+    this.selectedSubCategory = null;
+    this.selectedSize = null;
+    this.priceValue = 100;
+  },
   },
 };
 </script>

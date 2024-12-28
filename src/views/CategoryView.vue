@@ -14,45 +14,26 @@
       <div class="filterProduct">
         <div class="div">
           <div class="select">
-            <Filter_Component @apply-filter="handleFilterChange" />
+            <Filter_Component @apply-filter="handleFilterChange" @clear-filter="resetFilters"/>
           </div>
           <div v-if="isSearching" class="loadSearch">
             <LoadingView />
           </div>
           <div v-else class="showProduct">
-            <ProductCard_Component
-              v-for="product in displayedProducts"
-              :id="product.id"
-              :key="product.id"
-              :name-product="product.title"
-              :image-product="product.image"
-              :rating-product="product.rating"
-              :price-product="product.price"
-              :size-product="product.size"
-              :color-product="product.color"
-              :stock-product="product.stock"
-              :description-product="product.description"
-              :discount-product="product.discount"
-              :image-details="product.imageDetails"
-              :old-price="product.oldPrice"
-              class="product-card"
-              @click="goToProductDetail(product.id)"
-            />
+            <ProductCard_Component v-for="product in displayedProducts" :id="product.id" :key="product.id"
+              :name-product="product.title" :image-product="product.image" :rating-product="product.rating"
+              :price-product="product.price" :size-product="product.size" :color-product="product.color"
+              :stock-product="product.stock" :description-product="product.description"
+              :discount-product="product.discount" :image-details="product.imageDetails" :old-price="product.oldPrice"
+              class="product-card" @click="goToProductDetail(product.id)" />
           </div>
         </div>
         <div class="loadMore">
           <div v-if="isLoadMoreLoading" class="loadSearch">
             <LoadingView />
           </div>
-          <Button_Component
-            v-else
-            name-button="Load More"
-            color-button="#FFFFFF"
-            background-color-button="#958383"
-            height-button="50px"
-            width-button="200px"
-            @click="loadMoreProducts"
-          />
+          <Button_Component v-else name-button="Load More" color-button="#FFFFFF" background-color-button="#958383"
+            height-button="50px" width-button="200px" @click="loadMoreProducts" />
         </div>
       </div>
 
@@ -98,13 +79,15 @@ export default {
     const allProducts = ref(store.products); // Assuming products is an array of products in your store
     const displayedCount = ref(6);
     const searchQuery = ref("");
-    const filters = ref({
-      tab: "Clothes",
+    // Default filters
+    const defaultFilters = {
+      tab: "All", // "All" means no category filtering
       color: null,
       subCategory: null,
       size: null,
       price: 100,
-    });
+    };
+    const filters = ref({ ...defaultFilters });
 
     const filteredProducts = computed(() => {
       return store.products.filter((product) => {
@@ -126,15 +109,6 @@ export default {
           product.description
             .toLowerCase()
             .includes(searchQuery.value.toLowerCase());
-
-        console.log(`Checking product ${product.title}:`, {
-          matchesTab,
-          matchesSubCategory,
-          matchesColor,
-          matchesSize,
-          matchesPrice,
-          matchesSearch,
-        });
 
         return (
           matchesTab &&
@@ -174,16 +148,25 @@ export default {
 
     // Function to load more products
     const loadMoreProducts = () => {
-      isLoadMoreLoading.value = true;
-      setTimeout(() => {
-        isLoadMoreLoading.value = false;
-        const nextIndex = displayedCount.value + 3;
-        displayedProducts.value = allProducts.value.slice(0, nextIndex);
-        displayedCount.value = nextIndex;
-      }, 1000); // Wait for 1 second before resetting isLoadMoreLoading to false
+    isLoadMoreLoading.value = true;
 
+    setTimeout(() => {
+      // Calculate the next index based on the number of products displayed
+      const nextIndex = displayedCount.value + 6;  // Display 6 more products
+      displayedCount.value = nextIndex;
+
+      // Update displayed products based on new index
       console.log("Next index: ", nextIndex);
-      console.log("Displayed products: ", displayedProducts.value);
+      console.log("Displayed products count: ", displayedCount.value);
+
+      isLoadMoreLoading.value = false;  // Set loading to false after 1 second
+    }, 1000); // Simulate loading delay of 1 second
+  };
+    // Reset all filters and search query
+    const resetFilters = () => {
+      filters.value = { ...defaultFilters };
+      searchQuery.value = "";
+      displayedCount.value = filteredProducts.value.length;
     };
 
     return {
@@ -193,7 +176,7 @@ export default {
       handleSearch,
       handleFilterChange,
       isLoading,
-
+      resetFilters,
       isSearching,
       isLoadMoreLoading,
     };
@@ -208,12 +191,14 @@ export default {
   justify-content: center;
   align-items: center;
 }
+
 .load {
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100vh;
 }
+
 .categoryScreen {
   width: 100%;
   height: 100vh;
@@ -225,6 +210,7 @@ h1 {
   padding: 2%;
   margin-left: 1%;
 }
+
 .filterProduct {
   width: 100%;
   height: auto;
@@ -233,6 +219,7 @@ h1 {
   justify-content: space-between;
   align-items: centers;
 }
+
 .div {
   width: 100%;
   height: auto;
@@ -240,6 +227,7 @@ h1 {
   justify-content: space-between;
   align-items: start;
 }
+
 .select {
   width: 30%;
   height: 1021px;
@@ -247,6 +235,7 @@ h1 {
   flex-direction: column;
   margin-left: 2%;
 }
+
 .showProduct {
   width: 70%;
   display: grid;
@@ -254,6 +243,7 @@ h1 {
   gap: 20px;
   margin-top: 2%;
 }
+
 .product-card {
   border: none;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
@@ -272,10 +262,12 @@ h1 {
   margin-top: 3%;
   margin-bottom: 5%;
 }
+
 /* For mobile and smaller screens */
 @media (max-width: 768px) {
   .div {
-    flex-direction: column; /* Stack the filter and products */
+    flex-direction: column;
+    /* Stack the filter and products */
     align-items: center;
   }
 
@@ -287,7 +279,8 @@ h1 {
 
   .showProduct {
     width: 100%;
-    grid-template-columns: repeat(2, 1fr); /* Show 2 columns */
+    grid-template-columns: repeat(2, 1fr);
+    /* Show 2 columns */
   }
 
   .product-card {
@@ -302,7 +295,8 @@ h1 {
 /* For very small screens (mobile devices) */
 @media (max-width: 480px) {
   h1 {
-    font-size: 1.5rem; /* Smaller font size for mobile */
+    font-size: 1.5rem;
+    /* Smaller font size for mobile */
   }
 
   .select {
@@ -310,7 +304,8 @@ h1 {
   }
 
   .showProduct {
-    grid-template-columns: 1fr; /* Single column for mobile */
+    grid-template-columns: 1fr;
+    /* Single column for mobile */
   }
 
   .loadMore {

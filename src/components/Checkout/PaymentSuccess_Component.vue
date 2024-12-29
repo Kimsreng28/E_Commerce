@@ -27,6 +27,7 @@
       <p class="transactionDate">Transaction Date: {{ transactionDate }}</p>
     </div>
     <div class="btn">
+      <router-link to = "/order">
       <div class="history">
         <Button_Component
           name-button="View Order History"
@@ -36,6 +37,7 @@
           color-button="#FFFFFF"
         />
       </div>
+    </router-link>
       <div class="returnHome">
         <Button_Component
           name-button="Return to Home"
@@ -72,6 +74,11 @@ export default {
     transactionDate: {
       type: String,
       required: true,
+    },
+  },
+  methods: {
+    goToOrderHistory() {
+      this.$router.push("/order");
     },
   },
 };

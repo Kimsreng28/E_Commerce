@@ -100,6 +100,15 @@ const router = createRouter({
         breadcrumb: "Coupon Service",
       },
     },
+    {
+      path: "/order",
+      name: "order",
+      component: () => import("../views/OrderView.vue"),
+      props: true,
+      meta: {
+        breadcrumb: "Ordered",
+      },
+    },
   ],
 });
 

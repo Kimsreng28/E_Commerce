@@ -7,6 +7,7 @@
     </div>
     <div class="container" v-else>
       <Breadcrumb_Component />
+      <OrderHistory_Component />
     </div>
 
     <Footer_Component class="footer" />
@@ -17,6 +18,7 @@
 import Breadcrumb_Component from "@/components/Breadcrumb_Component.vue";
 import Footer_Component from "@/components/Footer_Component.vue";
 import Navbar_Component from "@/components/Navbar_Component.vue";
+import OrderHistory_Component from "@/components/OrderHistory_Component.vue";
 import { onMounted, ref } from "vue";
 import LoadingView from "./LoadingView.vue";
 export default {
@@ -26,6 +28,7 @@ export default {
     LoadingView,
     Breadcrumb_Component,
     Footer_Component,
+    OrderHistory_Component,
   },
   setup() {
     const isLoading = ref(true);

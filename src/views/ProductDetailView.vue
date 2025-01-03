@@ -27,7 +27,7 @@
         :stock="product.stock"
       />
 
-      <ReviewProduct_Component />
+      <ReviewProduct_Component :productId="id"/>
 
       <Footer_Component class="footer" />
     </div>

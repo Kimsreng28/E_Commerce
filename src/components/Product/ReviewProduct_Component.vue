@@ -2,84 +2,40 @@
   <div class="reviewProduct">
     <div class="tabs">
       <div class="tabBtn">
-        <button
-          v-for="tab in tabs"
-          :key="tab"
-          :class="{ active: selectedTab === tab }"
-          @click="changeTab(tab)"
-        >
+        <button v-for="tab in tabs" :key="tab" :class="{ active: selectedTab === tab }" @click="changeTab(tab)">
           {{ tab }}
         </button>
       </div>
     </div>
 
     <div class="tabContent">
-      <div v-if="selectedTab === 'Details'">
-        <!-- Catch details of product from product in store -->
-        <p>
-          {{ detail || "No details available for this product." }}
-        </p>
-      </div>
-      <div v-if="selectedTab === 'RelateItems'">
-        <div v-if="relatedProducts.length">
-          <ProductCard_Component
-            class="productCard"
-            v-for="product in relatedProducts"
-            :key="product.id"
-            :id="product.id"
-            :name-product="product.title"
-            :image-product="product.image"
-            :rating-product="product.rating"
-            :price-product="product.price"
-            :size-product="product.size"
-            :color-product="product.color"
-            :stock-product="product.stock"
-            :description-product="product.description"
-            :discount-product="product.discount"
-            :image-details="product.imageDetails"
-            :old-price="product.oldPrice"
-          />
-        </div>
-        <p v-else>No related items found for this category.</p>
+      <div v-show="selectedTab === 'Details'">
+        <p>{{ detail || "No details available for this product." }}</p>
       </div>
 
-      <div class="reviews" v-if="selectedTab === 'Reviews'">
+      <div v-show="selectedTab === 'RelateItems'">
+        <p v-if="!relatedProducts.length">No related items found for this category.</p>
+        <div v-else>
+          <ProductCard_Component v-for="product in relatedProducts" :key="product.id" :product="product"
+            class="product-card" @click="goToProductDetail(product.id)" />
+        </div>
+      </div>
+
+      <div class="reviews" v-show="selectedTab === 'Reviews'">
         <form @submit.prevent="addReview" class="review-form">
-          <textarea
-            v-model="newComment"
-            placeholder="Write a review..."
-            class="review-input"
-          ></textarea>
+          <textarea v-model="newComment" placeholder="Write a review..." class="review-input"></textarea>
           <div class="review-actions">
-            <label for="rating" class="rating-label">Rating(0-5):</label>
-            <input
-              type="number"
-              v-model.number="newRating"
-              min="1"
-              max="5"
-              placeholder="Rating (1-5)"
-              class="rating-input"
-            />
+            <label for="rating">Rating(0-5):</label>
+            <input type="number" v-model.number="newRating" min="1" max="5" placeholder="Rating (1-5)"
+              class="rating-input" />
             <button type="submit" class="submit-btn">Post</button>
           </div>
         </form>
 
-        <!-- Edit Form -->
         <div v-if="isEditing" class="edit-form">
           <h3>Edit Review</h3>
-          <textarea
-            v-model="editingComment"
-            placeholder="Edit your comment"
-            class="edit-input"
-          ></textarea>
-          <input
-            type="number"
-            v-model.number="editingRating"
-            min="1"
-            max="5"
-            placeholder="Edit rating (1-5)"
-            class="edit-rating"
-          />
+          <textarea v-model="editingComment" placeholder="Edit your comment" class="edit-input"></textarea>
+          <input type="number" v-model.number="editingRating" min="1" max="5" class="edit-rating" />
           <div class="edit-actions">
             <button @click="saveReview" class="save-btn">Save</button>
             <button @click="cancelEdit" class="cancel-btn">Cancel</button>
@@ -87,37 +43,24 @@
         </div>
 
         <ul class="review-list">
-          <li
-            v-for="(review, index) in reviews"
-            :key="index"
-            class="review-item"
-          >
+          <li v-for="(review, index) in reviews" :key="review.id" class="review-item">
             <div class="review-header">
               <img :src="profileImage" alt="" class="profile-pic" />
               <div class="review-info">
                 <p class="review-name">{{ firstName }} {{ lastName }}</p>
-                <p class="review-date">
-                  {{ new Date(review.date).toLocaleDateString() }}
-                </p>
+                <p class="review-date">{{ new Date(review.date).toLocaleDateString() }}</p>
               </div>
             </div>
             <div class="review-content">
               <p class="review-text">{{ review.comment }}</p>
               <div class="review-rating">
-                <span v-for="n in review.rating" :key="n" class="star">★</span>
-                <span
-                  v-for="n in 5 - review.rating"
-                  :key="'empty' + n"
-                  class="star empty"
-                  >☆</span
-                >
+                <span v-for="n in review.rating" :key="'star-' + n" class="star">★</span>
+                <span v-for="n in 5 - review.rating" :key="'empty-' + n" class="star empty">☆</span>
               </div>
             </div>
             <div class="review-actions">
               <button @click="editReview(index)" class="edit-btn">Edit</button>
-              <button @click="deleteReview(index)" class="delete-btn">
-                Delete
-              </button>
+              <button @click="deleteReview(index)" class="delete-btn">Delete</button>
             </div>
           </li>
         </ul>
@@ -143,42 +86,80 @@ export default {
       type: String,
       required: true,
     },
+    
   },
   setup(props) {
-    const reviewStore = useReviewStore();
     const productStore = useProductStore();
+    const reviewStore = useReviewStore();
     const userSignupStore = useUserSignupStore();
 
-    const tabs = ["Details", "Relate Items", "Reviews"];
-    const selectedTab = ref("Relate Items");
-
+    const tabs = ["Details", "RelateItems", "Reviews"];
+    const selectedTab = ref("Details");
     const isEditing = ref(false);
     const editingIndex = ref(null);
     const editingComment = ref("");
     const editingRating = ref(0);
+    const newComment = ref("");
+    const newRating = ref(0);
+    const reviews = ref([]);
 
-    // profile images
-    const profileImage = computed(() => {
-      return userSignupStore.profileImage;
-    });
-    // first name
-    const firstName = computed(() => {
-      return userSignupStore.firstName;
-    });
-    // last name
-    const lastName = computed(() => {
-      return userSignupStore.lastName;
+    const profileImage = computed(() => userSignupStore.profileImage);
+    const firstName = computed(() => userSignupStore.firstName);
+    const lastName = computed(() => userSignupStore.lastName);
+
+    const relatedProducts = computed(() => {
+      const filteredProducts = productStore.products.filter((product) => {
+        const category = product.category?.toLowerCase();
+        const productId = props.productId?.toLowerCase();
+
+        // Check if category and productId are defined and match
+        return category && productId && category === productId;
+      });
+
+      return filteredProducts.length > 0 ? [...filteredProducts] : [];
     });
 
-    // function for edit
-    const editReview = (index) => {
-      isEditing.value = true;
-      editingIndex.value = index;
-      editingComment.value = reviews.value[index].comment;
-      editingRating.value = reviews.value[index].rating;
+
+    const loadReviewsForProduct = () => {
+      const productReviews = reviewStore.reviews.filter(
+        (review) => review.productId === props.productId
+      );
+      reviews.value = productReviews;
     };
 
-    // function for save when edit
+    onMounted(() => {
+      reviewStore.loadReviews();
+    });
+
+    watch(
+      () => props.productId,
+      () => loadReviewsForProduct(),
+      { immediate: true }
+    );
+
+    const addReview = () => {
+      if (!newComment.value || newRating.value <= 0) return;
+
+      reviewStore.addReview({
+        productId: props.productId,
+        comment: newComment.value,
+        rating: newRating.value,
+        date: new Date().toISOString(),
+      });
+
+      loadReviewsForProduct();
+      newComment.value = "";
+      newRating.value = 0;
+    };
+
+    const editReview = (index) => {
+      const review = reviews.value[index];
+      isEditing.value = true;
+      editingIndex.value = index;
+      editingComment.value = review.comment;
+      editingRating.value = review.rating;
+    };
+
     const saveReview = () => {
       if (editingIndex.value === null) return;
 
@@ -190,12 +171,10 @@ export default {
       };
 
       reviewStore.updateReview(updatedReview.id, updatedReview);
-
       loadReviewsForProduct();
       cancelEdit();
     };
 
-    // function for cancel
     const cancelEdit = () => {
       isEditing.value = false;
       editingIndex.value = null;
@@ -203,73 +182,27 @@ export default {
       editingRating.value = 0;
     };
 
-    // For deleting a review
     const deleteReview = (index) => {
-      const reviewId = reviews.value[index].id; // Get the id of the review to delete
+      const reviewId = reviews.value[index].id;
       reviewStore.deleteReview(reviewId);
-
       loadReviewsForProduct();
     };
 
-    // Get the reviews from the store and update them when the store emits a change event
-    const reviews = ref([]);
-
-    const newComment = ref("");
-    const newRating = ref(0);
-
-    // Function for adding a new review
-    const addReview = () => {
-      if (!newComment.value || newRating.value <= 0) {
-        console.error("Invalid review data.");
-        return;
-      }
-
-      reviewStore.addReview({
-        productId: props.productId,
-        comment: newComment.value,
-        rating: newRating.value,
-        date: new Date().toISOString(),
-      });
-
-      // Refresh reviews after adding
-      loadReviewsForProduct();
-      newComment.value = "";
-      newRating.value = 0;
+    const changeTab = (tab) => {
+      selectedTab.value = tab;
     };
-
-    // Load the reviews when the component is mounted
-    onMounted(() => {
-      reviewStore.loadReviews();
-    });
-
-    const relatedProducts = computed(() => {
-      // Get the category from the store
-      return productStore.getProductByCategory(category);
-    });
-
-    const loadReviewsForProduct = () => {
-      const allReviews = reviewStore.reviews; // Assuming this gets all reviews
-      reviews.value = allReviews.filter(
-        (review) => review.productId === props.productId
-      );
-    };
-
-    watch(
-      () => props.productId,
-      (newId) => {
-        reviewStore.loadReviews(newId); // Reload reviews for the new product
-      },
-      { immediate: true }
-    );
 
     return {
-      relatedProducts,
       tabs,
       selectedTab,
+      relatedProducts,
+      reviews,
+      profileImage,
+      firstName,
+      lastName,
       newComment,
       newRating,
       addReview,
-      reviews,
       isEditing,
       editingComment,
       editingRating,
@@ -277,15 +210,8 @@ export default {
       saveReview,
       cancelEdit,
       deleteReview,
-      profileImage,
-      firstName,
-      lastName,
+      changeTab,
     };
-  },
-  methods: {
-    changeTab(tab) {
-      this.selectedTab = tab;
-    },
   },
 };
 </script>
@@ -297,12 +223,14 @@ export default {
   height: auto;
   flex-direction: column;
 }
+
 .tabs {
   width: 100%;
   height: auto;
   display: flex;
   justify-content: space-evenly;
 }
+
 .tabBtn {
   width: 80%;
   height: auto;
@@ -329,10 +257,12 @@ export default {
   font-weight: 700;
   box-shadow: 0 4px 4px rgba(0, 0, 0, 0.1);
 }
+
 .tabBtn button.active {
   background-color: #f2f3f4;
   color: #000000;
 }
+
 .tabContent {
   width: 100%;
   height: auto;
@@ -507,6 +437,7 @@ export default {
 .star.empty {
   color: #ddd;
 }
+
 /* Edit Form Styling */
 .edit-btn {
   background-color: #4267b2;
@@ -545,6 +476,7 @@ export default {
 .delete-btn:hover {
   background-color: #c62828;
 }
+
 .edit-form {
   width: 100%;
   background-color: #fff;
@@ -626,6 +558,7 @@ export default {
     opacity: 0;
     transform: translateY(-10px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);

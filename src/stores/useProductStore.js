@@ -484,18 +484,19 @@ export const useProductStore = defineStore("product", {
         };
       }
     },
+
     getProductById(id) {
       return this.products.find((product) => product.id === id);
     },
 
     getProductByCategory(category) {
-      console.log("Filtering products for category:", category);
-      const filteredProducts = this.products.filter(
-        (product) => product.category.toLowerCase() === category.toLowerCase()
-      );
-      console.log("Filtered Products:", filteredProducts);
-      return filteredProducts;
-    },
+      // Ensure category is a string and not empty
+      if (typeof category !== 'string' || !category) {
+        console.warn("Invalid category provided:", category);
+        return [];
+      }
+      return this.products.filter(product => product.category === category);
+    }
   },
 
   getters: {
@@ -511,6 +512,14 @@ export const useProductStore = defineStore("product", {
           product.title.toLowerCase().includes(lowerCaseQuery) ||
           product.description.toLowerCase().includes(lowerCaseQuery)
       );
+    },
+
+    productByCategory: (state) => (category) => {
+      return state.products.filter(product => product.category === category);
+    },
+
+    productBySubCategory: (state) => (subCategory) => {
+      return state.products.filter(product => product.subCategory === subCategory);
     },
   },
 });

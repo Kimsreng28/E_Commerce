@@ -6,35 +6,67 @@
     <div v-else>
       <div v-for="order in visibleOrders" :key="order.id" class="order">
         <div class="order-card-container">
-          <!-- Stack each item vertically -->
-          <div v-for="item in order.items" :key="item.id" class="order-card">
-            <img
-              :src="getImageById(item.id)"
-              alt="Product image"
-              class="product-image"
-            />
-            <div class="order-details">
-              <div class="product-info">
-                <div class="item-header">
-                  <p class="item-name">{{ item.name }}</p>
-                  <div class="price-section">
-                    <h2 class="item-price">
-                      ${{ (item.price * item.quantity).toFixed(2) }}
-                    </h2>
-                    <p class="quantity">x{{ item.quantity }}</p>
+          <div v-for="item in order.items" :key="item.id">
+            <div class="order-card">
+              <img
+                :src="getImageById(item.id)"
+                alt="Product image"
+                class="product-image"
+              />
+              <div class="order-details">
+                <div class="product-info">
+                  <div class="item-header">
+                    <p class="item-name">{{ item.name }}</p>
+                    <div class="price-section">
+                      <h2 class="item-price">
+                        ${{ (item.price * item.quantity).toFixed(2) }}
+                      </h2>
+                      <p class="quantity">x{{ item.quantity }}</p>
+                    </div>
                   </div>
+                  <p style="font-weight: bold;">Size: {{ item.size || "N/A" }}</p>
+                  <div class="color-section">
+                    <span style="font-weight: bold;">Color:</span>
+                    <div
+                      class="colorOption"
+                      :style="{ backgroundColor: item.color || '#ccc' }"
+                      :title="item.color || 'No color provided'"
+                    ></div>
+                  </div>
+                  <p class="order-date">{{ order.date }}</p>
                 </div>
-                <p style="font-weight: bold;">Size: {{ item.size || "N/A" }}</p>
-                <div class="color-section">
-                  <span style="font-weight: bold;">Color:</span>
-                  <div
-                    class="colorOption"
-                    :style="{ backgroundColor: item.color || '#ccc' }"
-                    :title="item.color || 'No color provided'"
-                  ></div>
-                </div>
-                <p class="order-date">{{ order.date }}</p>
               </div>
+            </div>
+  
+            <div class="button-row">
+              <Button_Component id="button-border"
+                name-button="Delivery Details"
+                color-button="#958383"
+                background-color-button="#FFFFFF"
+                height-button="40px"
+                width-button="150px"
+              />
+              <Button_Component id="button-border"
+                name-button="Refund"
+                color-button="#958383"
+                background-color-button="#FFFFFF"
+                height-button="40px"
+                width-button="150px"
+              />
+              <Button_Component
+                name-button="Re-Order"
+                color-button="#FFFFFF"
+                background-color-button="#564949"
+                height-button="40px"
+                width-button="150px"
+              />
+              <Button_Component
+                name-button="Rate Us!"
+                color-button="#FFFFFF"
+                background-color-button="#564949"
+                height-button="40px"
+                width-button="150px"
+              />
             </div>
           </div>
         </div>
@@ -44,13 +76,20 @@
 </template>
 
 
+
+
+
 <script>
 import { ref, watch, onMounted } from "vue";
 import { useOrderHistory } from "@/stores/useOrderHistory";
 import { useCartStore } from "@/stores/useCartStore";
+import Button_Component from "@/components/Button_Component.vue";
 
 export default {
   name: "OrderHistory_Component",
+  components: {
+    Button_Component,
+  },
   setup() {
     const orderHistoryStore = useOrderHistory();
     const cartStore = useCartStore();
@@ -89,6 +128,21 @@ export default {
 
 
 <style scoped>
+
+#button-border {
+  border: 1px solid #9E9E9E;
+  border-radius: 8px;
+}
+
+.button-row {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 15px;
+  margin-right: 5em;
+  gap: 10px;
+  margin-bottom: 5px;
+}
+
 .orderHistory {
   padding: 20px;
   display: flex;
@@ -104,7 +158,6 @@ export default {
 .order-card-container {
   display: flex;
   flex-direction: column; 
-  align-items: center; 
   gap: 15px; 
 }
 

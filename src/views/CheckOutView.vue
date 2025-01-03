@@ -85,6 +85,7 @@ import PaymentSuccess_Component from "@/components/Checkout/PaymentSuccess_Compo
 import Footer_Component from "@/components/Footer_Component.vue";
 import Navbar_Component from "@/components/Navbar_Component.vue";
 import { useCheckOut } from "@/stores/useCheckOut";
+import { useOrderHistory } from "@/stores/useOrderHistory";
 import { onMounted, ref } from "vue";
 import { useRoute } from "vue-router";
 import LoadingView from "./LoadingView.vue";
@@ -111,6 +112,9 @@ export default {
 
     const route = useRoute();
     const totalPrice = ref(parseFloat(route.query.totalPrice) || 0);
+
+    const checkOutStore = useCheckOut();
+    const orderHistoryStore = useOrderHistory()
 
     onMounted(() => {
       setTimeout(() => {
@@ -139,7 +143,24 @@ export default {
 
       // Generate a random transaction ID and set transaction date
       transactionId.value = `TXN${Math.floor(Math.random() * 1000000000)}`;
-      transactionDate.value = new Date().toLocaleString();
+      // Store product data in order history
+      const order = {
+        id: transactionId.value,
+        date: transactionDate.value,
+        items: checkOutStore.checkOut.map(item => ({
+          id: item.id,
+          name: item.name,
+          quantity: item.quantity,
+          price: item.price,
+          discount: item.discount,
+          finalPrice: item.finalPrice,
+          color: item.color,
+          size: item.size,
+        })),
+        totalPrice: totalPrice.value,
+        paymentMethod: selectedPaymentMethod.value,
+      };
+      orderHistoryStore.addToOrderHistory(order);
 
       // After successful payment, reset after 5 seconds
       setTimeout(() => {

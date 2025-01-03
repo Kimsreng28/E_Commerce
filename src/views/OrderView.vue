@@ -21,6 +21,7 @@ import Navbar_Component from "@/components/Navbar_Component.vue";
 import OrderHistory_Component from "@/components/OrderHistory_Component.vue";
 import { onMounted, ref } from "vue";
 import LoadingView from "./LoadingView.vue";
+
 export default {
   name: "OrderView",
   components: {
@@ -35,8 +36,8 @@ export default {
 
     onMounted(() => {
       setTimeout(() => {
-        isLoading.value = false; // Set loading to false after 3 seconds
-      }, 1000);
+        isLoading.value = false;
+      }, 1000); // Simulate loading for 1 second
     });
 
     return {

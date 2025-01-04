@@ -10,15 +10,20 @@
 
     <div class="tabContent">
       <div v-show="selectedTab === 'Details'">
-        <p>{{ detail || "No details available for this product." }}</p>
+        <p>{{ description || "No details available for this product." }}</p>
       </div>
 
-      <div v-show="selectedTab === 'RelateItems'">
-        <p v-if="!relatedProducts.length">No related items found for this category.</p>
-        <div v-else>
+      <div v-show="selectedTab === 'RelateItems'" class="contain">
+        <div v-if="relatedProducts && relatedProducts.length > 0" class="productContain">
           <ProductCard_Component v-for="product in relatedProducts" :key="product.id" :product="product"
-            class="product-card" @click="goToProductDetail(product.id)" />
+            :id="product.id" :name-product="product.title" :image-product="product.image"
+            :rating-product="product.rating" :price-product="product.price" :size-product="product.size"
+            :color-product="product.color" :stock-product="product.stock" :description-product="product.description"
+            :discount-product="product.discount" :image-details="product.imageDetails" :old-price="product.oldPrice"
+            @click="goToProductDetail(product.id)" class="product-card"/>
         </div>
+        <p v-else>No related items found for this category.</p>
+
       </div>
 
       <div class="reviews" v-show="selectedTab === 'Reviews'">
@@ -26,7 +31,7 @@
           <textarea v-model="newComment" placeholder="Write a review..." class="review-input"></textarea>
           <div class="review-actions">
             <label for="rating">Rating(0-5):</label>
-            <input type="number" v-model.number="newRating" min="1" max="5" placeholder="Rating (1-5)"
+            <input type="number" id="rating" v-model.number="newRating" min="1" max="5" placeholder="Rating (1-5)"
               class="rating-input" />
             <button type="submit" class="submit-btn">Post</button>
           </div>
@@ -86,7 +91,7 @@ export default {
       type: String,
       required: true,
     },
-    
+
   },
   setup(props) {
     const productStore = useProductStore();
@@ -107,17 +112,29 @@ export default {
     const firstName = computed(() => userSignupStore.firstName);
     const lastName = computed(() => userSignupStore.lastName);
 
+    console.log('props.productId', props.productId)
+    const productDetail = computed(() => {
+
+      const detail = productStore.products.find((product) => {
+        return product.id == props.productId
+      })
+      return detail
+    })
+    console.log('productDetail', productDetail.value)
+
     const relatedProducts = computed(() => {
       const filteredProducts = productStore.products.filter((product) => {
-        const category = product.category?.toLowerCase();
-        const productId = props.productId?.toLowerCase();
-
-        // Check if category and productId are defined and match
-        return category && productId && category === productId;
+        console.log("Products.sdfsdfsdf", product.category);
+        console.log('Product detail category', productDetail.value.category)
+        return product.category == productDetail.value.category;
       });
-
+      console.log("Filtered Products:", filteredProducts);
       return filteredProducts.length > 0 ? [...filteredProducts] : [];
     });
+    const goToProductDetail = (productId) => {
+      console.log("Navigating to product detail with ID:", productId);
+      router.push({ name: "productDetail", params: { id: productId } });
+    };
 
 
     const loadReviewsForProduct = () => {
@@ -129,10 +146,12 @@ export default {
 
     onMounted(() => {
       reviewStore.loadReviews();
+      loadReviewsForProduct();
     });
 
     watch(
       () => props.productId,
+      () => props.category,
       () => loadReviewsForProduct(),
       { immediate: true }
     );
@@ -211,6 +230,8 @@ export default {
       cancelEdit,
       deleteReview,
       changeTab,
+      productDetail,
+      goToProductDetail,
     };
   },
 };
@@ -219,11 +240,33 @@ export default {
 <style scoped>
 .reviewProduct {
   display: flex;
-  width: 1440px;
+  width: 100%;
   height: auto;
   flex-direction: column;
 }
+.contain{
 
+  width: 100%;
+  display: flex;
+  justify-content: center;
+
+}
+.productContain {
+  width: 90%;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 20px;
+  margin-top: 2%;
+  margin-bottom: 5%;
+
+}
+.product-card {
+  border: none;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  background-color: white;
+  border-radius: 8px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
 .tabs {
   width: 100%;
   height: auto;

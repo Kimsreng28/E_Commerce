@@ -27,7 +27,7 @@
         :stock="product.stock"
       />
 
-      <ReviewProduct_Component :productId="id"/>
+      <ReviewProduct_Component :productId="$route.params.id" />
 
       <Footer_Component class="footer" />
     </div>

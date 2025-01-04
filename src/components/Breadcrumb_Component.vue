@@ -37,14 +37,18 @@ export default {
         const fullPath = `/${pathArray.slice(0, index + 1).join("/")}`;
         const routeMatch = router.resolve(fullPath);
 
+        const lastPathSegment = path.split("/").pop(); 
         // Use route's meta breadcrumb if available, or fallback to the path name
-        const routeName = routeMatch.meta?.breadcrumb || path;
+        const routeName = routeMatch.meta?.breadcrumb || lastPathSegment;
+
+       
 
         return {
           name: routeName.charAt(0).toUpperCase() + routeName.slice(1),
           path: fullPath,
         };
-      });
+      })
+      .filter(Boolean); 
     });
 
     return {

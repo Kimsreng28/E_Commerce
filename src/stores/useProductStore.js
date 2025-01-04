@@ -463,6 +463,7 @@ export const useProductStore = defineStore("product", {
   }),
 
   actions: {
+
     addProduct(product) {
       const id = product.id || this.products.length + 1;
       const newProduct = { ...product, id };
@@ -512,14 +513,6 @@ export const useProductStore = defineStore("product", {
           product.title.toLowerCase().includes(lowerCaseQuery) ||
           product.description.toLowerCase().includes(lowerCaseQuery)
       );
-    },
-
-    productByCategory: (state) => (category) => {
-      return state.products.filter(product => product.category === category);
-    },
-
-    productBySubCategory: (state) => (subCategory) => {
-      return state.products.filter(product => product.subCategory === subCategory);
     },
   },
 });

@@ -92,8 +92,9 @@ const router = createRouter({
         breadcrumb: "Category",
       },
     },
+    
     {
-      path: "/category/:id",
+      path: "/category/products/:id",
       name: "productDetail",
       component: () => import("../views/ProductDetailView.vue"),
       props: true,

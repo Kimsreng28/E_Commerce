@@ -1,5 +1,12 @@
 <template>
   <div class="orderHistory">
+    <div class="sortBy">
+      <label for="sort">Sort By:</label>
+      <select id="sort" v-model="selectedSort">
+        <option value="date">Date</option>
+        <option value="alphabetical">Product Name</option>
+      </select>
+    </div>
     <div v-if="visibleOrders.length === 0">
       No orders found.
     </div>
@@ -37,7 +44,7 @@
                 </div>
               </div>
             </div>
-  
+
             <div class="button-row">
               <Button_Component id="button-border"
                 name-button="Delivery Details"
@@ -75,10 +82,6 @@
   </div>
 </template>
 
-
-
-
-
 <script>
 import { ref, watch, onMounted } from "vue";
 import { useOrderHistory } from "@/stores/useOrderHistory";
@@ -94,6 +97,7 @@ export default {
     const orderHistoryStore = useOrderHistory();
     const cartStore = useCartStore();
     const visibleOrders = ref([]);
+    const selectedSort = ref("date");
 
     const addOrdersSequentially = () => {
       const allOrders = orderHistoryStore.orderHistory;
@@ -101,10 +105,14 @@ export default {
 
       const intervalId = setInterval(() => {
         if (index < allOrders.length) {
-          visibleOrders.value.push(allOrders[index]);
+          const newOrder = allOrders[index];
+          if (!visibleOrders.value.some(order => order.id === newOrder.id)) {
+            visibleOrders.value.push(newOrder);
+          }
+          sortOrders(); // Ensure sorting after adding new orders
           index++;
         } else {
-          clearInterval(intervalId); 
+          clearInterval(intervalId);
         }
       }, 500);
     };
@@ -114,21 +122,33 @@ export default {
       return product ? product.image : "default-image-url.jpg";
     };
 
+    const sortOrders = () => {
+      const ordersCopy = [...visibleOrders.value];
+      if (selectedSort.value === "date") {
+        ordersCopy.sort((a, b) => new Date(b.date) - new Date(a.date));
+      } else if (selectedSort.value === "alphabetical") {
+        ordersCopy.sort((a, b) => a.items[0].name.localeCompare(b.items[0].name));
+      }
+      visibleOrders.value = ordersCopy;
+    };
+
+    watch(selectedSort, sortOrders);
+
     onMounted(() => {
+      console.log("Fetched Orders:", orderHistoryStore.orderHistory);
       addOrdersSequentially();
     });
 
     return {
       visibleOrders,
       getImageById,
+      selectedSort,
     };
   },
 };
 </script>
 
-
 <style scoped>
-
 #button-border {
   border: 1px solid #9E9E9E;
   border-radius: 8px;
@@ -147,7 +167,7 @@ export default {
   padding: 20px;
   display: flex;
   flex-direction: column;
-  gap: 20px; 
+  gap: 20px;
 }
 
 .order {
@@ -157,8 +177,8 @@ export default {
 
 .order-card-container {
   display: flex;
-  flex-direction: column; 
-  gap: 15px; 
+  flex-direction: column;
+  gap: 15px;
 }
 
 .order-card {
@@ -166,7 +186,7 @@ export default {
   align-items: center;
   gap: 15px;
   border: 1px solid #ddd;
-  width: 90%; 
+  width: 90%;
   padding: 15px;
   border-radius: 8px;
   background-color: #fff;
@@ -239,5 +259,33 @@ export default {
 .order-date {
   color: #aaa;
   font-size: 14px;
+}
+
+.sortBy {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+  justify-content: flex-end;
+  padding-right: 5em;
+}
+
+.sortBy label {
+  font-family: Quicksand, sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  color: #564949;
+}
+
+.sortBy select {
+  height: 30px;
+  width: 150px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  outline: none;
+  font-family: Quicksand, sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  color: #1f1d1d;
 }
 </style>

@@ -43,84 +43,50 @@
         <p v-else>No related items found for this category.</p>
       </div>
 
+      <!-- Review Section -->
       <div class="reviews" v-if="selectedTab === 'Reviews'">
         <form @submit.prevent="addReview" class="review-form">
-          <textarea
-            v-model="newComment"
-            placeholder="Write a review..."
-            class="review-input"
-          ></textarea>
           <div class="review-actions">
+            <div>
+              <input
+              v-model="comment"
+              type="text"
+              placeholder="Write your review..."
+            />
             <label for="rating" class="rating-label">Rating(0-5):</label>
             <input
-              type="number"
-              v-model.number="newRating"
-              min="1"
-              max="5"
-              placeholder="Rating (1-5)"
-              class="rating-input"
-            />
-            <button type="submit" class="submit-btn">Post</button>
+                v-model="rating"
+                type="number"
+                min="1"
+                max="5"
+                placeholder="Rating (1-5)"
+            /></div>
+            <input type="file" @change="onImageUpload" />
+            <button @click="postReview">Post</button>
           </div>
-        </form>
+          <p>Comments</p>
+          <div class="showReview" v-for="review in reviewStore.reviews" :key="review.id">
+           <div> 
+            <img :src="review.image" alt="Review Image" style="max-width: 200px" />
+            <p>{{ review.comment }}</p>
+            <p>⭐{{ review.rating }}</p>
+           </div>
+           <div class="but-action">
+             <button @click="deleteReview(review.id)">Delete</button>
+             <button @click="editReview(review.id)">Edit</button>
+           </div>
+          </div>
 
-        <!-- Edit Form -->
-        <div v-if="isEditing" class="edit-form">
+      <div v-if="isEditing" class="edit-form">
           <h3>Edit Review</h3>
-          <textarea
-            v-model="editingComment"
-            placeholder="Edit your comment"
-            class="edit-input"
-          ></textarea>
-          <input
-            type="number"
-            v-model.number="editingRating"
-            min="1"
-            max="5"
-            placeholder="Edit rating (1-5)"
-            class="edit-rating"
-          />
+          <textarea v-model="editingComment" placeholder="Edit your comment" class="edit-input"></textarea>
+          <input type="number" v-model.number="editingRating" min="1" max="5" class="edit-rating" />
           <div class="edit-actions">
             <button @click="saveReview" class="save-btn">Save</button>
             <button @click="cancelEdit" class="cancel-btn">Cancel</button>
           </div>
         </div>
-
-        <ul class="review-list">
-          <li
-            v-for="(review, index) in reviews"
-            :key="index"
-            class="review-item"
-          >
-            <div class="review-header">
-              <img :src="profileImage" alt="" class="profile-pic" />
-              <div class="review-info">
-                <p class="review-name">{{ firstName }} {{ lastName }}</p>
-                <p class="review-date">
-                  {{ new Date(review.date).toLocaleDateString() }}
-                </p>
-              </div>
-            </div>
-            <div class="review-content">
-              <p class="review-text">{{ review.comment }}</p>
-              <div class="review-rating">
-                <span v-for="n in review.rating" :key="n" class="star">★</span>
-                <span
-                  v-for="n in 5 - review.rating"
-                  :key="'empty' + n"
-                  class="star empty"
-                  >☆</span
-                >
-              </div>
-            </div>
-            <div class="review-actions">
-              <button @click="editReview(index)" class="edit-btn">Edit</button>
-              <button @click="deleteReview(index)" class="delete-btn">
-                Delete
-              </button>
-            </div>
-          </li>
-        </ul>
+        </form>
       </div>
     </div>
   </div>
@@ -132,6 +98,7 @@ import { useReviewStore } from "@/stores/useReviewStore";
 import { useUserSignupStore } from "@/stores/useUserSignupStore";
 import { computed, onMounted, ref, watch } from "vue";
 import ProductCard_Component from "./ProductCard_Component.vue";
+
 
 export default {
   name: "ReviewProduct_Component",
@@ -152,6 +119,9 @@ export default {
     const tabs = ["Details", "Relate Items", "Reviews"];
     const selectedTab = ref("Relate Items");
 
+    const comment = ref("");
+    const rating = ref(null);
+    const image = ref(null);
     const isEditing = ref(false);
     const editingIndex = ref(null);
     const editingComment = ref("");
@@ -176,6 +146,17 @@ export default {
       editingIndex.value = index;
       editingComment.value = reviews.value[index].comment;
       editingRating.value = reviews.value[index].rating;
+    };
+
+    const onImageUpload = (event) => {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          image.value = e.target.result; // Store the base64 representation of the image
+        };
+        reader.readAsDataURL(file);
+      }
     };
 
     // function for save when edit
@@ -204,11 +185,13 @@ export default {
     };
 
     // For deleting a review
-    const deleteReview = (index) => {
-      const reviewId = reviews.value[index].id; // Get the id of the review to delete
-      reviewStore.deleteReview(reviewId);
-
-      loadReviewsForProduct();
+    const deleteReview = (reviewId) => {
+      try {
+        reviewStore.deleteReview(reviewId);
+        alert("Review deleted successfully!");
+      } catch (error) {
+        alert(error.message);
+      }
     };
 
     // Get the reviews from the store and update them when the store emits a change event
@@ -218,6 +201,17 @@ export default {
     const newRating = ref(0);
 
     // Function for adding a new review
+    const postReview = () => {
+      try {
+        reviewStore.addReview(props.productId, comment.value, rating.value, image.value);
+        comment.value = "";
+        rating.value = null;
+        image.value = null;
+        alert("Review posted successfully!");
+      } catch (error) {
+        alert(error.message);
+      }
+    };
     const addReview = () => {
       if (!newComment.value || newRating.value <= 0) {
         console.error("Invalid review data.");
@@ -263,6 +257,12 @@ export default {
     );
 
     return {
+      reviewStore,
+      comment,
+      rating,
+      image,
+      onImageUpload,
+      postReview,
       relatedProducts,
       tabs,
       selectedTab,
@@ -347,9 +347,8 @@ export default {
   width: 80%;
   margin: 2rem auto;
   padding: 2rem;
-  background-color: #f9f9f9;
-  border-radius: 12px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+
 }
 
 /* Review Form */
@@ -358,6 +357,7 @@ export default {
   flex-direction: column;
   gap: 1rem;
   margin-bottom: 2rem;
+
 }
 
 .review-input {
@@ -485,9 +485,13 @@ export default {
 
 .review-actions {
   display: flex;
-  justify-content: flex-end;
-  align-items: center;
+  flex-direction: column;
+  align-items: left ;
   gap: 0.5rem;
+  background: white;
+  border: 5px solid #faf5ec;
+  padding: 20px;
+  border-radius: 10px;
 }
 
 .review-actions label {
@@ -618,6 +622,71 @@ export default {
 
 .cancel-btn:hover {
   background-color: #d32f2f;
+}
+
+.review-actions input[type="text"] {
+  outline: none;
+  border: 2.5px solid #faf5ec ;
+  padding: 10px;
+  width: 79%;
+  border-radius: 10px;
+  margin-right: 10px;
+  
+}
+.review-actions input[type="number"] {
+  outline: none;
+  border: 2.5px solid #faf5ec ;
+  padding: 10px;
+  width: 10.6%;
+  border-radius: 10px;
+}
+
+.review-actions input[type="file"]::file-selector-button {
+  outline: none;
+  border: 2.5px solid #faf5ec ;
+  background: white;
+  padding: 10px;
+  border-radius: 10px;
+  display: inline-block;
+
+}
+.review-actions button {
+  background: white;
+  border: 2.5px solid #faf5ec ;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  width: 10%;
+  align-self: center;
+  font-size: 16px;
+  font-family: Quicksand, sans-serif;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+.showReview {
+  display: flex;
+  border-radius: 12px;
+  justify-content: space-between;
+  padding: 10px;
+  background: #faf5ec;
+}
+.showReview img {
+  border-radius: 10px;
+}
+.but-action {
+  display: flex;
+  flex-direction: column;
+  gap:10px;
+}
+.but-action button {
+  background: white;
+  border: 2.5px solid #faf5ec ;
+  padding: 10px;
+  width: 100%;
+  border-radius: 8px;
+  align-self: center;
+  font-size: 16px;
+  transition: all 0.3s ease;
+
 }
 
 /* Animation */

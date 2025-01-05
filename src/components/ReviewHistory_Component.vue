@@ -17,15 +17,7 @@
         v-for="review in displayedReviews"
         :key="review.id"
       >
-        <img
-          class="reviewImage"
-          :src="
-            review.imageProduct
-              ? 'http://localhost:5173/' + review.imageProduct
-              : '/path/to/default-image.jpg'
-          "
-          alt=""
-        />
+      <img v-if="review.image" :src="review.image" alt="Product Image" class="reviewImage"/>
         <div class="cardFooter">
           <p class="command-product">{{ review.comment }}</p>
           <p class="rating">⭐ {{ review.rating }}</p>
@@ -163,8 +155,7 @@ export default {
 }
 
 .reviewImage {
-  width: 100%;
-  height: 200px;
+  max-width: 450px;
   object-fit: cover;
   border-radius: 10px;
 }

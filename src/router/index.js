@@ -92,6 +92,11 @@ const router = createRouter({
         breadcrumb: "Category",
       },
     },
+    {
+      path: "/category/products",
+      redirect: "/category",
+      props: true,
+    },
     
     {
       path: "/category/products/:id",

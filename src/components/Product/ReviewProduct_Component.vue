@@ -9,18 +9,24 @@
     </div>
 
     <div class="tabContent">
-      <div v-show="selectedTab === 'Details'">
+      <div v-show="selectedTab === 'Details'" class="detail">
         <p>{{ description || "No details available for this product." }}</p>
       </div>
 
       <div v-show="selectedTab === 'RelateItems'" class="contain">
-        <div v-if="relatedProducts && relatedProducts.length > 0" class="productContain">
-          <ProductCard_Component v-for="product in relatedProducts" :key="product.id" :product="product"
+        <div v-if="relatedProducts && relatedProducts.length > 0" >
+          <div v-if="isSearching" class="loadSearch">
+            <LoadingView />
+          </div>
+          <div v-else class="productContain">
+            <ProductCard_Component v-for="product in relatedProducts" :key="product.id" :product="product"
             :id="product.id" :name-product="product.title" :image-product="product.image"
             :rating-product="product.rating" :price-product="product.price" :size-product="product.size"
             :color-product="product.color" :stock-product="product.stock" :description-product="product.description"
             :discount-product="product.discount" :image-details="product.imageDetails" :old-price="product.oldPrice"
-            @click="goToProductDetail(product.id)" class="product-card"/>
+            class="product-card" @click="goToDetail(product.id)"/>
+          </div>
+          
         </div>
         <p v-else>No related items found for this category.</p>
 
@@ -80,20 +86,28 @@ import { useReviewStore } from "@/stores/useReviewStore";
 import { useUserSignupStore } from "@/stores/useUserSignupStore";
 import { computed, onMounted, ref, watch } from "vue";
 import ProductCard_Component from "./ProductCard_Component.vue";
-
+import { useRouter } from 'vue-router';
+import LoadingView from "@/views/LoadingView.vue";
 export default {
   name: "ReviewProduct_Component",
   components: {
     ProductCard_Component,
+    LoadingView,
   },
+  
   props: {
     productId: {
-      type: String,
+      type: [String, Number],
       required: true,
     },
+    description: {
+      type: String,
+      required: true // or false, depending on whether it's mandatory
+    }
 
   },
   setup(props) {
+    const router = useRouter();
     const productStore = useProductStore();
     const reviewStore = useReviewStore();
     const userSignupStore = useUserSignupStore();
@@ -107,34 +121,33 @@ export default {
     const newComment = ref("");
     const newRating = ref(0);
     const reviews = ref([]);
+    const isSearching = ref(false);
+    const isLoading = ref(true);
 
     const profileImage = computed(() => userSignupStore.profileImage);
     const firstName = computed(() => userSignupStore.firstName);
     const lastName = computed(() => userSignupStore.lastName);
-
-    console.log('props.productId', props.productId)
-    const productDetail = computed(() => {
+    const productDetails = computed(() => {
 
       const detail = productStore.products.find((product) => {
-        return product.id == props.productId
-      })
-      return detail
-    })
-    console.log('productDetail', productDetail.value)
+        return product.id == props.productId;
+      });
+      return detail;
+    });
 
     const relatedProducts = computed(() => {
       const filteredProducts = productStore.products.filter((product) => {
-        console.log("Products.sdfsdfsdf", product.category);
-        console.log('Product detail category', productDetail.value.category)
-        return product.category == productDetail.value.category;
+        return product.category == productDetails.value.category;
       });
-      console.log("Filtered Products:", filteredProducts);
       return filteredProducts.length > 0 ? [...filteredProducts] : [];
     });
-    const goToProductDetail = (productId) => {
-      console.log("Navigating to product detail with ID:", productId);
-      router.push({ name: "productDetail", params: { id: productId } });
+    const goToDetail = (productId) => {
+      console.log("DetailllllProducts:", productId);
+      router.push({ name: "productDetail", params: { id: productId } })
+     
     };
+    
+
 
 
     const loadReviewsForProduct = () => {
@@ -147,11 +160,16 @@ export default {
     onMounted(() => {
       reviewStore.loadReviews();
       loadReviewsForProduct();
+      setTimeout(() => {
+        isLoading.value = false; // Set loading to false after 3 seconds
+      }, 1000);
     });
 
     watch(
       () => props.productId,
+
       () => props.category,
+
       () => loadReviewsForProduct(),
       { immediate: true }
     );
@@ -230,8 +248,11 @@ export default {
       cancelEdit,
       deleteReview,
       changeTab,
-      productDetail,
-      goToProductDetail,
+      productDetails,
+      goToDetail,
+      isSearching,
+      isLoading,
+
     };
   },
 };
@@ -244,13 +265,19 @@ export default {
   height: auto;
   flex-direction: column;
 }
-.contain{
+
+.contain {
 
   width: 100%;
   display: flex;
   justify-content: center;
 
 }
+.detail p{
+  font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  font-size: 25px;
+}
+
 .productContain {
   width: 90%;
   display: grid;
@@ -260,6 +287,7 @@ export default {
   margin-bottom: 5%;
 
 }
+
 .product-card {
   border: none;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
@@ -267,6 +295,7 @@ export default {
   border-radius: 8px;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
+
 .tabs {
   width: 100%;
   height: auto;

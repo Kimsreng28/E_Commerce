@@ -81,7 +81,7 @@ export default {
     imageDetails: Array,
     colorProduct: Array,
     sizeProduct: Array,
-    stockProduct: String,
+    stockProduct: Number,
     category: String,
   },
   mounted() {

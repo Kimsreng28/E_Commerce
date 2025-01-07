@@ -2,11 +2,18 @@
   <div class="orderScreen">
     <Navbar_Component />
 
+
+    
     <div class="load" v-if="isLoading">
       <LoadingView />
     </div>
     <div class="container" v-else>
       <Breadcrumb_Component />
+
+      <div class="title">
+        <p>Ordered</p>
+      </div>
+
       <OrderHistory_Component />
     </div>
 
@@ -19,8 +26,11 @@ import Breadcrumb_Component from "@/components/Breadcrumb_Component.vue";
 import Footer_Component from "@/components/Footer_Component.vue";
 import Navbar_Component from "@/components/Navbar_Component.vue";
 import OrderHistory_Component from "@/components/OrderHistory_Component.vue";
-import { onMounted, ref } from "vue";
+import { useOrderHistory } from "@/stores/useOrderHistory";
+import { useCheckOut } from "@/stores/useCheckOut";
+import { ref, onMounted } from "vue";
 import LoadingView from "./LoadingView.vue";
+
 export default {
   name: "OrderView",
   components: {
@@ -32,10 +42,17 @@ export default {
   },
   setup() {
     const isLoading = ref(true);
+    const orderHistoryStore = useOrderHistory();
+    const checkoutStore = useCheckOut();
 
     onMounted(() => {
+      if (checkoutStore.checkOut.length > 0) {
+        orderHistoryStore.addOrderFromCheckout(checkoutStore.checkOut);
+        checkoutStore.clearCheckOut(); 
+      }
+
       setTimeout(() => {
-        isLoading.value = false; // Set loading to false after 3 seconds
+        isLoading.value = false;
       }, 1000);
     });
 
@@ -47,6 +64,23 @@ export default {
 </script>
 
 <style scoped>
+
+.title {
+  width: 95%;
+  margin-top: 2%;
+  margin-left: 3%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+.title p {
+  font-family: Saira, sans-serif;
+  font-size: 32px;
+  font-weight: bold;
+  color: #564949;
+}
+
 .load {
   display: flex;
   justify-content: center;

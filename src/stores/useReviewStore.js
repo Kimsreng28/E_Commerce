@@ -22,6 +22,7 @@ export const useReviewStore = defineStore("review", {
         ...review,
         date: new Date(review.date), // Convert date back to a Date object
       }));
+      console.log("Reviews after loading:", this.reviews); // Debugging line
     },
 
     saveReviews() {
@@ -44,7 +45,7 @@ export const useReviewStore = defineStore("review", {
       this.reviews.push(newReview);
       this.saveReviews();
     },
-    // Update an existing review by id
+
     updateReview(reviewId, updatedReview) {
       const index = this.reviews.findIndex((review) => review.id === reviewId);
       if (index !== -1) {
@@ -55,7 +56,6 @@ export const useReviewStore = defineStore("review", {
       }
     },
 
-    // Delete a review by id
     deleteReview(reviewId) {
       this.reviews = this.reviews.filter((review) => review.id !== reviewId);
       this.saveReviews();

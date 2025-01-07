@@ -70,7 +70,10 @@ export default {
     id: Number,
     imageProduct: String,
     nameProduct: String,
-    ratingProduct: Number,
+    ratingProduct: {
+      type: Number,
+      default: 0,
+    },
     priceProduct: Number,
     discountProduct: String,
     oldPrice: Number,
@@ -78,7 +81,8 @@ export default {
     imageDetails: Array,
     colorProduct: Array,
     sizeProduct: Array,
-    stockProduct: String,
+    stockProduct: Number,
+    category: String,
   },
   mounted() {
     console.log("Received product:", this.nameProduct); // Debugging the received data

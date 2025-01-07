@@ -140,6 +140,7 @@ export default {
   justify-content: center;
   align-items: center;
   border: 1px solid #e7e2e2;
+  
 }
 
 .cardImage {
@@ -205,7 +206,7 @@ export default {
 }
 
 .image img {
-  width: 90%;
+  width: 65%;
   height: auto;
   margin-right: 10px;
 }

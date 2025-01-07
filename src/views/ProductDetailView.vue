@@ -27,7 +27,7 @@
         :stock="product.stock"
       />
 
-      <ReviewProduct_Component />
+      <ReviewProduct_Component :productId="$route.params.id" :description="product.description"/>
 
       <Footer_Component class="footer" />
     </div>
@@ -56,7 +56,7 @@ export default {
   },
   props: {
     id: {
-      type: Number,
+      type: [String, Number],
       required: true,
     },
   },

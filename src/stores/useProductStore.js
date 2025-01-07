@@ -463,6 +463,7 @@ export const useProductStore = defineStore("product", {
   }),
 
   actions: {
+
     addProduct(product) {
       const id = product.id || this.products.length + 1;
       const newProduct = { ...product, id };
@@ -484,18 +485,19 @@ export const useProductStore = defineStore("product", {
         };
       }
     },
+
     getProductById(id) {
       return this.products.find((product) => product.id === id);
     },
 
     getProductByCategory(category) {
-      console.log("Filtering products for category:", category);
-      const filteredProducts = this.products.filter(
-        (product) => product.category.toLowerCase() === category.toLowerCase()
-      );
-      console.log("Filtered Products:", filteredProducts);
-      return filteredProducts;
-    },
+      // Ensure category is a string and not empty
+      if (typeof category !== 'string' || !category) {
+        console.warn("Invalid category provided:", category);
+        return [];
+      }
+      return this.products.filter(product => product.category === category);
+    }
   },
 
   getters: {

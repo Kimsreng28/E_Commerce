@@ -1,6 +1,7 @@
 <template>
   <div>
-    <router-view />
+    <!--{:key="$route.fullPath"} to ensure the component is re-rendered whenever the route changes. -->
+    <router-view :key="$route.fullPath"/>
   </div>
 </template>
 

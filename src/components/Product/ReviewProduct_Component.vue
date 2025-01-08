@@ -40,7 +40,7 @@
               :discount-product="product.discount"
               :image-details="product.imageDetails"
               :old-price="product.oldPrice"
-              class="product-card"
+              class="productCard"
               @click="goToDetail(product.id)"
             />
           </div>
@@ -170,8 +170,9 @@ export default {
       const filteredProducts = productStore.products.filter((product) => {
         return product.category == productDetails.value.category;
       });
-      return filteredProducts.length > 0 ? [...filteredProducts] : [];
+      return filteredProducts.length > 0 ? filteredProducts.slice(0, 4) : [];
     });
+
     const goToDetail = (productId) => {
       console.log("DetailllllProducts:", productId);
       router.push({ name: "productDetail", params: { id: productId } });
@@ -379,6 +380,27 @@ export default {
   border: none;
   border-radius: 8px;
   cursor: pointer;
+}
+.productContain {
+  width: 100%;
+  height: auto;
+  margin: 2%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 2%;
+}
+.productCard {
+  border: none;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  background-color: white;
+  border-radius: 8px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.productCard:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
 
 .tabBtn button {

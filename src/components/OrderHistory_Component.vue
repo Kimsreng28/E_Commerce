@@ -173,6 +173,7 @@ export default {
 .order {
   border-bottom: 1px solid #ccc;
   padding-bottom: 20px;
+  padding-top: 20px;
 }
 
 .order-card-container {

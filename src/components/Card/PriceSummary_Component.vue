@@ -28,11 +28,11 @@
       <hr />
     </div>
 
-    <div class="discount">
+    <div class="discount" v-if="showCoupon">
       <p>Coupon:</p>
     </div>
 
-    <div class="coupon">
+    <div class="coupon" v-show="showCoupon">
       <input type="text" placeholder="Coupon Code" v-model="couponCode" />
       <Button_Component
         name-button="Apply coupon"
@@ -53,7 +53,6 @@
 
 <script>
 import { useCartStore } from "@/stores/useCartStore";
-
 import { computed, ref } from "vue";
 import Button_Component from "../Button_Component.vue";
 
@@ -78,21 +77,20 @@ export default {
       type: Number,
       default: 0,
     },
+    showCoupon: {
+      type: Boolean,
+      default: true, // Show the coupon section by default
+    },
   },
   setup(props) {
     const cartStore = useCartStore();
-    // coupon code and price tracking
-    const couponCode = ref("");
-    // coupon price tracking and calculation based on the coupon code applied or not.
-    const couponPrice = ref(0);
 
-    // discount catch from DetailProduct
+    const couponCode = ref("");
+    const couponPrice = ref(0);
     const discountPrice = ref(parseFloat(props.discountPrice) || 0);
 
-    // Compute subtotal price from the cart items
     const subtotalPrice = computed(() => cartStore.getSubtotal);
 
-    // Compute total price
     const calculatedTotalPrice = computed(() => {
       return (
         subtotalPrice.value +
@@ -102,19 +100,18 @@ export default {
       );
     });
 
-    // Apply a discount based on the coupon code
     const applyCoupon = () => {
       if (couponCode.value === "DISCOUNT50") {
-        couponPrice.value = subtotalPrice.value * 0.5; // Apply 50% discount
+        couponPrice.value = subtotalPrice.value * 0.5;
         alert("Coupon Applied! 50% discount.");
       } else {
         alert("Invalid coupon code!");
-        couponPrice.value = 0; // Reset coupon if invalid
+        couponPrice.value = 0;
       }
     };
-    // Handle the coupon code received from CardDiscount
+
     const handleCouponGenerated = (generatedCoupon) => {
-      couponCode.value = generatedCoupon; // Store generated coupon code
+      couponCode.value = generatedCoupon;
     };
 
     return {
@@ -128,6 +125,7 @@ export default {
   },
 };
 </script>
+
 
 <style scoped>
 .priceSummary {
@@ -226,39 +224,39 @@ export default {
   font-family: Quicksand, sans-serif;
 }
 
-/* Media Queries for Responsiveness */
+
 @media (max-width: 768px) {
   .priceSummary {
-    padding: 4%; /* Add more padding for smaller screens */
+    padding: 4%; 
   }
   .titleSummary p {
-    font-size: 20px; /* Further reduce title size */
+    font-size: 20px; 
   }
   .subtotalPrice p,
   .shipping p,
   .discount p,
   .totalPrice p {
-    font-size: 14px; /* Reduce text size for smaller screens */
+    font-size: 14px; 
   }
   .coupon input {
-    max-width: 100%; /* Use full width for very small screens */
-    height: 40px; /* Reduce input height */
+    max-width: 100%; 
+    height: 40px; 
   }
   .totalPrice p {
-    font-size: 18px; /* Adjust total price size */
+    font-size: 18px; 
   }
 }
 
 @media (max-width: 480px) {
   .priceSummary {
-    flex-direction: column; /* Stack elements for very small screens */
+    flex-direction: column; 
   }
   .coupon {
-    flex-direction: column; /* Stack coupon elements */
-    gap: 10px; /* Add space between input and button */
+    flex-direction: column; 
+    gap: 10px; 
   }
   .coupon input {
-    max-width: 100%; /* Full width for input */
+    max-width: 100%; 
   }
 }
 </style>

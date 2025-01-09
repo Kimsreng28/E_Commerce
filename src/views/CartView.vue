@@ -57,6 +57,7 @@
             :discountPrice="totalDiscountPrice"
             :totalPrice="totalPrice"
             :coupon-price="couponPrice"
+            :showCoupon="true"
           />
         </div>
       </div>

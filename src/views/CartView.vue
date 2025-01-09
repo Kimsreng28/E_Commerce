@@ -45,6 +45,7 @@
             :quantity="item.quantity"
             :color-product="item.color"
             :size-product="item.size"
+            :showDeleteButton="true"
           />
         </div>
 

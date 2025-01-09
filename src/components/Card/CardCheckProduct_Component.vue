@@ -25,7 +25,8 @@
       </div>
 
       <div class="quantity">
-        <div class="delete">
+
+  <div class="delete" :class="{ hidden: !showDeleteButton }">
           <button @click="deleteItem">
             <span class="material-icons">delete</span>
           </button>
@@ -53,6 +54,7 @@
 import { useCartStore } from "@/stores/useCartStore";
 import { useCheckOut } from "@/stores/useCheckOut";
 import { computed, ref } from "vue";
+
 export default {
   name: "CardCheckProduct_Component",
   props: {
@@ -69,6 +71,10 @@ export default {
     fromCheckout: {
       type: Boolean,
       default: false,
+    },
+    showDeleteButton: {
+      type: Boolean,
+      default: true, 
     },
   },
 
@@ -114,6 +120,19 @@ export default {
 </script>
 
 <style scoped>
+
+.delete {
+  min-width: 40px; 
+  min-height: 40px; 
+  display: flex; 
+  justify-content: center;
+  align-items: center;
+}
+
+
+.delete.hidden {
+  visibility: hidden; 
+}
 .colorDisplay {
   width: 20px;
   height: 20px;

@@ -38,6 +38,7 @@
             :color-product="item.color"
             :size-product="item.size"
             :fromCheckout="true"
+            :showDeleteButton="false"
           />
           <PriceSummary_Component
             titleSummary="Confirmed Payment"

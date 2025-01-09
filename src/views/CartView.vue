@@ -8,11 +8,30 @@
     <div v-else>
       <Breadcrumb_Component />
 
-      <div class="title">
+      <div v-if="!isCartEmpty" class="title">
         <p>Cart Check</p>
       </div>
 
-      <div class="cartCheck">
+      <div v-if="isCartEmpty" class="emptyCart">
+        <img
+          src="@/assets/images/Checkout/empty-cart.png"
+          alt="Empty Cart"
+          class="emptyCartImage"
+        />
+        <p class="emptyCartText">Your cart is empty</p>
+        <div class="startShopping">
+          <Button_Component
+            nameButton="Start Shopping"
+            backgroundColorButton="#958383"
+            widthButton="250px"
+            heightButton="60px"
+            colorButton="#FFFFFF"
+            @click="navigateToCategory"
+          />
+        </div>
+      </div>
+
+      <div v-else class="cartCheck">
         <div class="itemCheck">
           <CardCheckProduct_Component
             class="cardCheck"
@@ -41,7 +60,7 @@
         </div>
       </div>
 
-      <div class="buttonOfScreen">
+      <div v-if="!isCartEmpty" class="buttonOfScreen">
         <Button_Component
           nameButton="Return To Shop"
           backgroundColorButton="#958383"
@@ -66,6 +85,7 @@
   </div>
 </template>
 
+
 <script>
 import Breadcrumb_Component from "@/components/Breadcrumb_Component.vue";
 import Button_Component from "@/components/Button_Component.vue";
@@ -76,6 +96,7 @@ import Navbar_Component from "@/components/Navbar_Component.vue";
 import { useCartStore } from "@/stores/useCartStore";
 import { useCheckOut } from "@/stores/useCheckOut";
 import LoadingView from "./LoadingView.vue";
+
 export default {
   name: "CartView",
   components: {
@@ -89,30 +110,26 @@ export default {
   },
   data() {
     return {
-      isLoading: true, // Flag to show loading view
-      couponCode: "", // Coupon code input
-      couponPrice: 0, // Variable to store the applied coupon price
+      isLoading: true, 
+      couponCode: "", 
+      couponPrice: 0, 
     };
   },
   computed: {
     cartItems() {
       const store = useCartStore();
       return store.cartItems.map((item) => {
-        console.log("Cart Item:", item); // Log each item
         const discount = item.discount || "0%";
         const discountPercentage = parseFloat(discount.replace("%", "")) || 0;
         const discountPrice = (item.price * discountPercentage) / 100;
-        console.log(
-          "Discount Percentage:",
-          discountPercentage,
-          "Discount Price:",
-          discountPrice
-        );
         return {
           ...item,
-          discountPrice: discountPrice, // Add calculated discountPrice to each item
+          discountPrice: discountPrice, 
         };
       });
+    },
+    isCartEmpty() {
+      return this.cartItems.length === 0;
     },
     shippingPrice() {
       return 0.25;
@@ -125,7 +142,7 @@ export default {
     },
     totalDiscountPrice() {
       return this.cartItems.reduce(
-        (total, item) => total + item.discountPrice * item.quantity, // Ensure the discount price is multiplied by quantity
+        (total, item) => total + item.discountPrice * item.quantity,
         0
       );
     },
@@ -141,10 +158,9 @@ export default {
 
   methods: {
     loadData() {
-      // Simulate loading process with a delay (e.g., API call or fetching data)
       setTimeout(() => {
-        this.isLoading = false; // After loading, set isLoading to false
-      }, 1000); // 2 seconds delay for simulation
+        this.isLoading = false; 
+      }, 1000);
     },
     moveAllToShop() {
       const store = useCartStore();
@@ -165,14 +181,47 @@ export default {
         query: { totalPrice: this.totalPrice },
       });
     },
+    navigateToCategory() {
+    this.$router.push({ path: "/category" });
+  },
   },
   mounted() {
     this.loadData();
   },
 };
 </script>
-
 <style scoped>
+.emptyCart {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  height: 60%;
+  padding: 20px;
+}
+
+.emptyCartImage {
+  max-width: 300px;
+  margin-bottom: 20px;
+}
+
+.emptyCartText {
+  font-family: Saira, sans-serif;
+  font-size: 32px;
+  font-weight: bold;
+  color: #564949;
+}
+
+.startShopping {
+  margin-top: 10px;
+}
+
+.buttonOfScreen {
+  display: flex;
+  justify-content: center;
+}
+
 .load {
   display: flex;
   justify-content: center;

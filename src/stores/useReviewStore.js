@@ -29,15 +29,17 @@ export const useReviewStore = defineStore("review", {
       localStorage.setItem("reviews", JSON.stringify(this.reviews));
     },
 
-    addReview(comment, rating) {
-      if (!comment || rating < 1 || rating > 5) {
-        throw new Error("Invalid comment or rating.");
+    addReview(productId, comment, rating, image) {
+      if (!comment || rating < 1 || rating > 5 || !image) {
+        throw new Error("Invalid comment, rating, product name, or image.");
       }
 
       const newReview = {
         id: Date.now(), // Assign a unique id to the review
+        productId,
         comment,
         rating,
+        image,
         date: new Date().toISOString(),
       };
       this.reviews.push(newReview);

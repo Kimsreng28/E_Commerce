@@ -9,64 +9,98 @@
     </div>
 
     <div class="tabContent">
-      <div v-show="selectedTab === 'Details'">
-        <p>{{ detail || "No details available for this product." }}</p>
+      <div v-show="selectedTab === 'Details'" class="detail">
+        <p>{{ description || "No details available for this product." }}</p>
       </div>
 
-      <div v-show="selectedTab === 'RelateItems'">
-        <p v-if="!relatedProducts.length">No related items found for this category.</p>
-        <div v-else>
-          <ProductCard_Component v-for="product in relatedProducts" :key="product.id" :product="product"
-            class="product-card" @click="goToProductDetail(product.id)" />
+      <div v-show="selectedTab === 'RelateItems'" class="contain">
+        <div v-if="relatedProducts && relatedProducts.length > 0">
+          <div v-if="isSearching" class="loadSearch">
+            <LoadingView />
+          </div>
+          <div v-else class="productContain">
+            <ProductCard_Component
+              v-for="product in relatedProducts"
+              :key="product.id"
+              :product="product"
+              :id="product.id"
+              :name-product="product.title"
+              :image-product="product.image"
+              :rating-product="product.rating"
+              :price-product="product.price"
+              :size-product="product.size"
+              :color-product="product.color"
+              :stock-product="product.stock"
+              :description-product="product.description"
+              :discount-product="product.discount"
+              :image-details="product.imageDetails"
+              :old-price="product.oldPrice"
+              class="productCard"
+              @click="goToDetail(product.id)"
+            />
+          </div>
         </div>
       </div>
 
-      <div class="reviews" v-show="selectedTab === 'Reviews'">
+      <!-- Review Section -->
+      <div class="reviews" v-if="selectedTab === 'Reviews'">
         <form @submit.prevent="addReview" class="review-form">
-          <textarea v-model="newComment" placeholder="Write a review..." class="review-input"></textarea>
           <div class="review-actions">
-            <label for="rating">Rating(0-5):</label>
-            <input type="number" v-model.number="newRating" min="1" max="5" placeholder="Rating (1-5)"
-              class="rating-input" />
-            <button type="submit" class="submit-btn">Post</button>
+            <div>
+              <input
+                v-model="comment"
+                type="text"
+                placeholder="Write your review..."
+              />
+              <label for="rating" class="rating-label">Rating(0-5):</label>
+              <input
+                v-model="rating"
+                type="number"
+                min="1"
+                max="5"
+                placeholder="Rating (1-5)"
+              />
+            </div>
+            <input type="file" @change="onImageUpload" />
+            <button @click="postReview">Post</button>
           </div>
         </form>
 
         <div v-if="isEditing" class="edit-form">
-          <h3>Edit Review</h3>
-          <textarea v-model="editingComment" placeholder="Edit your comment" class="edit-input"></textarea>
-          <input type="number" v-model.number="editingRating" min="1" max="5" class="edit-rating" />
-          <div class="edit-actions">
-            <button @click="saveReview" class="save-btn">Save</button>
-            <button @click="cancelEdit" class="cancel-btn">Cancel</button>
-          </div>
-        </div>
-
-        <ul class="review-list">
-          <li v-for="(review, index) in reviews" :key="review.id" class="review-item">
-            <div class="review-header">
-              <img :src="profileImage" alt="" class="profile-pic" />
-              <div class="review-info">
-                <p class="review-name">{{ firstName }} {{ lastName }}</p>
-                <p class="review-date">{{ new Date(review.date).toLocaleDateString() }}</p>
-              </div>
-            </div>
-            <div class="review-content">
-              <p class="review-text">{{ review.comment }}</p>
-              <div class="review-rating">
-                <span v-for="n in review.rating" :key="'star-' + n" class="star">★</span>
-                <span v-for="n in 5 - review.rating" :key="'empty-' + n" class="star empty">☆</span>
-              </div>
-            </div>
-            <div class="review-actions">
-              <button @click="editReview(index)" class="edit-btn">Edit</button>
-              <button @click="deleteReview(index)" class="delete-btn">Delete</button>
-            </div>
-          </li>
-        </ul>
+      <h3>Edit Review</h3>
+      <textarea
+        v-model="editingComment"
+        placeholder="Edit your comment"
+        class="edit-input"
+      ></textarea>
+      <input
+        type="number"
+        v-model.number="editingRating"
+        min="1"
+        max="5"
+        class="edit-rating"
+      />
+      <div class="edit-actions">
+        <button @click="saveReview" class="save-btn">Save</button>
+        <button @click="cancelEdit" class="cancel-btn">Cancel</button>
+      </div>
+    </div>
+    <p>Comments</p>
+    <div class="showReview" v-for="(review, index) in filteredReviews" :key="review.id">
+      <div>
+        <img :src="review.image" alt="Review Image" style="max-width: 200px" />
+        <p>{{ review.comment }}</p>
+        <p>⭐{{ review.rating }}</p>
+      </div>
+      <div class="but-action">
+        <button @click="editReview(index)">Edit</button>
+        <button @click="deleteReview(index)">Delete</button>
       </div>
     </div>
   </div>
+
+      </div>
+    </div>
 </template>
 
 <script>
@@ -75,20 +109,27 @@ import { useReviewStore } from "@/stores/useReviewStore";
 import { useUserSignupStore } from "@/stores/useUserSignupStore";
 import { computed, onMounted, ref, watch } from "vue";
 import ProductCard_Component from "./ProductCard_Component.vue";
-
+import { useRouter } from "vue-router";
+import LoadingView from "@/views/LoadingView.vue";
 export default {
   name: "ReviewProduct_Component",
   components: {
     ProductCard_Component,
+    LoadingView,
   },
+
   props: {
     productId: {
-      type: String,
+      type: [String, Number],
       required: true,
     },
-    
+    description: {
+      type: String,
+      required: true, // or false, depending on whether it's mandatory
+    },
   },
   setup(props) {
+    const router = useRouter();
     const productStore = useProductStore();
     const reviewStore = useReviewStore();
     const userSignupStore = useUserSignupStore();
@@ -102,23 +143,34 @@ export default {
     const newComment = ref("");
     const newRating = ref(0);
     const reviews = ref([]);
+    const isSearching = ref(false);
+    const isLoading = ref(true);
+
+    const comment = ref("");
+    const rating = ref(null);
+    const image = ref(null);
 
     const profileImage = computed(() => userSignupStore.profileImage);
     const firstName = computed(() => userSignupStore.firstName);
     const lastName = computed(() => userSignupStore.lastName);
+    const productDetails = computed(() => {
+      const detail = productStore.products.find((product) => {
+        return product.id == props.productId;
+      });
+      return detail;
+    });
 
     const relatedProducts = computed(() => {
       const filteredProducts = productStore.products.filter((product) => {
-        const category = product.category?.toLowerCase();
-        const productId = props.productId?.toLowerCase();
-
-        // Check if category and productId are defined and match
-        return category && productId && category === productId;
+        return product.category == productDetails.value.category;
       });
-
-      return filteredProducts.length > 0 ? [...filteredProducts] : [];
+      return filteredProducts.length > 0 ? filteredProducts.slice(0, 4) : [];
     });
 
+    const goToDetail = (productId) => {
+      console.log("DetailllllProducts:", productId);
+      router.push({ name: "productDetail", params: { id: productId } });
+    };
 
     const loadReviewsForProduct = () => {
       const productReviews = reviewStore.reviews.filter(
@@ -129,16 +181,38 @@ export default {
 
     onMounted(() => {
       reviewStore.loadReviews();
+      loadReviewsForProduct();
+      setTimeout(() => {
+        isLoading.value = false; // Set loading to false after 3 seconds
+      }, 1000);
     });
 
     watch(
       () => props.productId,
+
+      () => props.category,
+
       () => loadReviewsForProduct(),
       { immediate: true }
     );
 
+    // Function for adding a new review
+    const postReview = () => {
+      try {
+        reviewStore.addReview(props.productId, comment.value, rating.value, image.value);
+        comment.value = "";
+        rating.value = null;
+        image.value = null;
+        alert("Review posted successfully!");
+      } catch (error) {
+        alert(error.message);
+      }
+    };
     const addReview = () => {
-      if (!newComment.value || newRating.value <= 0) return;
+      if (!newComment.value || newRating.value <= 0) {
+        console.error("Invalid review data.");
+        return;
+      }
 
       reviewStore.addReview({
         productId: props.productId,
@@ -147,13 +221,14 @@ export default {
         date: new Date().toISOString(),
       });
 
+      // Refresh reviews after adding
       loadReviewsForProduct();
       newComment.value = "";
       newRating.value = 0;
     };
 
     const editReview = (index) => {
-      const review = reviews.value[index];
+      const review = filteredReviews.value[index];
       isEditing.value = true;
       editingIndex.value = index;
       editingComment.value = review.comment;
@@ -164,7 +239,7 @@ export default {
       if (editingIndex.value === null) return;
 
       const updatedReview = {
-        ...reviews.value[editingIndex.value],
+        ...filteredReviews.value[editingIndex.value],
         comment: editingComment.value,
         rating: editingRating.value,
         date: new Date().toISOString(),
@@ -183,13 +258,62 @@ export default {
     };
 
     const deleteReview = (index) => {
-      const reviewId = reviews.value[index].id;
+      const reviewId = filteredReviews.value[index].id;
       reviewStore.deleteReview(reviewId);
-      loadReviewsForProduct();
     };
+
+    const filteredReviews = computed(() => {
+      return reviewStore.reviews.filter(review => review.productId === props.productId);
+    });
 
     const changeTab = (tab) => {
       selectedTab.value = tab;
+    };
+
+    // Function to compress the image before uploading
+    function compressImage(file, callback) {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = (event) => {
+        const img = new Image();
+        img.src = event.target.result;
+        img.onload = () => {
+          const canvas = document.createElement("canvas");
+          const ctx = canvas.getContext("2d");
+          const maxWidth = 800; // Maximum width for the compressed image
+          const maxHeight = 800; // Maximum height for the compressed image
+          let width = img.width;
+          let height = img.height;
+
+          if (width > height) {
+            if (width > maxWidth) {
+              height *= maxWidth / width;
+              width = maxWidth;
+            }
+          } else {
+            if (height > maxHeight) {
+              width *= maxHeight / height;
+              height = maxHeight;
+            }
+          }
+
+          canvas.width = width;
+          canvas.height = height;
+          ctx.drawImage(img, 0, 0, width, height);
+          const compressedDataUrl = canvas.toDataURL("image/jpeg", 0.7); // Adjust the quality as needed
+          callback(compressedDataUrl);
+        };
+      };
+    }
+
+    // Usage in your component
+    const onImageUpload = (event) => {
+      const file = event.target.files[0];
+      if (file) {
+        compressImage(file, (compressedDataUrl) => {
+          image.value = compressedDataUrl; // Store the compressed base64 representation of the image
+        });
+      }
     };
 
     return {
@@ -211,6 +335,16 @@ export default {
       cancelEdit,
       deleteReview,
       changeTab,
+      productDetails,
+      goToDetail,
+      isSearching,
+      isLoading,
+      comment,
+      rating,
+      image,
+      postReview,
+      onImageUpload,
+      filteredReviews,
     };
   },
 };
@@ -242,6 +376,27 @@ export default {
   border: none;
   border-radius: 8px;
   cursor: pointer;
+}
+.productContain {
+  width: 100%;
+  height: auto;
+  margin: 2%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 2%;
+}
+.productCard {
+  border: none;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  background-color: white;
+  border-radius: 8px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.productCard:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
 
 .tabBtn button {
@@ -277,9 +432,7 @@ export default {
   width: 80%;
   margin: 2rem auto;
   padding: 2rem;
-  background-color: #f9f9f9;
-  border-radius: 12px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
 }
 
 /* Review Form */
@@ -415,9 +568,13 @@ export default {
 
 .review-actions {
   display: flex;
-  justify-content: flex-end;
-  align-items: center;
+  flex-direction: column;
+  align-items: left;
   gap: 0.5rem;
+  background: white;
+  border: 5px solid #faf5ec;
+  padding: 20px;
+  border-radius: 10px;
 }
 
 .review-actions label {
@@ -550,6 +707,68 @@ export default {
 
 .cancel-btn:hover {
   background-color: #d32f2f;
+}
+
+.review-actions input[type="text"] {
+  outline: none;
+  border: 2.5px solid #faf5ec;
+  padding: 10px;
+  width: 79%;
+  border-radius: 10px;
+  margin-right: 10px;
+}
+.review-actions input[type="number"] {
+  outline: none;
+  border: 2.5px solid #faf5ec;
+  padding: 10px;
+  width: 10.6%;
+  border-radius: 10px;
+}
+
+.review-actions input[type="file"]::file-selector-button {
+  outline: none;
+  border: 2.5px solid #faf5ec;
+  background: white;
+  padding: 10px;
+  border-radius: 10px;
+  display: inline-block;
+}
+.review-actions button {
+  background: white;
+  border: 2.5px solid #faf5ec;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  width: 10%;
+  align-self: center;
+  font-size: 16px;
+  font-family: Quicksand, sans-serif;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+.showReview {
+  display: flex;
+  border-radius: 12px;
+  justify-content: space-between;
+  padding: 10px;
+  background: #faf5ec;
+}
+.showReview img {
+  border-radius: 10px;
+}
+.but-action {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.but-action button {
+  background: white;
+  border: 2.5px solid #faf5ec;
+  padding: 10px;
+  width: 100%;
+  border-radius: 8px;
+  align-self: center;
+  font-size: 16px;
+  transition: all 0.3s ease;
 }
 
 /* Animation */

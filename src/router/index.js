@@ -93,7 +93,13 @@ const router = createRouter({
       },
     },
     {
-      path: "/category/:id",
+      path: "/category/products",
+      redirect: "/category",
+      props: true,
+    },
+    
+    {
+      path: "/category/products/:id",
       name: "productDetail",
       component: () => import("../views/ProductDetailView.vue"),
       props: true,

@@ -463,6 +463,7 @@ export const useProductStore = defineStore("product", {
   }),
 
   actions: {
+
     addProduct(product) {
       const id = product.id || this.products.length + 1;
       const newProduct = { ...product, id };

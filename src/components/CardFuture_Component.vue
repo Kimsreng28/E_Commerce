@@ -63,7 +63,7 @@ export default {
     navigateToDetailPage() {
       // Navigate to the corresponding route based on the card ID
       if (this.cardId === 1) {
-        this.$router.push({ path: "/service" }); // Navigate to Service page
+        this.$router.push({ path: "/contact" }); // Navigate to Service page
       } else if (this.cardId === 2) {
         this.$router.push({ path: "/coupon" }); // Navigate to Coupon page
       }

@@ -256,8 +256,8 @@ export default {
       },
       {
         id: 3,
-        title: "Coupons",
-        description: "Give free when pay start from 20$ up.",
+        title: "Vouchers",
+        description: "Discount 50% with free Delivery",
         image: Coupon,
         color: "#FAF5EC",
         width: "546px",

@@ -164,7 +164,7 @@ export default {
       const filteredProducts = productStore.products.filter((product) => {
         return product.category == productDetails.value.category;
       });
-      return filteredProducts.length > 0 ? filteredProducts.slice(0, 4) : [];
+      return filteredProducts.length > 0 ? [...filteredProducts] : [];
     });
 
     const goToDetail = (productId) => {
@@ -381,11 +381,13 @@ export default {
   width: 100%;
   height: auto;
   margin: 2%;
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
   flex-direction: row;
   justify-content: center;
   align-items: center;
   gap: 2%;
+  margin-bottom: 5%;
 }
 .productCard {
   border: none;

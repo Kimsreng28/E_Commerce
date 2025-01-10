@@ -58,55 +58,58 @@
                 type="text"
                 placeholder="Write your review..."
               />
-              <label for="rating" class="rating-label">Rating(0-5):</label>
-              <input
-                v-model="rating"
-                type="number"
-                min="1"
-                max="5"
-                placeholder="Rating (1-5)"
-              />
+              <label class="rating-label">Rating:</label>
+              <!-- Integrate StarRating Component -->
+              <StarRating v-model="rating" :maxStars="5" />
+              <p>Your rating: {{ rating }}</p>
             </div>
             <input type="file" @change="onImageUpload" />
+            <p v-if="!image"></p>
             <button @click="postReview">Post</button>
           </div>
         </form>
 
         <div v-if="isEditing" class="edit-form">
-      <h3>Edit Review</h3>
-      <textarea
-        v-model="editingComment"
-        placeholder="Edit your comment"
-        class="edit-input"
-      ></textarea>
-      <input
-        type="number"
-        v-model.number="editingRating"
-        min="1"
-        max="5"
-        class="edit-rating"
-      />
-      <div class="edit-actions">
-        <button @click="saveReview" class="save-btn">Save</button>
-        <button @click="cancelEdit" class="cancel-btn">Cancel</button>
-      </div>
-    </div>
-    <p>Comments</p>
-    <div class="showReview" v-for="(review, index) in filteredReviews" :key="review.id">
-      <div>
-        <img :src="review.image" alt="Review Image" style="max-width: 200px" />
-        <p>{{ review.comment }}</p>
-        <p>⭐{{ review.rating }}</p>
-      </div>
-      <div class="but-action">
-        <button @click="editReview(index)">Edit</button>
-        <button @click="deleteReview(index)">Delete</button>
+          <h3>Edit Review</h3>
+          <textarea
+            v-model="editingComment"
+            placeholder="Edit your comment"
+            class="edit-input"
+          ></textarea>
+          <StarRating v-model="editingRating" :maxStars="5" />
+          <div class="edit-actions">
+            <button @click="saveReview" class="save-btn">Save</button>
+            <button @click="cancelEdit" class="cancel-btn">Cancel</button>
+          </div>
+        </div>
+
+        <p>Comments</p>
+        <div class="showReview" v-for="(review, index) in filteredReviews" :key="review.id">
+          <div>
+            <!-- Reviewhead -->
+            <div class="review-head">
+              <img :src="profileImage" alt="" class="profile-pic" />
+              <div class="review-header">
+                <p class="review-name">{{ firstName }} {{ lastName }}</p>
+                <p>⭐{{ review.rating }}</p>
+              </div>
+            </div>
+            <div class="review-info">
+                <p class="review-date"> {{ new Date(review.date).toLocaleDateString() }}</p>
+                <div class="review-content">
+                  <p class="comment">{{ review.comment }}</p>
+                  <img v-if="review.image" :src="review.image" alt="Review Image" style="max-width: 200px"/>
+                </div>
+            </div>
+          </div>
+          <div class="but-action">
+            <button @click="editReview(index)">Edit</button>
+            <button @click="deleteReview(index)">Delete</button>
+          </div>
+        </div>
       </div>
     </div>
   </div>
-
-      </div>
-    </div>
 </template>
 
 <script>
@@ -117,11 +120,14 @@ import { computed, onMounted, ref, watch } from "vue";
 import ProductCard_Component from "./ProductCard_Component.vue";
 import { useRouter } from "vue-router";
 import LoadingView from "@/views/LoadingView.vue";
+import StarRating from "@/components/StarReview_Component.vue"; // Import the StarRating component
+
 export default {
   name: "ReviewProduct_Component",
   components: {
     ProductCard_Component,
     LoadingView,
+    StarRating, // Register the StarRating component
   },
 
   props: {
@@ -133,6 +139,7 @@ export default {
       type: String,
       required: true, // or false, depending on whether it's mandatory
     },
+  
   },
   setup(props) {
     const router = useRouter();
@@ -153,28 +160,28 @@ export default {
     const isLoading = ref(true);
 
     const comment = ref("");
-    const rating = ref(null);
+    const rating = ref(0);
     const image = ref(null);
 
     const profileImage = computed(() => userSignupStore.profileImage);
     const firstName = computed(() => userSignupStore.firstName);
     const lastName = computed(() => userSignupStore.lastName);
     const productDetails = computed(() => {
-      const detail = productStore.products.find((product) => {
+    const detail = productStore.products.find((product) => {
         return product.id == props.productId;
       });
       return detail;
     });
+    
 
     const relatedProducts = computed(() => {
-      const filteredProducts = productStore.products.filter((product) => {
+    const filteredProducts = productStore.products.filter((product) => {
         return product.category == productDetails.value.category;
       });
       return filteredProducts.length > 0 ? filteredProducts.slice(0, 4) : [];
     });
 
     const goToDetail = (productId) => {
-      console.log("DetailllllProducts:", productId);
       router.push({ name: "productDetail", params: { id: productId } });
     };
 
@@ -202,20 +209,36 @@ export default {
       { immediate: true }
     );
 
-    // Function for adding a new review
     const postReview = () => {
       try {
-        reviewStore.addReview(props.productId, comment.value, rating.value, image.value);
+        // Check if comment and rating are valid
+        if (!comment.value || rating.value < 1 || rating.value > 5) {
+          alert("Please provide a valid comment and rating.");
+          return;
+        }
+
+        // Add the review to the store
+        reviewStore.addReview(
+          props.productId,
+          comment.value,
+          rating.value,
+          image.value || null // Allow the image to be optional
+        );
+
+        // Reset the form fields after submission
         comment.value = "";
-        rating.value = null;
+        rating.value = 0;
         image.value = null;
+
         alert("Review posted successfully!");
+        loadReviewsForProduct(); // Refresh reviews after adding
       } catch (error) {
         alert(error.message);
       }
     };
+
     const addReview = () => {
-      if (!newComment.value || newRating.value <= 0) {
+      if (!newComment.value || newRating.value <= 0 || newRating.value > 5) {
         console.error("Invalid review data.");
         return;
       }
@@ -224,13 +247,16 @@ export default {
         productId: props.productId,
         comment: newComment.value,
         rating: newRating.value,
+        image: image.value || null, // Allow the image to be optional
         date: new Date().toISOString(),
       });
 
-      // Refresh reviews after adding
-      loadReviewsForProduct();
+      // Reset form
       newComment.value = "";
       newRating.value = 0;
+      image.value = null;
+
+      loadReviewsForProduct(); // Refresh reviews after adding
     };
 
     const editReview = (index) => {
@@ -239,18 +265,19 @@ export default {
       editingIndex.value = index;
       editingComment.value = review.comment;
       editingRating.value = review.rating;
+      image.value = review.image; // Load existing image if available
     };
 
     const saveReview = () => {
       if (editingIndex.value === null) return;
 
-      const updatedReview = {
+    const updatedReview = {
         ...filteredReviews.value[editingIndex.value],
         comment: editingComment.value,
         rating: editingRating.value,
+        image: image.value || filteredReviews.value[editingIndex.value].image, // Optional new or existing image
         date: new Date().toISOString(),
       };
-
       reviewStore.updateReview(updatedReview.id, updatedReview);
       loadReviewsForProduct();
       cancelEdit();
@@ -261,6 +288,7 @@ export default {
       editingIndex.value = null;
       editingComment.value = "";
       editingRating.value = 0;
+      image.value = null; // Reset the image value
     };
 
     const deleteReview = (index) => {
@@ -269,14 +297,15 @@ export default {
     };
 
     const filteredReviews = computed(() => {
-      return reviewStore.reviews.filter(review => review.productId === props.productId);
+      return reviewStore.reviews.filter(
+        (review) => review.productId === props.productId
+      );
     });
 
     const changeTab = (tab) => {
       selectedTab.value = tab;
     };
 
-    // Function to compress the image before uploading
     function compressImage(file, callback) {
       const reader = new FileReader();
       reader.readAsDataURL(file);
@@ -312,7 +341,6 @@ export default {
       };
     }
 
-    // Usage in your component
     const onImageUpload = (event) => {
       const file = event.target.files[0];
       if (file) {
@@ -351,6 +379,7 @@ export default {
       postReview,
       onImageUpload,
       filteredReviews,
+     
     };
   },
 };
@@ -428,13 +457,11 @@ export default {
   justify-content: center;
   align-items: center;
 }
-
-/* Main Review Section */
-.reviews {
-  width: 80%;
-  margin: 2rem auto;
-  padding: 2rem;
-  border-radius: 10px;
+.profile-pic {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: 2px solid #ddd;
 }
 
 /* Review Form */
@@ -502,31 +529,6 @@ export default {
 }
 
 /* Review List */
-.review-list {
-  width: 100%;
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.review-item {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  padding: 1rem 1.5rem;
-  margin-bottom: 1.5rem;
-  border: 1px solid #ddd;
-  border-radius: 12px;
-  background-color: #fff;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-.review-header {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-}
-
 .profile-pic {
   width: 50px;
   height: 50px;
@@ -534,68 +536,6 @@ export default {
   border: 2px solid #ddd;
 }
 
-.review-info {
-  display: flex;
-  flex-direction: column;
-}
-
-.review-name {
-  font-family: Quicksand, sans-serif;
-  font-size: 18px;
-  font-weight: bold;
-  color: #333;
-}
-
-.review-date {
-  font-family: Quicksand, sans-serif;
-  font-size: 14px;
-  color: #888;
-}
-
-.review-content {
-  font-family: Quicksand, sans-serif;
-  padding: 0.5rem 0;
-  font-size: 16px;
-  color: #555;
-}
-
-.review-text {
-  margin-bottom: 0.5rem;
-}
-
-.review-rating {
-  display: flex;
-  align-items: center;
-}
-
-.review-actions {
-  display: flex;
-  flex-direction: column;
-  align-items: left;
-  gap: 0.5rem;
-  background: white;
-  border: 5px solid #faf5ec;
-  padding: 20px;
-  border-radius: 10px;
-}
-
-.review-actions label {
-  font-size: 16px;
-  color: #888;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  text-align: center;
-  font-family: Quicksand, sans-serif;
-}
-
-.star {
-  font-size: 20px;
-  color: #f4c542;
-}
-
-.star.empty {
-  color: #ddd;
-}
 /* Edit Form Styling */
 .edit-btn {
   background-color: #4267b2;
@@ -709,6 +649,34 @@ export default {
   background-color: #d32f2f;
 }
 
+/* Main Review Section */
+.reviews {
+  width: 80%;
+  margin: 2rem auto;
+  padding: 2rem;
+  border-radius: 10px;
+}
+
+.review-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: left;
+  gap: 0.5rem;
+  background: white;
+  border: 5px solid #faf5ec;
+  padding: 20px;
+  border-radius: 10px;
+}
+
+.review-actions label {
+  font-size: 16px;
+  color: #888;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: center;
+  font-family: Quicksand, sans-serif;
+}
+
 .review-actions input[type="text"] {
   outline: none;
   border: 2.5px solid #faf5ec;
@@ -750,8 +718,11 @@ export default {
   border-radius: 12px;
   justify-content: space-between;
   padding: 10px;
-  background: #faf5ec;
+  margin: 10px;
+  width: 100%;
+
 }
+
 .showReview img {
   border-radius: 10px;
 }
@@ -760,6 +731,7 @@ export default {
   flex-direction: column;
   gap: 10px;
 }
+
 .but-action button {
   background: white;
   border: 2.5px solid #faf5ec;
@@ -770,6 +742,54 @@ export default {
   font-size: 16px;
   transition: all 0.3s ease;
 }
+
+.review-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-grow: 10;
+  padding: 10px;
+}
+
+.review-head {
+  display: flex;
+  align-items: center;
+  
+}
+
+.review-date {
+  font-family: Quicksand, sans-serif;
+  font-size: 14px;
+  color: #888;
+  margin: 0 0 0 auto;
+  flex-grow: 10;
+}
+
+.review-info {
+  display: flex;
+  flex-direction: column;
+  background: #faf5ec;
+  width: 1000px;
+  padding: 10px;
+  margin: 10px;
+  border-radius: 10px ;
+}
+.comment {
+  font-family: Quicksand, sans-serif;
+  font-size: 20px;
+  color: #333;
+  margin: 0;
+  padding: 10px;
+}
+
+.review-name{
+  font-family: Quicksand, sans-serif;
+  font-size: 16px;
+  color: #1c1b1b;
+  margin: 0;
+  padding: 10px;
+}
+
 
 /* Animation */
 @keyframes fadeIn {

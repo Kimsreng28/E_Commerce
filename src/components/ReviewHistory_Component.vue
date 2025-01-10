@@ -1,23 +1,18 @@
 <template>
   <div>
-    <p class="reviewTitle">What customers say about</p>
-    <p class="reviewTitle">Fast Collection?</p>
-
-    <div
-      class="reviewContainer"
-      ref="reviewContainer"
-      @mousedown="startDrag"
-      @mousemove="drag"
-      @mouseup="stopDrag"
-      @mouseleave="stopDrag"
-    >
-      <!-- Loop through displayed reviews -->
+    <!-- Add scrollable container -->
+    <div class="reviewContainer" ref="reviewContainer">
+      <!-- Loop through displayed reviews with filter -->
       <div
         class="reviewCard"
-        v-for="review in displayedReviews"
+        v-for="review in displayedReviews.filter(review => review.image)"
         :key="review.id"
       >
-      <img v-if="review.image" :src="review.image" alt="Product Image" class="reviewImage"/>
+        <img
+          :src="review.image"
+          alt="Product Image"
+          class="reviewImage"
+        />
         <div class="cardFooter">
           <p class="command-product">{{ review.comment }}</p>
           <p class="rating">⭐ {{ review.rating }}</p>
@@ -36,70 +31,22 @@ export default {
   setup() {
     const reviewStore = useReviewStore();
 
-    // State for dragging
-    const isDragging = ref(false);
-    const startX = ref(0);
-    const scrollLeft = ref(0);
-
-    // Computed property for all reviews
     const allReviews = computed(() => reviewStore.reviews);
-
-    // State for managing displayed reviews
     const displayedReviews = ref([]);
-    const currentIndex = ref(0);
 
-    // Update displayed reviews every 5 items
     const updateDisplayedReviews = () => {
       if (!allReviews.value.length) return;
 
-      const start = currentIndex.value;
-      const end = start + 5;
-      displayedReviews.value = allReviews.value.slice(
-        start,
-        end > allReviews.value.length ? undefined : end
-      );
-
-      // Update the index for the next batch
-      currentIndex.value = end >= allReviews.value.length ? 0 : end;
+      displayedReviews.value = allReviews.value.slice(0, 10); // Show first 10 reviews
     };
 
-    // Start automatic updates
-    const startAutoUpdate = () => {
-      updateDisplayedReviews(); // Initial display
-      setInterval(updateDisplayedReviews, 5000); // Change every 5 seconds
-    };
-
-    // Methods for drag functionality
-    const startDrag = (e) => {
-      isDragging.value = true;
-      startX.value = e.clientX;
-      scrollLeft.value = e.target.scrollLeft;
-    };
-
-    const drag = (e) => {
-      if (!isDragging.value) return;
-      const walk = (e.clientX - startX.value) * 2; // Multiplier for scroll speed
-      e.target.scrollLeft = scrollLeft.value - walk;
-    };
-
-    const stopDrag = () => {
-      isDragging.value = false;
-    };
-
-    // Load reviews when the component is mounted
     onMounted(() => {
       reviewStore.loadReviews();
-      startAutoUpdate();
+      updateDisplayedReviews();
     });
 
     return {
-      isDragging,
-      startX,
-      scrollLeft,
       displayedReviews,
-      startDrag,
-      drag,
-      stopDrag,
     };
   },
 };
@@ -107,7 +54,7 @@ export default {
 
 <style>
 .reviewTitle {
-  margin-left: 40px;
+  margin-left: 60px;
   font-size: 24px;
   font-weight: bold;
   color: #372f2f;
@@ -116,9 +63,8 @@ export default {
 
 .reviewContainer {
   display: flex;
-  overflow-x: auto;
-  gap: 20px;
-  padding: 20px;
+  gap: 15px;
+  padding: 15px;
   scroll-behavior: smooth;
   user-select: none;
   cursor: grab;
@@ -177,79 +123,5 @@ export default {
 .rating {
   font-size: 16px;
   color: #ff9800;
-}
-
-/* Responsive adjustments */
-@media (max-width: 1024px) {
-  .reviewContainer {
-    gap: 15px;
-  }
-
-  .reviewCard {
-    flex: 0 0 45%; /* Two cards per row */
-    height: auto;
-  }
-
-  .reviewImage {
-    height: 180px; /* Adjust image height for better fit */
-  }
-}
-
-@media (max-width: 768px) {
-  .reviewTitle {
-    font-size: 20px;
-    margin-left: 20px;
-  }
-
-  .reviewContainer {
-    gap: 10px;
-    padding: 10px;
-  }
-
-  .reviewCard {
-    flex: 0 0 90%; /* One card per row */
-    height: auto;
-  }
-
-  .reviewImage {
-    height: 150px; /* Reduce image height */
-  }
-
-  .productName {
-    font-size: 14px;
-  }
-
-  .rating {
-    font-size: 14px;
-  }
-}
-
-@media (max-width: 480px) {
-  .reviewTitle {
-    font-size: 18px;
-    margin-left: 10px;
-  }
-
-  .reviewContainer {
-    gap: 8px;
-    padding: 5px;
-  }
-
-  .reviewCard {
-    flex: 0 0 85%; /* One card per row with more margin */
-    height: auto;
-  }
-
-  .reviewImage {
-    height: 130px; /* Further reduce image height for mobile */
-  }
-
-  .productName {
-    font-size: 12px;
-  }
-
-  .rating {
-    font-size: 12px;
-  }
 }
 </style>

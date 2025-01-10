@@ -123,8 +123,22 @@
       </div>
 
       <!-- Comments -->
-      <div>
-        <ReviewHistory_Component class="reviewHistory" />
+      <p class="reviewTitle">What customers say about</p>
+      <p class="reviewTitle">Fast Collection?</p>
+      <div class="container">
+        <div
+          class="reviewHistory"
+          id="reviewDraggableContainer"
+          @mousedown="startDragging"
+          @mousemove="onDrag"
+          @mouseup="stopDragging"
+          @mouseleave="stopDragging"
+          @touchstart="startDragging"
+          @touchmove="onDrag"
+          @touchend="stopDragging"
+        >
+          <ReviewHistory_Component />
+        </div>
       </div>
 
       <!-- Footer -->
@@ -552,6 +566,24 @@ export default {
   position: absolute;
   opacity: 0;
   transition: opacity 1s ease-in-out; /* Smooth fade-in */
+}
+.reviewHistory {
+  width: auto;
+  height: 400px; /* Ensure the height is fixed */
+  margin-top: 2%;
+  margin-left: 2%;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  gap: 2%;
+  overflow-x: hidden; /* Enable horizontal scrolling */
+  overflow-y: hidden; /* Hide vertical overflow (optional) */
+  padding: 0; /* Avoid unnecessary space causing scroll issues */
+  box-sizing: border-box;
+  cursor: grab;
+  scroll-behavior: smooth;
+  user-select: none;
+  transition: all 0.3s;
 }
 
 /* Media Queries for Responsiveness */

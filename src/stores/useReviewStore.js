@@ -29,9 +29,9 @@ export const useReviewStore = defineStore("review", {
       localStorage.setItem("reviews", JSON.stringify(this.reviews));
     },
 
-    addReview(productId, comment, rating, image) {
-      if (!comment || rating < 1 || rating > 5 || !image) {
-        throw new Error("Invalid comment, rating, product name, or image.");
+    addReview(productId, comment, rating, image = null) {
+      if (!comment || rating < 1 || rating > 5) {
+        throw new Error("Invalid comment or rating.");
       }
 
       const newReview = {
@@ -39,7 +39,7 @@ export const useReviewStore = defineStore("review", {
         productId,
         comment,
         rating,
-        image,
+        image: image || null, // Allow the image field to be null if not provided
         date: new Date().toISOString(),
       };
       this.reviews.push(newReview);

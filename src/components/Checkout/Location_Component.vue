@@ -5,7 +5,6 @@
     </div>
     <hr />
     <div class="add" @click="toggleDropdown">
-      <!-- When Click add show icon dropdown -->
       <span class="material-icons" v-if="!showDropdown"> add </span>
       <span
         class="material-icons"
@@ -17,32 +16,27 @@
       <p>Add new locations</p>
     </div>
 
-    <!-- Click add new location dropdown -->
     <transition name="dropdown">
       <div class="dropdown" v-show="showDropdown">
         <div class="inputName">
           <p>Full Name</p>
-          <input type="text" placeholder="" v-model="newLocation.fullName" />
+          <input type="text" v-model="newLocation.fullName" />
         </div>
         <div class="inputAddress">
           <p>Street Address</p>
-          <input
-            type="text"
-            placeholder=""
-            v-model="newLocation.streetAddress"
-          />
+          <input type="text" v-model="newLocation.streetAddress" />
         </div>
         <div class="inputFloor">
           <p>Apartment, floor, etc. (optional)</p>
-          <input type="text" placeholder="" v-model="newLocation.apartment" />
+          <input type="text" v-model="newLocation.apartment" />
         </div>
         <div class="inputCity">
           <p>Town/City</p>
-          <input type="text" placeholder="" v-model="newLocation.city" />
+          <input type="text" v-model="newLocation.city" />
         </div>
         <div class="inputNumberPhone">
           <p>Phone Number</p>
-          <input type="text" placeholder="" v-model="newLocation.phoneNumber" />
+          <input type="text" v-model="newLocation.phoneNumber" />
         </div>
         <div class="buttonAdd">
           <Button_Component
@@ -57,7 +51,6 @@
       </div>
     </transition>
 
-    <!-- Show all saved locations -->
     <div
       class="showLocation"
       v-for="(location, index) in locations"
@@ -70,10 +63,8 @@
         <p>{{ formatAddress(location) }}</p>
       </div>
       <span class="material-icons">
-        {{
-          location.selected ? "check_circle" : "radio_button_unchecked"
-        }}</span
-      >
+        {{ location.selected ? "check_circle" : "radio_button_unchecked" }}
+      </span>
     </div>
   </div>
 </template>
@@ -88,10 +79,10 @@ export default {
   components: {
     Button_Component,
   },
-  setup() {
+  emits: ["update:location"],
+  setup(_, { emit }) {
     const locationStore = useLocationStore();
 
-    // Initialize state variables
     const showDropdown = ref(false);
     const newLocation = ref({
       fullName: "",
@@ -103,15 +94,12 @@ export default {
 
     const locations = computed(() => locationStore.locations);
 
-    // Function to toggle the dropdown
     const toggleDropdown = () => {
       showDropdown.value = !showDropdown.value;
     };
 
-    // Function to add a new location to the store and hide the dropdown
     const addLocation = () => {
-      const { fullName, streetAddress, apartment, city, phoneNumber } =
-        newLocation.value;
+      const { fullName, streetAddress, apartment, city, phoneNumber } = newLocation.value;
 
       if (!fullName || !streetAddress || !city || !phoneNumber) {
         alert("Please fill in all required fields.");
@@ -124,7 +112,7 @@ export default {
         apartment: apartment || "",
         city,
         phoneNumber,
-        selected: false, // Initialize the new location as not selected
+        selected: false,
       });
 
       newLocation.value = {
@@ -138,18 +126,21 @@ export default {
       showDropdown.value = false;
     };
 
-    // Function to format the address of a location for display
     const formatAddress = (location) => {
       const { streetAddress, apartment, city } = location;
       return `${streetAddress}${apartment ? `, ${apartment}` : ""}, ${city}`;
     };
 
-    // Function to select a location and update the selected location in the store
     const selectLocation = (index) => {
-      // Toggle the `selected` state of the location
-      locations.value[index].selected = !locations.value[index].selected;
+      locations.value.forEach((location, i) => {
+        location.selected = i === index;
+      });
 
-      locationStore.selectedLocation = locations.value[index];
+      const selectedLocation = locations.value[index];
+      locationStore.selectedLocation = selectedLocation;
+
+      emit("update:location", selectedLocation);  // Emit to parent
+
     };
 
     return {
@@ -164,6 +155,7 @@ export default {
   },
 };
 </script>
+
 
 <style scoped>
 .location {
@@ -227,7 +219,7 @@ hr {
 }
 .dropdown-enter-to,
 .dropdown-leave-from {
-  max-height: 500px; /* Adjust to fit the content */
+  max-height: 500px; 
   opacity: 1;
 }
 .inputName,

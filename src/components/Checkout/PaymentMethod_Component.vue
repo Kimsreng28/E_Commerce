@@ -420,8 +420,8 @@ hr {
   font-weight: 700;
 }
 .showCard span {
-  color: #7b7373;
-  font-size: 18px;
+  color: #2C3E50;
+  font-size: 24px;
   cursor: pointer;
 }
 .saved-card {
@@ -446,7 +446,7 @@ hr {
   border-radius: 5px;
 }
 .detailCard p {
-  color: #7b7373;
+  color: #000000;
   font-size: 16px;
   font-family: Quicksand, sans-serif;
   font-weight: 500;

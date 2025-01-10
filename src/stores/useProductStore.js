@@ -514,5 +514,13 @@ export const useProductStore = defineStore("product", {
           product.description.toLowerCase().includes(lowerCaseQuery)
       );
     },
+
+    productByCategory: (state) => (category) => {
+      return state.products.filter(product => product.category === category);
+    },
+
+    productBySubCategory: (state) => (subCategory) => {
+      return state.products.filter(product => product.subCategory === subCategory);
+    },
   },
 });

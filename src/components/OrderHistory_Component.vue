@@ -82,6 +82,10 @@
   </div>
 </template>
 
+
+
+
+
 <script>
 import { ref, watch, onMounted } from "vue";
 import { useOrderHistory } from "@/stores/useOrderHistory";
@@ -147,6 +151,7 @@ export default {
   },
 };
 </script>
+
 
 <style scoped>
 #button-border {

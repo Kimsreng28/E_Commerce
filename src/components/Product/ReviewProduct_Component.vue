@@ -2,12 +2,7 @@
   <div class="reviewProduct">
     <div class="tabs">
       <div class="tabBtn">
-        <button
-          v-for="tab in tabs"
-          :key="tab"
-          :class="{ active: selectedTab === tab }"
-          @click="changeTab(tab)"
-        >
+        <button v-for="tab in tabs" :key="tab" :class="{ active: selectedTab === tab }" @click="changeTab(tab)">
           {{ tab }}
         </button>
       </div>
@@ -45,7 +40,6 @@
             />
           </div>
         </div>
-        <p v-else>No related items found for this category.</p>
       </div>
 
       <!-- Review Section -->
@@ -178,7 +172,7 @@ export default {
     const filteredProducts = productStore.products.filter((product) => {
         return product.category == productDetails.value.category;
       });
-      return filteredProducts.length > 0 ? filteredProducts.slice(0, 4) : [];
+      return filteredProducts.length > 0 ? [...filteredProducts] : [];
     });
 
     const goToDetail = (productId) => {
@@ -392,12 +386,14 @@ export default {
   height: auto;
   flex-direction: column;
 }
+
 .tabs {
   width: 100%;
   height: auto;
   display: flex;
   justify-content: space-evenly;
 }
+
 .tabBtn {
   width: 80%;
   height: auto;
@@ -414,11 +410,13 @@ export default {
   width: 100%;
   height: auto;
   margin: 2%;
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
   flex-direction: row;
   justify-content: center;
   align-items: center;
   gap: 2%;
+  margin-bottom: 5%;
 }
 .productCard {
   border: none;
@@ -445,10 +443,12 @@ export default {
   font-weight: 700;
   box-shadow: 0 4px 4px rgba(0, 0, 0, 0.1);
 }
+
 .tabBtn button.active {
   background-color: #f2f3f4;
   color: #000000;
 }
+
 .tabContent {
   width: 100%;
   height: auto;
@@ -536,6 +536,68 @@ export default {
   border: 2px solid #ddd;
 }
 
+.review-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.review-name {
+  font-family: Quicksand, sans-serif;
+  font-size: 18px;
+  font-weight: bold;
+  color: #333;
+}
+
+.review-date {
+  font-family: Quicksand, sans-serif;
+  font-size: 14px;
+  color: #888;
+}
+
+.review-content {
+  font-family: Quicksand, sans-serif;
+  padding: 0.5rem 0;
+  font-size: 16px;
+  color: #555;
+}
+
+.review-text {
+  margin-bottom: 0.5rem;
+}
+
+.review-rating {
+  display: flex;
+  align-items: center;
+}
+
+.review-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: left;
+  gap: 0.5rem;
+  background: white;
+  border: 5px solid #faf5ec;
+  padding: 20px;
+  border-radius: 10px;
+}
+
+.review-actions label {
+  font-size: 16px;
+  color: #888;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: center;
+  font-family: Quicksand, sans-serif;
+}
+
+.star {
+  font-size: 20px;
+  color: #f4c542;
+}
+
+.star.empty {
+  color: #ddd;
+}
 /* Edit Form Styling */
 .edit-btn {
   background-color: #4267b2;
@@ -574,6 +636,7 @@ export default {
 .delete-btn:hover {
   background-color: #c62828;
 }
+
 .edit-form {
   width: 100%;
   background-color: #fff;
@@ -797,6 +860,7 @@ export default {
     opacity: 0;
     transform: translateY(-10px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);

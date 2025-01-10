@@ -15,7 +15,9 @@
 
       <div class="container">
         <div class="left">
-          <Location_Component />
+          <Location_Component
+            @update:location="updateLocation"  
+          />
           <PaymentMethod_Component
             style="margin-top: 5%"
             @update:paymentMethod="updatePaymentMethod"
@@ -36,6 +38,7 @@
             :color-product="item.color"
             :size-product="item.size"
             :fromCheckout="true"
+            :showDeleteButton="false"
           />
           <PriceSummary_Component
             titleSummary="Confirmed Payment"
@@ -44,6 +47,7 @@
             :discountPrice="totalDiscountPrice"
             :totalPrice="totalPrice"
             :coupon-price="couponPrice"
+            :showCoupon="false"
           />
         </div>
       </div>
@@ -61,7 +65,7 @@
 
       <Footer_Component style="margin-top: 5%" />
     </div>
-    <!-- Show Payment Success Component after Payment -->
+
     <div class="showSuccess" v-if="isPaymentSuccess">
       <PaymentSuccess_Component
         :key="isPaymentSuccess"
@@ -69,26 +73,28 @@
         :paymentMethod="selectedPaymentMethod"
         :transactionId="transactionId"
         :transactionDate="transactionDate"
+        :location="selectedLocation"
       />
     </div>
   </div>
 </template>
 
 <script>
+import { ref, onMounted } from "vue";
+import { useRoute } from "vue-router";
 import Breadcrumb_Component from "@/components/Breadcrumb_Component.vue";
+import { useCheckOut } from "@/stores/useCheckOut";
+import { useOrderHistory } from "@/stores/useOrderHistory";
+import Location_Component from "@/components/Checkout/Location_Component.vue";
+import PaymentMethod_Component from "@/components/Checkout/PaymentMethod_Component.vue";
 import Button_Component from "@/components/Button_Component.vue";
 import CardCheckProduct_Component from "@/components/Card/CardCheckProduct_Component.vue";
 import PriceSummary_Component from "@/components/Card/PriceSummary_Component.vue";
-import Location_Component from "@/components/Checkout/Location_Component.vue";
-import PaymentMethod_Component from "@/components/Checkout/PaymentMethod_Component.vue";
 import PaymentSuccess_Component from "@/components/Checkout/PaymentSuccess_Component.vue";
 import Footer_Component from "@/components/Footer_Component.vue";
 import Navbar_Component from "@/components/Navbar_Component.vue";
-import { useCheckOut } from "@/stores/useCheckOut";
-import { useOrderHistory } from "@/stores/useOrderHistory";
-import { onMounted, ref } from "vue";
-import { useRoute } from "vue-router";
 import LoadingView from "./LoadingView.vue";
+
 export default {
   name: "CheckOutView",
   components: {
@@ -114,13 +120,19 @@ export default {
     const totalPrice = ref(parseFloat(route.query.totalPrice) || 0);
 
     const checkOutStore = useCheckOut();
-    const orderHistoryStore = useOrderHistory()
+    const orderHistoryStore = useOrderHistory();
+    const selectedLocation = ref("");
 
     onMounted(() => {
       setTimeout(() => {
-        isLoading.value = false; // Set loading to false after 3 seconds
+        isLoading.value = false;
       }, 1000);
     });
+
+    const updateLocation = (location) => {
+      console.log("Selected Location:", location);
+      selectedLocation.value = location;  
+    };
 
     const updatePaymentMethod = (method) => {
       console.log("Selected Payment Method:", method);
@@ -133,21 +145,21 @@ export default {
         return;
       }
 
-      console.log(
-        "Processing payment with method:",
-        selectedPaymentMethod.value
-      );
+      if (!selectedLocation.value) {
+        alert("Please select a shipping location.");
+        return;
+      }
+
+      console.log("Processing payment with method:", selectedPaymentMethod.value);
 
       // Simulate a successful payment
       isPaymentSuccess.value = true;
 
-      // Generate a random transaction ID and set transaction date
       transactionId.value = `TXN${Math.floor(Math.random() * 1000000000)}`;
-      // Store product data in order history
       const order = {
         id: transactionId.value,
         date: transactionDate.value,
-        items: checkOutStore.checkOut.map(item => ({
+        items: checkOutStore.checkOut.map((item) => ({
           id: item.id,
           name: item.name,
           quantity: item.quantity,
@@ -159,12 +171,12 @@ export default {
         })),
         totalPrice: totalPrice.value,
         paymentMethod: selectedPaymentMethod.value,
+        shippingLocation: selectedLocation.value,  // Pass selectedLocation
       };
       orderHistoryStore.addToOrderHistory(order);
 
-      // After successful payment, reset after 5 seconds
       setTimeout(() => {
-        isPaymentSuccess.value = false; // Reset the payment success state after 5 seconds
+        isPaymentSuccess.value = false;
       }, 5000);
     };
 
@@ -174,40 +186,35 @@ export default {
       selectedPaymentMethod,
       transactionId,
       transactionDate,
+      updateLocation,
       updatePaymentMethod,
       handlePayNow,
       totalPrice,
+      selectedLocation,
     };
   },
   computed: {
     checkOutItems() {
       const store = useCheckOut();
       return store.checkOut.map((item) => {
-        // Assuming discount is a percentage (e.g., 10%)
-        const discountPercentage =
-          parseFloat(item.discount.replace("%", "")) || 0;
+        const discountPercentage = parseFloat(item.discount.replace("%", "")) || 0;
         const discountPrice = (item.price * discountPercentage) / 100;
-        const finalPrice = item.price - discountPrice; // Applying discount to price
-
-        return {
-          ...item,
-          discountPrice,
-          finalPrice,
-        };
+        const finalPrice = item.price - discountPrice;
+        return { ...item, discountPrice, finalPrice };
       });
     },
     shippingPrice() {
-      return 0.25; // Set shipping price to 0 for now
+      return 0.25;
     },
     subtotalPrice() {
       return this.checkOutItems.reduce(
-        (total, item) => total + item.finalPrice * item.quantity, // Use final price
+        (total, item) => total + item.finalPrice * item.quantity,
         0
       );
     },
     totalDiscountPrice() {
       return this.checkOutItems.reduce(
-        (total, item) => total + item.discountPrice * item.quantity, // Discounted amount
+        (total, item) => total + item.discountPrice * item.quantity,
         0
       );
     },
@@ -297,25 +304,25 @@ export default {
   align-items: center;
   margin-top: 5%;
 }
-/* For mobile devices (max-width: 480px) */
+
 @media (max-width: 480px) {
   .checkoutScreen {
-    margin-top: 5%; /* Adjust margin for mobile screens */
+    margin-top: 5%; 
   }
 
   .cardCheck {
-    width: 100%; /* Ensure the cardCheck takes full width */
+    width: 100%; 
     height: auto;
   }
 
   .payNow {
     margin-left: 0;
-    margin-top: 20px; /* Adjust button positioning */
+    margin-top: 20px; 
     justify-content: center;
   }
 
   h1 {
-    font-size: 1.5rem; /* Smaller font size for mobile */
+    font-size: 1.5rem; 
   }
 
   .container {

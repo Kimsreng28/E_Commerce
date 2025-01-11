@@ -89,8 +89,11 @@
               </div>
             </div>
             <div class="review-info">
-                <p class="review-date"> {{ new Date(review.date).toLocaleDateString() }}</p>
-                <div class="review-content">
+             <div class="review-content"> 
+              <p class="review-product-title">{{productTitle}}</p>
+              <p class="review-date"> {{ new Date(review.date).toLocaleDateString() }}</p>
+             </div>
+                <div class="review-content1">
                   <p class="comment">{{ review.comment }}</p>
                   <img v-if="review.image" :src="review.image" alt="Review Image" style="max-width: 200px"/>
                 </div>
@@ -129,6 +132,10 @@ export default {
       type: [String, Number],
       required: true,
     },
+    productTitle: {
+      type: String,
+      required: true,
+    },
     description: {
       type: String,
       required: true, // or false, depending on whether it's mandatory
@@ -157,7 +164,7 @@ export default {
     const rating = ref(0);
     const image = ref(null);
 
-    const profileImage = computed(() => userSignupStore.profileImage);
+    const profileImage = computed(() => userSignupStore.profileImage);  
     const firstName = computed(() => userSignupStore.firstName);
     const lastName = computed(() => userSignupStore.lastName);
     const productDetails = computed(() => {
@@ -222,7 +229,7 @@ export default {
         // Reset the form fields after submission
         comment.value = "";
         rating.value = 0;
-        image.value = null;
+        image.value = [];
 
         alert("Review posted successfully!");
         loadReviewsForProduct(); // Refresh reviews after adding
@@ -559,7 +566,11 @@ export default {
   padding: 0.5rem 0;
   font-size: 16px;
   color: #555;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
 }
+
 
 .review-text {
   margin-bottom: 0.5rem;
@@ -590,14 +601,6 @@ export default {
   font-family: Quicksand, sans-serif;
 }
 
-.star {
-  font-size: 20px;
-  color: #f4c542;
-}
-
-.star.empty {
-  color: #ddd;
-}
 /* Edit Form Styling */
 .edit-btn {
   background-color: #4267b2;
@@ -825,7 +828,8 @@ export default {
   font-size: 14px;
   color: #888;
   margin: 0 0 0 auto;
-  flex-grow: 10;
+  padding: 5px;
+  
 }
 
 .review-info {
@@ -836,6 +840,13 @@ export default {
   padding: 10px;
   margin: 10px;
   border-radius: 10px ;
+}
+
+.review-product-title {
+  font-family: Quicksand, sans-serif;
+  font-size: 14px;
+  color: #888;
+  padding: 5px;
 }
 .comment {
   font-family: Quicksand, sans-serif;

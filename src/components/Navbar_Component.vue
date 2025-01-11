@@ -142,10 +142,10 @@ export default {
 
 <style scoped>
 .navBar {
-  width: 1519px;
-  height: 10vh;
+  width: 100%;
   display: flex;
   align-items: center;
+  justify-content: center;
   justify-content: space-between;
   flex-direction: row;
   padding: 2%;
@@ -308,9 +308,13 @@ export default {
   cursor: pointer;
 }
 /* Responsive adjustments */
-@media (max-width: 1024px) {
+@media (max-width: 1124px) {
   .navBar {
-    padding: 2% 1rem;
+    padding: 2% ;
+    width: 90%;
+    justify-content: center;
+    justify-content: space-between;
+
   }
 
   .contents {
@@ -332,13 +336,14 @@ export default {
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 828px) {
   .navBar {
     flex-direction: column;
     align-items: center;
     justify-content: center;
     height: auto;
     padding: 1rem;
+
   }
 
   .imgLogo img {
@@ -357,7 +362,7 @@ export default {
   }
 
   .search {
-    width: 80%;
+    width: 30%;
     margin-top: 1rem;
   }
 

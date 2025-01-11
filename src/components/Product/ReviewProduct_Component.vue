@@ -402,11 +402,12 @@ export default {
 <style scoped>
 .reviewProduct {
   display: flex;
-  width: 1440px;
+  width: 100%;
   height: auto;
+  justify-content: center;
+  align-items: center;
   flex-direction: column;
 }
-
 .tabs {
   width: 100%;
   height: auto;

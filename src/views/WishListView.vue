@@ -24,26 +24,20 @@
       </div>
 
       <div class="showItemCount">
-        <p>Showing List: {{ wishlistItems.length }} Item(s)</p>
+        <p>Showing List: {{ sortedWishlist.length }} Item(s)</p>
         <div class="sortBy">
           <label for="sort-options">Sort By:</label>
-          <select
-            id="sort-options"
-            v-model="selectedSort"
-            @change="sortWishlist"
-          >
+          <select id="sort-options" v-model="selectedSort">
             <option value="date">Time</option>
-            <option value="priceAsc">PriceLTH</option>
-            <option value="priceDesc">PriceHTL</option>
             <option value="name">Name</option>
           </select>
         </div>
       </div>
 
-      <div class="wishList" v-if="wishlistItems.length > 0">
+      <div class="wishList" v-if="sortedWishlist.length > 0">
         <CardWistList_Component
           class="cardWistList"
-          v-for="item in wishlistItems"
+          v-for="item in sortedWishlist"
           :key="item.id"
           :id="item.id"
           :imageWistList="item.images"
@@ -78,7 +72,7 @@ import CardWistList_Component from "@/components/CardWistList_Component.vue";
 import Footer_Component from "@/components/Footer_Component.vue";
 import Navbar_Component from "@/components/Navbar_Component.vue";
 import { useWishlistStore } from "@/stores/useWishlistStore";
-import { computed, onMounted, ref } from "vue";
+import { computed, onMounted, ref, watch } from "vue";
 import { useRouter } from "vue-router";
 import LoadingView from "./LoadingView.vue";
 
@@ -94,30 +88,48 @@ export default {
   },
   setup() {
     const isLoading = ref(true);
+
+    // Simulate a loading state
     onMounted(() => {
       setTimeout(() => {
-        isLoading.value = false; // Set loading to false after 3 seconds
+        isLoading.value = false; // Set loading to false after 1 second
       }, 1000);
     });
+
     const wishlistStore = useWishlistStore();
     const router = useRouter();
 
     // Access wishlist data from the store
     const wishlistItems = computed(() => wishlistStore.wishlist);
 
-    // Define a reactive variable to store the selected sort option
+    // Local reactive copy of the wishlist for sorting
+    const sortedWishlist = ref([...wishlistItems.value]);
+
     const selectedSort = ref("date");
 
+    // Sort the wishlist based on the selected option
     const sortWishlist = () => {
       const sortOption = selectedSort.value;
       if (sortOption === "date") {
-        wishlistItems.value.sort((a, b) => {
-          const dateA = new Date(a.date);
-          const dateB = new Date(b.date);
-          return dateB - dateA;
+        sortedWishlist.value.sort((a, b) => {
+          const dateA = a.date ? new Date(a.date) : new Date(0); // Default to epoch if no date
+          const dateB = b.date ? new Date(b.date) : new Date(0);
+          return dateB - dateA; // Descending order
         });
+      } else if (sortOption === "name") {
+        sortedWishlist.value.sort((a, b) => a.title.localeCompare(b.title));
       }
     };
+
+    // Watch for changes in selectedSort and wishlistItems
+    watch(
+      [selectedSort, wishlistItems],
+      () => {
+        sortedWishlist.value = [...wishlistItems.value];
+        sortWishlist();
+      },
+      { immediate: true } // Apply sorting immediately on initialization
+    );
 
     const goToCategoryProduct = () => {
       router.push("/category");
@@ -125,6 +137,7 @@ export default {
 
     return {
       wishlistItems,
+      sortedWishlist,
       sortWishlist,
       selectedSort,
       goToCategoryProduct,
@@ -132,7 +145,7 @@ export default {
     };
   },
   methods: {
-    // move all product to store function
+    // Move all items to the shop function
     moveAllToShop() {
       const store = useWishlistStore();
       store.clearWishlist(); // Clear the wishlist when the button is clicked
@@ -247,58 +260,17 @@ export default {
 .view {
   margin-top: 5%;
 }
-/* Responsive Styles */
 @media (max-width: 1024px) {
   .cardWistList {
-    flex: 1 1 calc(50% - 2%); /* Two items per row */
+    flex: 1 1 calc(50% - 2%);
   }
 }
-
 @media (max-width: 768px) {
   .cardWistList {
-    flex: 1 1 100%; /* One item per row */
+    flex: 1 1 100%;
   }
-
   .title p {
-    font-size: 24px; /* Adjust title size */
-  }
-
-  .showItemCount p {
-    font-size: 14px; /* Adjust text size */
-  }
-
-  .sortBy select {
-    width: 70px; /* Adjust dropdown width */
-  }
-
-  .btnStyle {
-    width: 150px; /* Adjust button width */
-    height: 40px; /* Adjust button height */
-  }
-}
-
-@media (max-width: 480px) {
-  .title p {
-    font-size: 20px; /* Adjust title size */
-  }
-
-  .showItemCount p {
-    font-size: 12px; /* Adjust text size */
-  }
-
-  .sortBy label,
-  .sortBy select {
-    font-size: 12px; /* Adjust dropdown font size */
-  }
-
-  .btnStyle {
-    width: 100%; /* Full width button */
-    height: 40px;
-  }
-
-  .view {
-    width: 100%; /* Full width button */
-    height: 40px;
+    font-size: 24px;
   }
 }
 </style>

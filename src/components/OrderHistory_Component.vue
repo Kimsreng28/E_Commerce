@@ -96,8 +96,8 @@ export default {
     const selectedSort = ref("date");
 
     const addOrdersSequentially = () => {
-      const allOrders = orderHistoryStore.orderHistory;
-      let index = 0;
+  const allOrders = orderHistoryStore.orderHistory;
+  let index = 0;
 
       const intervalId = setInterval(() => {
         if (index < allOrders.length) {
@@ -171,10 +171,9 @@ export default {
   gap: 20px;
 }
 
-.order {
-  border-bottom: 1px solid #ccc;
-  padding-bottom: 20px;
-  padding-top: 20px;
+.order { 
+  padding-bottom: 10px;
+  padding-top: 10px;
 }
 
 .order-card-container {

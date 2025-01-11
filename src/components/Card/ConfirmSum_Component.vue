@@ -6,7 +6,9 @@
 
     <div class="subtotalPrice">
       <p>Subtotal:</p>
+      <!-- <p>${{ subtotalPrice.toFixed(2) }}</p> -->
       <p>${{ subtotalPrice.toFixed(2) }}</p>
+
     </div>
     <div class="hr">
       <hr />
@@ -59,7 +61,12 @@ export default {
 
     const totalPrice = computed(() => {
       return subtotalPrice.value + shippingPrice - discountPrice.value;
-    });
+    }
+  );
+
+  let subPrice = subtotalPrice;
+  let totalAmount = totalPrice;
+
 
     watch(discountPrice, (newValue) => {
       if (newValue <= 0) {

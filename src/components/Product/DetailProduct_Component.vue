@@ -273,20 +273,20 @@ export default {
 <style scoped>
 .productDetailComponent {
   width: 100%;
-  max-width: 1440px;
-  height: 100vh;
+  height: fit-content;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
+  padding: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 2%;
 }
-
 .productDetail {
-  width: 100%;
-  display: flex;
-  flex-direction: row;
-  padding: 1%;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 4%;
+  width: 90%;
+  padding: 1%;
 }
 .addToCart {
   display: flex;
@@ -294,22 +294,18 @@ export default {
   justify-content: center;
   align-items: center;
 }
-
 .imagesOfProducts {
-  width: 50%;
-  height: 700px;
+  width: 100%;
   display: flex;
-  justify-content: start;
-  align-items: start;
   flex-direction: row;
   padding: 1%;
   gap: 1%;
+
 }
 
 .fourImages {
   background-color: #e9e7e7;
   width: 30%;
-  height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -317,7 +313,6 @@ export default {
   border: 1px solid #a29595;
   border-radius: 5px;
   gap: 10px;
-  padding: 10px;
   cursor: pointer;
 }
 .fourImages img {
@@ -325,7 +320,6 @@ export default {
   width: 80%;
   cursor: pointer;
   border-radius: 5px;
-  height: auto;
   object-fit: contain;
 }
 .fourImages img.selected {
@@ -338,8 +332,7 @@ export default {
 }
 .mainImage {
   background-color: #e9e7e7;
-  width: 70%;
-  height: 100%;
+  width: 80%;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -348,26 +341,25 @@ export default {
 }
 
 .mainImage img {
-  width: auto; /* Adjusts based on the aspect ratio */
-  height: 100%; /* Ensures it fills the container's height */
+  width: 80%;
   max-width: 100%; /* Prevents overflow within the container */
   object-fit: contain; /* Ensures the entire image is visible within the container */
   object-position: center; /* Centers the image */
 }
 
 .detailOfProduct {
-  width: 50%;
+  width: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: start;
   padding: 1%;
+
+
 }
 
 .name {
   width: 100%;
   display: flex;
   justify-content: start;
-  align-items: center;
 }
 
 .name p {
@@ -381,7 +373,6 @@ export default {
   width: 100%;
   display: flex;
   justify-content: start;
-  align-items: center;
   margin-top: 1%;
   gap: 2%;
 }
@@ -390,7 +381,6 @@ export default {
   width: 50px;
   display: flex;
   justify-content: center;
-  align-items: center;
   background-color: #958383;
   border-radius: 5px;
   font-size: 16px;
@@ -402,7 +392,6 @@ export default {
 .rating {
   display: flex;
   flex-direction: row;
-  align-items: center;
   width: 100%;
   margin-top: 2%;
   gap: 2%;
@@ -435,8 +424,7 @@ export default {
   width: 100%;
   display: flex;
   justify-content: start;
-  align-items: center;
-  margin-top: 2%;
+  margin-top: 1%;
   gap: 2%;
 }
 .price .oldPrice {
@@ -455,7 +443,6 @@ export default {
   display: flex;
   width: 100%;
   justify-content: start;
-  align-items: center;
   margin-top: 3%;
   gap: 3%;
 }
@@ -471,7 +458,6 @@ export default {
   width: 100%;
   display: flex;
   justify-content: start;
-  align-items: center;
   gap: 2%;
   margin-top: 3%;
 }
@@ -502,7 +488,6 @@ export default {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  align-items: center;
   width: 20%;
   gap: 1%;
   border-radius: 5px;
@@ -529,7 +514,7 @@ export default {
 .number {
   display: flex;
   justify-content: center;
-  align-items: center;
+
 }
 .number p {
   color: #000000;
@@ -541,7 +526,7 @@ export default {
   margin-top: 2%;
   display: flex;
   justify-content: start;
-  align-items: center;
+
 }
 .description p {
   color: #7b7373;
@@ -550,7 +535,7 @@ export default {
   font-weight: 500;
 }
 .tellAbout {
-  margin-top: 10%;
+  margin-top: 5%;
   width: 100%;
   display: flex;
   justify-content: center;
@@ -609,7 +594,6 @@ export default {
 .colorOptions {
   display: flex;
   justify-content: center;
-  align-items: center;
   gap: 10px;
 }
 
@@ -633,7 +617,6 @@ export default {
 .sizeOptions {
   display: flex;
   justify-content: center;
-  align-items: center;
   gap: 10px;
 }
 
@@ -645,7 +628,7 @@ export default {
   font-family: Quicksand, sans-serif;
   width: 50px;
   height: 40px;
-  border: 1px solid #ccc;
+  border: 1px solid #7f7b7b;
   font-weight: 500;
   transition: all 0.3s;
   cursor: pointer;
@@ -661,14 +644,20 @@ export default {
   color: white;
   border-color: #958383;
 }
-
-@media (max-width: 768px) {
+@media (max-width: 1124px) {
   .productDetail {
-    gap: 15px;
+    gap: 10px;
+    display: flex;
+    flex-direction: column;
+    width: 60%;
   }
-
+  .mainImage img{
+    max-height: 100%;
+  }
   .fourImages img {
-    max-height: 60px;
+    max-height: 50%;
+    margin: 10px;
+    width: 50%;
   }
 
   .price p {
@@ -687,17 +676,58 @@ export default {
   }
 }
 
-@media (max-width: 480px) {
+
+@media (max-width: 828px) {
+  .productDetail {
+    gap: 10px;
+    display: flex;
+    flex-direction: column;
+    width: 70%;
+  }
+  .mainImage img{
+    max-height: 100%;
+  }
+  .fourImages img {
+    max-height: 50%;
+    margin: 10px;
+    width: 50%;
+  }
+
+  .price p {
+    font-size: 20px;
+  }
+
+  .description p {
+    font-size: 14px;
+  }
+
+  .colorOption,
+  .sizeOption {
+    width: 25px;
+    height: 25px;
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 420px) {
   .productDetailComponent {
     padding: 5px;
+
   }
 
   .productDetail {
     gap: 10px;
+    display: flex;
+    flex-direction: column;
+    width: 80%;
   }
-
+  .mainImage img{
+    max-height: 100%;
+  }
   .fourImages img {
-    max-height: 50px;
+    max-height: 50%;
+    margin: 10px;
+    width: 50%;
   }
 
   .name p {

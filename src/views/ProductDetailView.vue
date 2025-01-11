@@ -6,7 +6,7 @@
       <LoadingView />
     </div>
 
-    <div v-else>
+    <div v-else class="wrapper">
       <Breadcrumb_Component />
 
       <DetailProduct_Component
@@ -28,9 +28,8 @@
       />
 
       <ReviewProduct_Component :productId="$route.params.id" :description="product.description" :product-title="product.title"/>
-
-      <Footer_Component class="footer" />
     </div>
+    <Footer_Component/>
   </div>
 </template>
 
@@ -90,58 +89,60 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  height: auto;
 }
 .productDetailScreen {
-  width: 100%;
+  width: fit-content;
   height: 100vh;
-  margin-top: 2%;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
 }
+.wrapper{
+  width: 100%;
+}
 .pdDt {
   width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-left: 2%;
+  margin-top: 2%;
+
 }
-@media (max-width: 1024px) {
+@media (max-width: 1124px) {
   .productDetailScreen {
-    margin-top: 1%;
+    flex-direction: column;
+    margin-left: 20%;
+    padding: 10px;
+    width: 100%;
+    
+  }
+  .load {
+    height: auto;
+    margin-top: 20%;
   }
 
-  .pdDt {
-    margin-left: 0;
-    padding: 10px;
-  }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 828px) {
   .productDetailScreen {
-    margin-top: 2%;
     flex-direction: column;
-  }
-
-  .pdDt {
-    margin-left: 0;
+    margin-left: 27%;
     padding: 10px;
-    flex-direction: column;
+    width: 100%;
   }
 
   .load {
     height: auto;
     margin-top: 20%;
   }
+
 }
 
-@media (max-width: 480px) {
-  .pdDt {
-    margin-left: 0;
-    padding: 5px;
+@media (max-width: 420px) {
+  .productDetailScreen {
+    flex-direction: column;
+    margin-left: 35%;
+    padding: 10px;
+    width: 100%;
   }
-
   .load {
     height: auto;
     margin-top: 20%;

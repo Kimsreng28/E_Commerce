@@ -96,7 +96,21 @@ export default {
 }
 
 /* Media Queries for Responsive Design */
-@media (max-width: 768px) {
+@media (max-width: 1124px) {
+  .breadcrumb ul {
+    justify-content: center; /* Center align breadcrumbs on tablets */
+    font-size: 14px;
+  }
+
+  .breadcrumb li {
+    font-size: 14px;
+  }
+
+  .breadcrumb-link {
+    font-size: 14px;
+  }
+}
+@media (max-width: 828px) {
   .breadcrumb ul {
     justify-content: center; /* Center align breadcrumbs on tablets */
     font-size: 14px;
@@ -111,13 +125,13 @@ export default {
   }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 420px) {
   .breadcrumb {
     padding: 8px 10px;
   }
 
   .breadcrumb ul {
-    justify-content: start; /* Align breadcrumbs to the left on smaller screens */
+    justify-content: center; /* Align breadcrumbs to the left on smaller screens */
     font-size: 12px;
     gap: 3px;
   }

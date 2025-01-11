@@ -120,15 +120,10 @@ export default {
     );
 
     const shippingPrice = 0.25;
-    const shippingPrice = 0.25;
 
     const totalPrice = computed(() => {
       return subtotalPrice.value + shippingPrice - discountPrice.value;
     });
-    const totalPrice = computed(() => {
-      return subtotalPrice.value + shippingPrice - discountPrice.value;
-    });
-
     watch(discountPrice, (newValue) => {
       if (newValue <= 0) {
         localStorage.setItem("discountPrice", "0");

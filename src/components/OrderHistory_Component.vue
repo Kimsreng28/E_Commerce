@@ -7,19 +7,13 @@
         <option value="alphabetical">Product Name</option>
       </select>
     </div>
-    <div v-if="visibleOrders.length === 0">
-      No orders found.
-    </div>
+    <div v-if="visibleOrders.length === 0">No orders found.</div>
     <div v-else>
       <div v-for="order in visibleOrders" :key="order.id" class="order">
         <div class="order-card-container">
           <div v-for="item in order.items" :key="item.id">
             <div class="order-card">
-              <img
-                :src="getImageById(item.id)"
-                alt="Product image"
-                class="product-image"
-              />
+              <img :src="getImageById(item.id)" alt="" class="product-image" />
               <div class="order-details">
                 <div class="product-info">
                   <div class="item-header">
@@ -31,9 +25,11 @@
                       <p class="quantity">x{{ item.quantity }}</p>
                     </div>
                   </div>
-                  <p style="font-weight: bold;">Size: {{ item.size || "N/A" }}</p>
+                  <p style="font-weight: bold">
+                    Size: {{ item.size || "N/A" }}
+                  </p>
                   <div class="color-section">
-                    <span style="font-weight: bold;">Color:</span>
+                    <span style="font-weight: bold">Color:</span>
                     <div
                       class="colorOption"
                       :style="{ backgroundColor: item.color || '#ccc' }"
@@ -46,14 +42,16 @@
             </div>
 
             <div class="button-row">
-              <Button_Component id="button-border"
+              <Button_Component
+                id="button-border"
                 name-button="Delivery Details"
                 color-button="#958383"
                 background-color-button="#FFFFFF"
                 height-button="40px"
                 width-button="150px"
               />
-              <Button_Component id="button-border"
+              <Button_Component
+                id="button-border"
                 name-button="Refund"
                 color-button="#958383"
                 background-color-button="#FFFFFF"
@@ -82,15 +80,11 @@
   </div>
 </template>
 
-
-
-
-
 <script>
-import { ref, watch, onMounted } from "vue";
-import { useOrderHistory } from "@/stores/useOrderHistory";
-import { useCartStore } from "@/stores/useCartStore";
 import Button_Component from "@/components/Button_Component.vue";
+import { useCartStore } from "@/stores/useCartStore";
+import { useOrderHistory } from "@/stores/useOrderHistory";
+import { onMounted, ref, watch } from "vue";
 
 export default {
   name: "OrderHistory_Component",
@@ -110,7 +104,7 @@ export default {
       const intervalId = setInterval(() => {
         if (index < allOrders.length) {
           const newOrder = allOrders[index];
-          if (!visibleOrders.value.some(order => order.id === newOrder.id)) {
+          if (!visibleOrders.value.some((order) => order.id === newOrder.id)) {
             visibleOrders.value.push(newOrder);
           }
           sortOrders(); // Ensure sorting after adding new orders
@@ -122,8 +116,11 @@ export default {
     };
 
     const getImageById = (id) => {
-      const product = cartStore.cartItems.find((item) => item.id === id);
-      return product ? product.image : "default-image-url.jpg";
+      const order = orderHistoryStore.orderHistory.find((order) =>
+        order.items.some((item) => item.id === id)
+      );
+      const item = order ? order.items.find((item) => item.id === id) : null;
+      return item ? item.image : "default-image-url.jpg";
     };
 
     const sortOrders = () => {
@@ -131,7 +128,9 @@ export default {
       if (selectedSort.value === "date") {
         ordersCopy.sort((a, b) => new Date(b.date) - new Date(a.date));
       } else if (selectedSort.value === "alphabetical") {
-        ordersCopy.sort((a, b) => a.items[0].name.localeCompare(b.items[0].name));
+        ordersCopy.sort((a, b) =>
+          a.items[0].name.localeCompare(b.items[0].name)
+        );
       }
       visibleOrders.value = ordersCopy;
     };
@@ -152,10 +151,9 @@ export default {
 };
 </script>
 
-
 <style scoped>
 #button-border {
-  border: 1px solid #9E9E9E;
+  border: 1px solid #9e9e9e;
   border-radius: 8px;
 }
 

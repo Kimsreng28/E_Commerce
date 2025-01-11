@@ -87,7 +87,6 @@
   </div>
 </template>
 
-
 <script>
 import Breadcrumb_Component from "@/components/Breadcrumb_Component.vue";
 import Button_Component from "@/components/Button_Component.vue";
@@ -112,9 +111,9 @@ export default {
   },
   data() {
     return {
-      isLoading: true, 
-      couponCode: "", 
-      couponPrice: 0, 
+      isLoading: true,
+      couponCode: "",
+      couponPrice: 0,
     };
   },
   computed: {
@@ -126,7 +125,7 @@ export default {
         const discountPrice = (item.price * discountPercentage) / 100;
         return {
           ...item,
-          discountPrice: discountPrice, 
+          discountPrice: discountPrice,
         };
       });
     },
@@ -142,12 +141,6 @@ export default {
         0
       );
     },
-    // totalDiscountPrice() {
-    //   return this.cartItems.reduce(
-    //     (total, item) => total + item.discountPrice * item.quantity,
-    //     0
-    //   );
-    // },
     totalPrice() {
       return (
         this.subtotalPrice -
@@ -161,7 +154,7 @@ export default {
   methods: {
     loadData() {
       setTimeout(() => {
-        this.isLoading = false; 
+        this.isLoading = false;
       }, 1000);
     },
     moveAllToShop() {
@@ -174,6 +167,7 @@ export default {
       const checkoutStore = useCheckOut();
 
       checkoutStore.clearCheckOut();
+
       cartStore.cartItems.forEach((item) => {
         checkoutStore.addToCheckOut(item);
       });
@@ -184,14 +178,15 @@ export default {
       });
     },
     navigateToCategory() {
-    this.$router.push({ path: "/category" });
-  },
+      this.$router.push({ path: "/category" });
+    },
   },
   mounted() {
     this.loadData();
   },
 };
 </script>
+
 <style scoped>
 .emptyCart {
   display: flex;
@@ -217,11 +212,6 @@ export default {
 
 .startShopping {
   margin-top: 10px;
-}
-
-.buttonOfScreen {
-  display: flex;
-  justify-content: center;
 }
 
 .load {
@@ -302,7 +292,6 @@ export default {
   margin-top: 5%;
 }
 
-
 @media (max-width: 1024px) {
   .cartCheck {
     flex-direction: column;
@@ -310,13 +299,13 @@ export default {
   }
 
   .itemCheck {
-    width: 100%; 
-    margin-bottom: 10px; 
+    width: 100%;
+    margin-bottom: 10px;
   }
 
   .totalSummary {
-    width: 100%; 
-    margin-top: 20px; 
+    width: 100%;
+    margin-top: 20px;
   }
 
   .buttonOfScreen {
@@ -326,7 +315,7 @@ export default {
   }
 
   .title p {
-    font-size: 28px; 
+    font-size: 28px;
   }
 }
 
@@ -337,7 +326,7 @@ export default {
   }
 
   .title p {
-    font-size: 24px; 
+    font-size: 24px;
   }
 
   .itemCheck {
@@ -365,16 +354,16 @@ export default {
   }
 
   .title p {
-    font-size: 20px; 
+    font-size: 20px;
   }
 
   .itemCheck {
-    width: 100%; 
-    margin-bottom: 15px; 
+    width: 100%;
+    margin-bottom: 15px;
   }
 
   .totalSummary {
-    width: 100%; 
+    width: 100%;
     margin-top: 20px;
   }
 

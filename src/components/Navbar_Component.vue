@@ -231,6 +231,7 @@ export default {
 .cart span {
   font-size: 24px;
   color: #ffffff;
+  transition: color 0.3s, transform 0.3s;
 }
 
 .cart span:hover {
@@ -332,7 +333,7 @@ export default {
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 500px) {
   .navBar {
     flex-direction: column;
     align-items: center;
@@ -357,7 +358,7 @@ export default {
   }
 
   .search {
-    width: 80%;
+    width: 50%;
     margin-top: 1rem;
   }
 

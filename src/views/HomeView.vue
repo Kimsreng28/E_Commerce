@@ -158,16 +158,17 @@ import Footer_Component from "@/components/Footer_Component.vue";
 import Navbar_Component from "@/components/Navbar_Component.vue";
 import ProductCard_Component from "@/components/Product/ProductCard_Component.vue";
 import ReviewHistory_Component from "@/components/ReviewHistory_Component.vue";
-import { useCategoryStore } from "@/stores/useCategoryStore";
-import { useProductStore } from "@/stores/useProductStore";
-import { computed, onMounted, ref } from "vue";
-import { useRouter } from "vue-router";
 import thirdArrival from "../assets/images/Arrivals/1st.jpg";
 import oneArrival from "../assets/images/Arrivals/2nd.jpg";
 import twoArrival from "../assets/images/Arrivals/3nd.jpg";
 import Service from "../assets/images/CardFuture/customer-service.png";
 import Coupon from "../assets/images/CardFuture/voucher.png";
 import LoadingView from "./LoadingView.vue";
+
+import { useCategoryStore } from "@/stores/useCategoryStore";
+import { useProductStore } from "@/stores/useProductStore";
+import { computed, onMounted, ref } from "vue";
+import { useRouter } from "vue-router";
 
 export default {
   name: "HomeView",

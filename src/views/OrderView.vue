@@ -2,8 +2,6 @@
   <div class="orderScreen">
     <Navbar_Component />
 
-
-    
     <div class="load" v-if="isLoading">
       <LoadingView />
     </div>
@@ -26,9 +24,10 @@ import Breadcrumb_Component from "@/components/Breadcrumb_Component.vue";
 import Footer_Component from "@/components/Footer_Component.vue";
 import Navbar_Component from "@/components/Navbar_Component.vue";
 import OrderHistory_Component from "@/components/OrderHistory_Component.vue";
-import { useOrderHistory } from "@/stores/useOrderHistory";
+import { useCartStore } from "@/stores/useCartStore";
 import { useCheckOut } from "@/stores/useCheckOut";
-import { ref, onMounted } from "vue";
+import { useOrderHistory } from "@/stores/useOrderHistory";
+import { onMounted, ref } from "vue";
 import LoadingView from "./LoadingView.vue";
 
 export default {
@@ -44,12 +43,15 @@ export default {
     const isLoading = ref(true);
     const orderHistoryStore = useOrderHistory();
     const checkoutStore = useCheckOut();
+    const cartStore = useCartStore();
 
     onMounted(() => {
       if (checkoutStore.checkOut.length > 0) {
         orderHistoryStore.addOrderFromCheckout(checkoutStore.checkOut);
-        checkoutStore.clearCheckOut(); 
+        checkoutStore.clearCheckOut();
       }
+
+      cartStore.clearCart();
 
       setTimeout(() => {
         isLoading.value = false;
@@ -64,7 +66,6 @@ export default {
 </script>
 
 <style scoped>
-
 .title {
   width: 95%;
   margin-top: 2%;

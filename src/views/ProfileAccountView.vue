@@ -9,7 +9,7 @@
     <div v-else>
       <!-- NAV WITH NAME -->
       <div class="navWithName">
-        <Breadcrumb_Component />
+        <Breadcrumb_Component class="breadcrumb" />
         <div class="welcome">
           <p>Welcome to!</p>
           <p style="color: #564949">{{ firstName }} {{ lastName }}</p>
@@ -522,54 +522,5 @@ export default {
   gap: 2%;
   margin-top: 3%;
   margin-bottom: 3%;
-}
-
-@media (max-width: 768px) {
-  .profileContainer {
-    height: auto;
-    width: 768px;
-  }
-  .navWithName {
-    width: 98%;
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .showInfo {
-    flex-direction: column;
-  }
-
-  .select {
-    width: 100%;
-  }
-
-  .dashboardEdit {
-    width: 100%;
-  }
-
-  .name,
-  .email,
-  .password {
-    flex-direction: column;
-    gap: 10px;
-  }
-
-  .name .firstName,
-  .name .lastName,
-  .email .emailInput,
-  .email .address,
-  .password .currentPassword,
-  .password .newPassword,
-  .password .confirmPassword {
-    width: 100%;
-  }
-
-  .welcome p {
-    font-size: 14px;
-  }
-
-  .titlePage p {
-    font-size: 20px;
-  }
 }
 </style>

@@ -3,8 +3,8 @@ import { defineStore } from "pinia";
 export const useCartStore = defineStore("cart", {
   state: () => ({
     cartItems: JSON.parse(localStorage.getItem("cart")) || [],
-    coupon: "", 
-    couponDiscount: 0, 
+    coupon: "",
+    couponDiscount: 0,
   }),
 
   actions: {
@@ -18,7 +18,9 @@ export const useCartStore = defineStore("cart", {
     },
     clearCart() {
       this.cartItems = [];
-      this.saveToLocalStorage();
+      console.log("Cart cleared in state.");
+      localStorage.removeItem("cart");
+      console.log("Cart cleared in localStorage.");
     },
     deleteItem(id) {
       this.cartItems = this.cartItems.filter((item) => item.id !== id);
@@ -37,7 +39,7 @@ export const useCartStore = defineStore("cart", {
         this.couponDiscount = 10;
       } else if (code === "SAVE20") {
         this.coupon = code;
-        this.couponDiscount = 20; 
+        this.couponDiscount = 20;
       } else {
         this.coupon = "";
         this.couponDiscount = 0;
@@ -59,17 +61,19 @@ export const useCartStore = defineStore("cart", {
     },
 
     getDiscount: (state) => {
-      const productDiscount = state.cartItems.reduce((totalDiscount, product) => {
-        if (product.discount) {
-          const itemDiscount =
-            (product.discount / 100) * product.price * product.quantity;
-          return totalDiscount + itemDiscount;
-        }
-        return totalDiscount;
-      }, 0);
+      const productDiscount = state.cartItems.reduce(
+        (totalDiscount, product) => {
+          if (product.discount) {
+            const itemDiscount =
+              (product.discount / 100) * product.price * product.quantity;
+            return totalDiscount + itemDiscount;
+          }
+          return totalDiscount;
+        },
+        0
+      );
 
-      const couponDiscount =
-        (state.couponDiscount / 100) * state.getSubtotal;
+      const couponDiscount = (state.couponDiscount / 100) * state.getSubtotal;
 
       return productDiscount + couponDiscount;
     },

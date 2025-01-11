@@ -70,19 +70,19 @@
 </template>
 
 <script>
-import { ref, onMounted, computed, watch } from "vue";
 import Breadcrumb_Component from "@/components/Breadcrumb_Component.vue";
-import { useCheckOut } from "@/stores/useCheckOut";
-import { useOrderHistory } from "@/stores/useOrderHistory";
-import { useCartStore } from "@/stores/useCartStore";
-import Location_Component from "@/components/Checkout/Location_Component.vue";
-import PaymentMethod_Component from "@/components/Checkout/PaymentMethod_Component.vue";
-import ConfirmSum_Component from "@/components/Card/ConfirmSum_Component.vue";
 import Button_Component from "@/components/Button_Component.vue";
 import CardCheckProduct_Component from "@/components/Card/CardCheckProduct_Component.vue";
+import ConfirmSum_Component from "@/components/Card/ConfirmSum_Component.vue";
+import Location_Component from "@/components/Checkout/Location_Component.vue";
+import PaymentMethod_Component from "@/components/Checkout/PaymentMethod_Component.vue";
 import PaymentSuccess_Component from "@/components/Checkout/PaymentSuccess_Component.vue";
 import Footer_Component from "@/components/Footer_Component.vue";
 import Navbar_Component from "@/components/Navbar_Component.vue";
+import { useCartStore } from "@/stores/useCartStore";
+import { useCheckOut } from "@/stores/useCheckOut";
+import { useOrderHistory } from "@/stores/useOrderHistory";
+import { computed, onMounted, ref, watch } from "vue";
 import LoadingView from "./LoadingView.vue";
 
 export default {
@@ -109,19 +109,21 @@ export default {
 
     const subtotalPrice = computed(() => cartStore.getSubtotal);
 
-const discountPrice = ref(parseFloat(localStorage.getItem("discountPrice")) || 0);
+    const discountPrice = ref(
+      parseFloat(localStorage.getItem("discountPrice")) || 0
+    );
 
-const shippingPrice = 0.25;
+    const shippingPrice = 0.25;
 
-const totalPrice = computed(() => {
-  return subtotalPrice.value + shippingPrice - discountPrice.value;
-});
+    const totalPrice = computed(() => {
+      return subtotalPrice.value + shippingPrice - discountPrice.value;
+    });
 
-watch(discountPrice, (newValue) => {
-  if (newValue <= 0) {
-    localStorage.setItem("discountPrice", "0");
-  }
-})
+    watch(discountPrice, (newValue) => {
+      if (newValue <= 0) {
+        localStorage.setItem("discountPrice", "0");
+      }
+    });
 
     const checkOutStore = useCheckOut();
     const orderHistoryStore = useOrderHistory();
@@ -135,7 +137,7 @@ watch(discountPrice, (newValue) => {
 
     const updateLocation = (location) => {
       console.log("Selected Location:", location);
-      selectedLocation.value = location;  
+      selectedLocation.value = location;
     };
 
     const updatePaymentMethod = (method) => {
@@ -158,19 +160,26 @@ watch(discountPrice, (newValue) => {
         return;
       }
 
-      console.log("Processing payment with method:", selectedPaymentMethod.value);
+      // Ensure checkOutItems is an array
+      const checkOutItems = Array.isArray(checkOutStore.checkOut)
+        ? checkOutStore.checkOut
+        : Object.values(checkOutStore.checkOut); // Convert to array if it's not one
 
+      console.log("CheckOut Items: ", checkOutItems);
+
+      // Process payment
       isPaymentSuccess.value = true;
 
-      resetDiscount(); 
+      resetDiscount();
 
       transactionId.value = `TXN${Math.floor(Math.random() * 1000000000)}`;
       const order = {
         id: transactionId.value,
         date: transactionDate.value,
-        items: checkOutStore.checkOut.map((item) => ({
+        items: checkOutItems.map((item) => ({
           id: item.id,
           name: item.name,
+          image: item.image || "default-image-url.jpg",
           quantity: item.quantity,
           price: item.price,
           discount: item.discount,
@@ -180,9 +189,12 @@ watch(discountPrice, (newValue) => {
         })),
         totalPrice: totalPrice.value,
         paymentMethod: selectedPaymentMethod.value,
-        shippingLocation: selectedLocation.value, 
+        shippingLocation: selectedLocation.value,
       };
       orderHistoryStore.addOrderFromCheckout(order);
+
+      // Clear the cart items after successful payment
+      cartStore.clearCart();
 
       setTimeout(() => {
         isPaymentSuccess.value = false;
@@ -206,7 +218,8 @@ watch(discountPrice, (newValue) => {
     checkOutItems() {
       const store = useCheckOut();
       return store.checkOut.map((item) => {
-        const discountPercentage = parseFloat(item.discount.replace("%", "")) || 0;
+        const discountPercentage =
+          parseFloat(item.discount.replace("%", "")) || 0;
         const discountPrice = (item.price * discountPercentage) / 100;
         const finalPrice = item.price - discountPrice;
         return { ...item, discountPrice, finalPrice };
@@ -230,7 +243,6 @@ watch(discountPrice, (newValue) => {
   },
 };
 </script>
-
 
 <style scoped>
 .load {
@@ -317,22 +329,22 @@ watch(discountPrice, (newValue) => {
 
 @media (max-width: 480px) {
   .checkoutScreen {
-    margin-top: 5%; 
+    margin-top: 5%;
   }
 
   .cardCheck {
-    width: 100%; 
+    width: 100%;
     height: auto;
   }
 
   .payNow {
     margin-left: 0;
-    margin-top: 20px; 
+    margin-top: 20px;
     justify-content: center;
   }
 
   h1 {
-    font-size: 1.5rem; 
+    font-size: 1.5rem;
   }
 
   .container {

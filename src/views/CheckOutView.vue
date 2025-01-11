@@ -70,11 +70,11 @@
 </template>
 
 <script>
-import { ref, onMounted } from "vue";
-import { useRoute } from "vue-router";
+import { ref, onMounted, computed, watch } from "vue";
 import Breadcrumb_Component from "@/components/Breadcrumb_Component.vue";
 import { useCheckOut } from "@/stores/useCheckOut";
 import { useOrderHistory } from "@/stores/useOrderHistory";
+import { useCartStore } from "@/stores/useCartStore";
 import Location_Component from "@/components/Checkout/Location_Component.vue";
 import PaymentMethod_Component from "@/components/Checkout/PaymentMethod_Component.vue";
 import ConfirmSum_Component from "@/components/Card/ConfirmSum_Component.vue";
@@ -100,14 +100,28 @@ export default {
     ConfirmSum_Component,
   },
   setup() {
+    const cartStore = useCartStore();
     const isLoading = ref(true);
     const isPaymentSuccess = ref(false);
     const selectedPaymentMethod = ref("");
     const transactionId = ref("TXN123456789");
     const transactionDate = ref(new Date().toLocaleString());
 
-    const route = useRoute();
-    const totalPrice = ref(parseFloat(route.query.totalPrice) || 0);
+    const subtotalPrice = computed(() => cartStore.getSubtotal);
+
+const discountPrice = ref(parseFloat(localStorage.getItem("discountPrice")) || 0);
+
+const shippingPrice = 0.25;
+
+const totalPrice = computed(() => {
+  return subtotalPrice.value + shippingPrice - discountPrice.value;
+});
+
+watch(discountPrice, (newValue) => {
+  if (newValue <= 0) {
+    localStorage.setItem("discountPrice", "0");
+  }
+})
 
     const checkOutStore = useCheckOut();
     const orderHistoryStore = useOrderHistory();
@@ -146,10 +160,8 @@ export default {
 
       console.log("Processing payment with method:", selectedPaymentMethod.value);
 
-      // Simulate a successful payment
       isPaymentSuccess.value = true;
 
-      // Reset the discount after payment
       resetDiscount(); 
 
       transactionId.value = `TXN${Math.floor(Math.random() * 1000000000)}`;
@@ -170,7 +182,7 @@ export default {
         paymentMethod: selectedPaymentMethod.value,
         shippingLocation: selectedLocation.value, 
       };
-      orderHistoryStore.addToOrderHistory(order);
+      orderHistoryStore.addOrderFromCheckout(order);
 
       setTimeout(() => {
         isPaymentSuccess.value = false;

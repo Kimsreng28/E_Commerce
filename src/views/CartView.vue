@@ -142,12 +142,12 @@ export default {
         0
       );
     },
-    totalDiscountPrice() {
-      return this.cartItems.reduce(
-        (total, item) => total + item.discountPrice * item.quantity,
-        0
-      );
-    },
+    // totalDiscountPrice() {
+    //   return this.cartItems.reduce(
+    //     (total, item) => total + item.discountPrice * item.quantity,
+    //     0
+    //   );
+    // },
     totalPrice() {
       return (
         this.subtotalPrice -
@@ -302,7 +302,7 @@ export default {
   margin-top: 5%;
 }
 
-/* Responsive design adjustments */
+
 @media (max-width: 1024px) {
   .cartCheck {
     flex-direction: column;
@@ -310,13 +310,13 @@ export default {
   }
 
   .itemCheck {
-    width: 100%; /* Full width on smaller screens */
-    margin-bottom: 10px; /* Space between items */
+    width: 100%; 
+    margin-bottom: 10px; 
   }
 
   .totalSummary {
-    width: 100%; /* Full width for the total summary */
-    margin-top: 20px; /* Add space between item and total */
+    width: 100%; 
+    margin-top: 20px; 
   }
 
   .buttonOfScreen {
@@ -326,7 +326,7 @@ export default {
   }
 
   .title p {
-    font-size: 28px; /* Adjust font size for smaller screens */
+    font-size: 28px; 
   }
 }
 
@@ -337,15 +337,15 @@ export default {
   }
 
   .title p {
-    font-size: 24px; /* Smaller font for title */
+    font-size: 24px; 
   }
 
   .itemCheck {
-    width: 100%; /* Full width for cart items */
+    width: 100%;
   }
 
   .totalSummary {
-    width: 100%; /* Full width for total summary */
+    width: 100%;
   }
 
   .buttonOfScreen {
@@ -365,16 +365,16 @@ export default {
   }
 
   .title p {
-    font-size: 20px; /* Reduce title font size for very small screens */
+    font-size: 20px; 
   }
 
   .itemCheck {
-    width: 100%; /* Full width */
-    margin-bottom: 15px; /* Add space between items */
+    width: 100%; 
+    margin-bottom: 15px; 
   }
 
   .totalSummary {
-    width: 100%; /* Full width for summary */
+    width: 100%; 
     margin-top: 20px;
   }
 

@@ -15,9 +15,7 @@
 
       <div class="container">
         <div class="left">
-          <Location_Component
-            @update:location="updateLocation"  
-          />
+          <Location_Component @update:location="updateLocation" />
           <PaymentMethod_Component
             style="margin-top: 5%"
             @update:paymentMethod="updatePaymentMethod"
@@ -40,15 +38,7 @@
             :fromCheckout="true"
             :showDeleteButton="false"
           />
-          <PriceSummary_Component
-            titleSummary="Confirmed Payment"
-            :subtotalPrice="subtotalPrice"
-            :shippingPrice="shippingPrice"
-            :discountPrice="totalDiscountPrice"
-            :totalPrice="totalPrice"
-            :coupon-price="couponPrice"
-            :showCoupon="false"
-          />
+          <ConfirmSum_Component />
         </div>
       </div>
 
@@ -87,9 +77,9 @@ import { useCheckOut } from "@/stores/useCheckOut";
 import { useOrderHistory } from "@/stores/useOrderHistory";
 import Location_Component from "@/components/Checkout/Location_Component.vue";
 import PaymentMethod_Component from "@/components/Checkout/PaymentMethod_Component.vue";
+import ConfirmSum_Component from "@/components/Card/ConfirmSum_Component.vue";
 import Button_Component from "@/components/Button_Component.vue";
 import CardCheckProduct_Component from "@/components/Card/CardCheckProduct_Component.vue";
-import PriceSummary_Component from "@/components/Card/PriceSummary_Component.vue";
 import PaymentSuccess_Component from "@/components/Checkout/PaymentSuccess_Component.vue";
 import Footer_Component from "@/components/Footer_Component.vue";
 import Navbar_Component from "@/components/Navbar_Component.vue";
@@ -103,11 +93,11 @@ export default {
     Location_Component,
     PaymentMethod_Component,
     CardCheckProduct_Component,
-    PriceSummary_Component,
     Footer_Component,
     Button_Component,
     LoadingView,
     PaymentSuccess_Component,
+    ConfirmSum_Component,
   },
   setup() {
     const isLoading = ref(true);
@@ -139,6 +129,10 @@ export default {
       selectedPaymentMethod.value = method;
     };
 
+    const resetDiscount = () => {
+      localStorage.setItem("discountPrice", "0");
+    };
+
     const handlePayNow = () => {
       if (!selectedPaymentMethod.value) {
         alert("Please select a payment method.");
@@ -154,6 +148,9 @@ export default {
 
       // Simulate a successful payment
       isPaymentSuccess.value = true;
+
+      // Reset the discount after payment
+      resetDiscount(); 
 
       transactionId.value = `TXN${Math.floor(Math.random() * 1000000000)}`;
       const order = {
@@ -171,7 +168,7 @@ export default {
         })),
         totalPrice: totalPrice.value,
         paymentMethod: selectedPaymentMethod.value,
-        shippingLocation: selectedLocation.value,  // Pass selectedLocation
+        shippingLocation: selectedLocation.value, 
       };
       orderHistoryStore.addToOrderHistory(order);
 
@@ -221,6 +218,7 @@ export default {
   },
 };
 </script>
+
 
 <style scoped>
 .load {

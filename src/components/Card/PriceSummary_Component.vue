@@ -6,7 +6,7 @@
 
     <div class="subtotalPrice">
       <p>Subtotal:</p>
-      <p>${{ subtotalPrice }}</p>
+      <p>${{ subtotalPrice.toFixed(2) }}</p>
     </div>
     <div class="hr">
       <hr />
@@ -14,7 +14,7 @@
 
     <div class="shipping">
       <p>Shipping:</p>
-      <p>${{ shippingPrice }}</p>
+      <p>${{ shippingPrice.toFixed(2) }}</p>
     </div>
     <div class="hr">
       <hr />
@@ -22,14 +22,11 @@
 
     <div class="discount">
       <p>Discount:</p>
-      <p>${{ discountPrice.toFixed(2) }}</p>
+      <p v-if="discountPrice > 0" class="negative">- ${{ discountPrice.toFixed(2) }}</p>
+      <p v-else>$0.00</p>
     </div>
     <div class="hr">
       <hr />
-    </div>
-
-    <div class="discount" v-if="showCoupon">
-      <p>Coupon:</p>
     </div>
 
     <div class="coupon" v-show="showCoupon">
@@ -42,12 +39,14 @@
         color-button="#FFFFFF"
         @click="applyCoupon"
       />
+      
     </div>
-
+    <p v-if="invalidCoupon" class="error-message">Invalid coupon code!</p>
     <div class="totalPrice">
       <p>Total:</p>
       <p>${{ calculatedTotalPrice.toFixed(2) }}</p>
     </div>
+ 
   </div>
 </template>
 
@@ -63,71 +62,70 @@ export default {
   },
   props: {
     titleSummary: String,
-    subtotalPrice: String,
+    subtotalPrice: Number,
     shippingPrice: {
-      type: String,
+      type: Number,
       default: 0,
     },
     discountPrice: {
-      type: String,
-      default: "0%",
+      type: Number,
+      default: 0,
     },
-    totalPrice: String,
     couponPrice: {
       type: Number,
       default: 0,
     },
     showCoupon: {
       type: Boolean,
-      default: true, // Show the coupon section by default
+      default: true,
     },
   },
   setup(props) {
-    const cartStore = useCartStore();
-
     const couponCode = ref("");
-    const couponPrice = ref(0);
-    const discountPrice = ref(parseFloat(props.discountPrice) || 0);
-
-    const subtotalPrice = computed(() => cartStore.getSubtotal);
+    const discountPrice = ref(0);
+    const invalidCoupon = ref(false);
 
     const calculatedTotalPrice = computed(() => {
-      return (
-        subtotalPrice.value +
-        props.shippingPrice -
-        discountPrice.value -
-        couponPrice.value
-      );
+      return props.subtotalPrice + props.shippingPrice - discountPrice.value;
     });
 
     const applyCoupon = () => {
       if (couponCode.value === "DISCOUNT50") {
-        couponPrice.value = subtotalPrice.value * 0.5;
-        alert("Coupon Applied! 50% discount.");
+        let discount = props.subtotalPrice * 0.5;
+        discount = Math.min(discount, 40); 
+
+        discountPrice.value = discount;
+
+        localStorage.setItem("discountPrice", discount.toFixed(2));
+
+        invalidCoupon.value = false;
+        
+        alert(`Coupon Applied! Discount: -$${discount.toFixed(2)}`);
       } else {
-        alert("Invalid coupon code!");
-        couponPrice.value = 0;
+        invalidCoupon.value = true;
+        discountPrice.value = 0; 
+        localStorage.setItem("discountPrice", "0");
       }
     };
 
-    const handleCouponGenerated = (generatedCoupon) => {
-      couponCode.value = generatedCoupon;
-    };
-
     return {
-      subtotalPrice,
-      calculatedTotalPrice,
       couponCode,
       discountPrice,
+      invalidCoupon,
+      calculatedTotalPrice,
       applyCoupon,
-      handleCouponGenerated,
     };
   },
 };
 </script>
 
-
 <style scoped>
+
+.error-message {
+  color: red;
+  font-size: 12px;
+  margin-top: 5px;
+}
 .priceSummary {
   width: 100%;
   max-width: 625px;

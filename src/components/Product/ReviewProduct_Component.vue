@@ -2,7 +2,12 @@
   <div class="reviewProduct">
     <div class="tabs">
       <div class="tabBtn">
-        <button v-for="tab in tabs" :key="tab" :class="{ active: selectedTab === tab }" @click="changeTab(tab)">
+        <button
+          v-for="tab in tabs"
+          :key="tab"
+          :class="{ active: selectedTab === tab }"
+          @click="changeTab(tab)"
+        >
           {{ tab }}
         </button>
       </div>
@@ -78,7 +83,11 @@
         </div>
 
         <p>Comments</p>
-        <div class="showReview" v-for="(review, index) in filteredReviews" :key="review.id">
+        <div
+          class="showReview"
+          v-for="(review, index) in filteredReviews"
+          :key="review.id"
+        >
           <div>
             <!-- Reviewhead -->
             <div class="review-head">
@@ -89,14 +98,21 @@
               </div>
             </div>
             <div class="review-info">
-             <div class="review-content"> 
-              <p class="review-product-title">{{productTitle}}</p>
-              <p class="review-date"> {{ new Date(review.date).toLocaleDateString() }}</p>
-             </div>
-                <div class="review-content1">
-                  <p class="comment">{{ review.comment }}</p>
-                  <img v-if="review.image" :src="review.image" alt="Review Image" style="max-width: 200px"/>
-                </div>
+              <div class="review-content">
+                <p class="review-product-title">{{ productTitle }}</p>
+                <p class="review-date">
+                  {{ new Date(review.date).toLocaleDateString() }}
+                </p>
+              </div>
+              <div class="review-content1">
+                <p class="comment">{{ review.comment }}</p>
+                <img
+                  v-if="review.image"
+                  :src="review.image"
+                  alt="Review Image"
+                  style="max-width: 200px"
+                />
+              </div>
             </div>
           </div>
           <div class="but-action">
@@ -140,7 +156,6 @@ export default {
       type: String,
       required: true, // or false, depending on whether it's mandatory
     },
-  
   },
   setup(props) {
     const router = useRouter();
@@ -164,19 +179,18 @@ export default {
     const rating = ref(0);
     const image = ref(null);
 
-    const profileImage = computed(() => userSignupStore.profileImage);  
+    const profileImage = computed(() => userSignupStore.profileImage);
     const firstName = computed(() => userSignupStore.firstName);
     const lastName = computed(() => userSignupStore.lastName);
     const productDetails = computed(() => {
-    const detail = productStore.products.find((product) => {
+      const detail = productStore.products.find((product) => {
         return product.id == props.productId;
       });
       return detail;
     });
-    
 
     const relatedProducts = computed(() => {
-    const filteredProducts = productStore.products.filter((product) => {
+      const filteredProducts = productStore.products.filter((product) => {
         return product.category == productDetails.value.category;
       });
       return filteredProducts.length > 0 ? [...filteredProducts] : [];
@@ -272,7 +286,7 @@ export default {
     const saveReview = () => {
       if (editingIndex.value === null) return;
 
-    const updatedReview = {
+      const updatedReview = {
         ...filteredReviews.value[editingIndex.value],
         comment: editingComment.value,
         rating: editingRating.value,
@@ -380,7 +394,6 @@ export default {
       postReview,
       onImageUpload,
       filteredReviews,
-     
     };
   },
 };
@@ -570,7 +583,6 @@ export default {
   flex-direction: row;
   justify-content: space-between;
 }
-
 
 .review-text {
   margin-bottom: 0.5rem;
@@ -786,7 +798,6 @@ export default {
   padding: 10px;
   margin: 10px;
   width: 100%;
-
 }
 
 .showReview img {
@@ -820,7 +831,6 @@ export default {
 .review-head {
   display: flex;
   align-items: center;
-  
 }
 
 .review-date {
@@ -829,7 +839,6 @@ export default {
   color: #888;
   margin: 0 0 0 auto;
   padding: 5px;
-  
 }
 
 .review-info {
@@ -839,7 +848,7 @@ export default {
   width: 1000px;
   padding: 10px;
   margin: 10px;
-  border-radius: 10px ;
+  border-radius: 10px;
 }
 
 .review-product-title {
@@ -856,14 +865,25 @@ export default {
   padding: 10px;
 }
 
-.review-name{
+.review-name {
   font-family: Quicksand, sans-serif;
   font-size: 16px;
   color: #1c1b1b;
   margin: 0;
   padding: 10px;
 }
-
+.detail {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2%;
+}
+.detail p {
+  font-family: Quicksand, sans-serif;
+  font-size: 16px;
+  color: #000000;
+  font-weight: 700;
+}
 
 /* Animation */
 @keyframes fadeIn {

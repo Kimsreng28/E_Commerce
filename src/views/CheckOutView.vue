@@ -59,12 +59,18 @@
     <div class="showSuccess" v-if="isPaymentSuccess">
       <PaymentSuccess_Component
         :key="isPaymentSuccess"
-        :totalPrice="totalPrice"
+        :totalPrice="recentTotalPrice"
         :paymentMethod="selectedPaymentMethod"
         :transactionId="transactionId"
         :transactionDate="transactionDate"
         :location="selectedLocation"
       />
+    </div>
+
+    <!-- Display recent total price -->
+    <div v-if="recentTotalPrice > 0" class="recent-order-summary">
+      <h2>Most Recent Order</h2>
+      <p>Total Price: ${{ recentTotalPrice.toFixed(2) }}</p>
     </div>
   </div>
 </template>
@@ -109,19 +115,19 @@ export default {
 
     const subtotalPrice = computed(() => cartStore.getSubtotal);
 
-const discountPrice = ref(parseFloat(localStorage.getItem("discountPrice")) || 0);
+    const discountPrice = ref(parseFloat(localStorage.getItem("discountPrice")) || 0);
 
-const shippingPrice = 0.25;
+    const shippingPrice = 0.25;
 
-const totalPrice = computed(() => {
-  return subtotalPrice.value + shippingPrice - discountPrice.value;
-});
+    const totalPrice = computed(() => {
+      return subtotalPrice.value + shippingPrice - discountPrice.value;
+    });
 
-watch(discountPrice, (newValue) => {
-  if (newValue <= 0) {
-    localStorage.setItem("discountPrice", "0");
-  }
-})
+    watch(discountPrice, (newValue) => {
+      if (newValue <= 0) {
+        localStorage.setItem("discountPrice", "0");
+      }
+    });
 
     const checkOutStore = useCheckOut();
     const orderHistoryStore = useOrderHistory();
@@ -135,7 +141,7 @@ watch(discountPrice, (newValue) => {
 
     const updateLocation = (location) => {
       console.log("Selected Location:", location);
-      selectedLocation.value = location;  
+      selectedLocation.value = location;
     };
 
     const updatePaymentMethod = (method) => {
@@ -162,7 +168,7 @@ watch(discountPrice, (newValue) => {
 
       isPaymentSuccess.value = true;
 
-      resetDiscount(); 
+      resetDiscount();
 
       transactionId.value = `TXN${Math.floor(Math.random() * 1000000000)}`;
       const order = {
@@ -180,14 +186,29 @@ watch(discountPrice, (newValue) => {
         })),
         totalPrice: totalPrice.value,
         paymentMethod: selectedPaymentMethod.value,
-        shippingLocation: selectedLocation.value, 
+        shippingLocation: selectedLocation.value,
       };
-      orderHistoryStore.addOrderFromCheckout(order);
+
+      orderHistoryStore.addOrderFromCheckout(
+        order.items,
+        order.totalPrice,
+        order.paymentMethod,
+        order.shippingLocation
+      );
+
+       setTimeout(() => {
+    cartStore.clearCart(); 
+  }, 20000); 
+
 
       setTimeout(() => {
         isPaymentSuccess.value = false;
       }, 5000);
     };
+
+    const recentTotalPrice = computed(() => {
+      return orderHistoryStore.mostRecentOrderTotalPrice;
+    });
 
     return {
       isLoading,
@@ -200,8 +221,10 @@ watch(discountPrice, (newValue) => {
       handlePayNow,
       totalPrice,
       selectedLocation,
+      recentTotalPrice,
     };
   },
+
   computed: {
     checkOutItems() {
       const store = useCheckOut();
@@ -230,6 +253,7 @@ watch(discountPrice, (newValue) => {
   },
 };
 </script>
+
 
 
 <style scoped>

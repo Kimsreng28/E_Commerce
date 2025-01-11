@@ -95,8 +95,17 @@ export default {
     const locations = computed(() => locationStore.locations);
 
     const toggleDropdown = () => {
-      showDropdown.value = !showDropdown.value;
-    };
+  showDropdown.value = !showDropdown.value;
+
+  // Reset selected location when closing the dropdown
+  if (!showDropdown.value) {
+    locations.value.forEach(location => {
+      location.selected = false;
+    });
+    locationStore.selectedLocation = null; // Optionally reset the store value
+    emit("update:location", null); // Optionally clear the selection in the parent component
+  }
+};
 
     const addLocation = () => {
       const { fullName, streetAddress, apartment, city, phoneNumber } = newLocation.value;
@@ -132,16 +141,16 @@ export default {
     };
 
     const selectLocation = (index) => {
-      locations.value.forEach((location, i) => {
-        location.selected = i === index;
-      });
+  // Reset all other locations' selected state
+  locations.value.forEach((location, i) => {
+    location.selected = i === index;
+  });
 
-      const selectedLocation = locations.value[index];
-      locationStore.selectedLocation = selectedLocation;
+  const selectedLocation = locations.value[index];
+  locationStore.selectedLocation = selectedLocation;
 
-      emit("update:location", selectedLocation);  // Emit to parent
-
-    };
+  emit("update:location", selectedLocation);  // Emit to parent
+};
 
     return {
       showDropdown,

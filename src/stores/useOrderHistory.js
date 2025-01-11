@@ -6,28 +6,37 @@ export const useOrderHistory = defineStore("orderHistory", {
   }),
 
   actions: {
-    addOrderFromCheckout(checkoutItems) {
+    addOrderFromCheckout(checkoutItems, totalPrice, paymentMethod, shippingLocation) {
       const order = {
-        id: `TXN${Date.now()}`, // Unique transaction ID
-        date: new Date().toLocaleString(), // Purchase date
+        id: `TXN${Date.now()}`, 
+        date: new Date().toLocaleString(), 
+        paymentMethod, 
+        shippingLocation, 
         items: checkoutItems.map((item) => ({
-          id: item.id, // Store product ID
-          name: item.name, // Store product name
-          size: item.size || "N/A", // Store product size
-          color: item.color || "N/A", // Store product color
-          price: item.price, // Store product price
-          quantity: item.quantity, // Store product quantity
-          image: item.image || "default-image-url.jpg", // Store product image URL
+          id: item.id, 
+          name: item.name, 
+          size: item.size || "N/A", 
+          color: item.color || "N/A", 
+          price: item.price, 
+          quantity: item.quantity, 
+          image: item.image && item.image.trim() ? item.image : "default-image-url.jpg", // Store product image URL
         })),
+        totalPrice, 
       };
 
-      // Add the new order to the top of the history (most recent order first)
+      
       this.orderHistory.unshift(order);
       this.saveToLocalStorage();
     },
 
     saveToLocalStorage() {
       localStorage.setItem("orderHistory", JSON.stringify(this.orderHistory));
+    },
+  },
+
+  getters: {
+    mostRecentOrderTotalPrice(state) {
+      return state.orderHistory.length > 0 ? state.orderHistory[0].totalPrice : 0;
     },
   },
 });

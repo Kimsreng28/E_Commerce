@@ -89,6 +89,7 @@
 <script>
 import { ref, watch, onMounted } from "vue";
 import { useOrderHistory } from "@/stores/useOrderHistory";
+import { useProductStore } from "@/stores/useProductStore";
 import { useCartStore } from "@/stores/useCartStore";
 import Button_Component from "@/components/Button_Component.vue";
 
@@ -104,27 +105,38 @@ export default {
     const selectedSort = ref("date");
 
     const addOrdersSequentially = () => {
-      const allOrders = orderHistoryStore.orderHistory;
-      let index = 0;
+  const allOrders = orderHistoryStore.orderHistory;
+  let index = 0;
 
-      const intervalId = setInterval(() => {
-        if (index < allOrders.length) {
-          const newOrder = allOrders[index];
-          if (!visibleOrders.value.some(order => order.id === newOrder.id)) {
-            visibleOrders.value.push(newOrder);
-          }
-          sortOrders(); // Ensure sorting after adding new orders
-          index++;
-        } else {
-          clearInterval(intervalId);
-        }
-      }, 500);
-    };
+  const intervalId = setInterval(() => {
+    if (index < allOrders.length) {
+      const newOrder = allOrders[index];
+      
+      if (!visibleOrders.value.some(order => order.id === newOrder.id)) {
+        visibleOrders.value.push({
+          ...newOrder,
+          items: newOrder.items.filter(item => {
+            return !visibleOrders.value.some(order =>
+              order.items.some(existingItem => existingItem.id === item.id)
+            );
+          })
+        });
+      }
+      
+      sortOrders(); 
+      index++;
+    } else {
+      clearInterval(intervalId);
+    }
+  }, 500);
+};
+
 
     const getImageById = (id) => {
-      const product = cartStore.cartItems.find((item) => item.id === id);
-      return product ? product.image : "default-image-url.jpg";
-    };
+  const productStore = useProductStore();
+  const product = productStore.products.find((item) => item.id === id); // Assuming `products` is the array in `useProductStore.js`
+  return product ? product.image : "default-image-url.jpg";
+};
 
     const sortOrders = () => {
       const ordersCopy = [...visibleOrders.value];
@@ -175,10 +187,9 @@ export default {
   gap: 20px;
 }
 
-.order {
-  border-bottom: 1px solid #ccc;
-  padding-bottom: 20px;
-  padding-top: 20px;
+.order { 
+  padding-bottom: 10px;
+  padding-top: 10px;
 }
 
 .order-card-container {

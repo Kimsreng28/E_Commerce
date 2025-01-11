@@ -82,7 +82,6 @@
 
 <script>
 import Button_Component from "@/components/Button_Component.vue";
-import { useCartStore } from "@/stores/useCartStore";
 import { useOrderHistory } from "@/stores/useOrderHistory";
 import { onMounted, ref, watch } from "vue";
 
@@ -93,7 +92,6 @@ export default {
   },
   setup() {
     const orderHistoryStore = useOrderHistory();
-    const cartStore = useCartStore();
     const visibleOrders = ref([]);
     const selectedSort = ref("date");
 

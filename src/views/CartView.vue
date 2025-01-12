@@ -174,7 +174,7 @@ export default {
 
       this.$router.push({
         path: "/checkout",
-        query: { totalPrice: this.totalPrice },
+        // query: { totalPrice: this.totalPrice },
       });
     },
     navigateToCategory() {

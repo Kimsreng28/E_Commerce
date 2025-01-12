@@ -161,58 +161,62 @@ export default {
     };
 
     const handlePayNow = () => {
-      if (!selectedPaymentMethod.value) {
-        alert("Please select a payment method.");
-        return;
-      }
+  if (!selectedPaymentMethod.value) {
+    alert("Please select a payment method.");
+    return;
+  }
 
-      if (!selectedLocation.value) {
-        alert("Please select a shipping location.");
-        return;
-      }
+  if (!selectedLocation.value) {
+    alert("Please select a shipping location.");
+    return;
+  }
 
-      // Ensure checkOutItems is an array
-      const checkOutItems = Array.isArray(checkOutStore.checkOut)
-        ? checkOutStore.checkOut
-        : Object.values(checkOutStore.checkOut); // Convert to array if it's not one
+  // Ensure checkOutItems is always an array
+  const checkOutItems = Array.isArray(checkOutStore.checkOut)
+    ? checkOutStore.checkOut
+    : Object.values(checkOutStore.checkOut);
 
-      console.log("CheckOut Items: ", checkOutItems);
+  console.log("CheckOut Items: ", checkOutItems);
 
-      // Process payment
-      isPaymentSuccess.value = true;
+  if (checkOutItems.length === 0) {
+    alert("Your checkout is empty!");
+    return;
+  }
 
-      resetDiscount();
-      resetDiscount();
+  // Process payment
+  isPaymentSuccess.value = true;
 
-      transactionId.value = `TXN${Math.floor(Math.random() * 1000000000)}`;
-      const order = {
-        id: transactionId.value,
-        date: transactionDate.value,
-        items: checkOutItems.map((item) => ({
-          id: item.id,
-          name: item.name,
-          image: item.image || "default-image-url.jpg",
-          quantity: item.quantity,
-          price: item.price,
-          discount: item.discount,
-          finalPrice: item.finalPrice,
-          color: item.color,
-          size: item.size,
-        })),
-        totalPrice: totalPrice.value,
-        paymentMethod: selectedPaymentMethod.value,
-        shippingLocation: selectedLocation.value,
-        shippingLocation: selectedLocation.value,
-      };
-      orderHistoryStore.addOrderFromCheckout(order);
+  resetDiscount();
 
-      // Clear the cart items after successful payment
-      cartStore.clearCart();
+  transactionId.value = `TXN${Math.floor(Math.random() * 1000000000)}`;
+  const totalPriceValue = totalPrice.value;
+  const order = {
+    id: transactionId.value,
+    date: transactionDate.value,
+    items: checkOutItems,
+    totalPrice: totalPriceValue,
+    paymentMethod: selectedPaymentMethod.value,
+    shippingLocation: selectedLocation.value,
+  };
 
-      setTimeout(() => {
-        isPaymentSuccess.value = false;
-      }, 5000);
-    };
+  orderHistoryStore.addOrderFromCheckout(
+    checkOutItems,
+    totalPriceValue,
+    selectedPaymentMethod.value,
+    selectedLocation.value
+  );
+
+  // set time clear cart
+   setTimeout(() => {
+     cartStore.clearCart();
+   }, 20000);
+
+
+  setTimeout(() => {
+    isPaymentSuccess.value = false;
+  }, 5000);
+};
+
 
     const recentTotalPrice = computed(() => {
       return orderHistoryStore.mostRecentOrderTotalPrice;

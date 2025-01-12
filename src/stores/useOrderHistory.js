@@ -7,27 +7,29 @@ export const useOrderHistory = defineStore("orderHistory", {
 
   actions: {
     addOrderFromCheckout(checkoutItems, totalPrice, paymentMethod, shippingLocation) {
+      const items = Array.isArray(checkoutItems) ? checkoutItems : [];
+    
       const order = {
-        id: `TXN${Date.now()}`, 
-        date: new Date().toLocaleString(), 
-        paymentMethod, 
-        shippingLocation, 
-        items: checkoutItems.map((item) => ({
-          id: item.id, 
-          name: item.name, 
-          size: item.size || "N/A", 
-          color: item.color || "N/A", 
-          price: item.price, 
-          quantity: item.quantity, 
-          image: item.image && item.image.trim() ? item.image : "default-image-url.jpg", // Store product image URL
+        id: `TXN${Date.now()}`,
+        date: new Date().toLocaleString(),
+        paymentMethod,
+        shippingLocation,
+        items: items.map((item) => ({
+          id: item.id,
+          name: item.name,
+          size: item.size || "N/A",
+          color: item.color || "N/A",
+          price: item.price,
+          quantity: item.quantity,
+          image: item.image && item.image.trim() ? item.image : "default-image-url.jpg",
         })),
-        totalPrice, 
+        totalPrice,
       };
-
-      
+    
       this.orderHistory.unshift(order);
       this.saveToLocalStorage();
     },
+    
 
     saveToLocalStorage() {
       localStorage.setItem("orderHistory", JSON.stringify(this.orderHistory));

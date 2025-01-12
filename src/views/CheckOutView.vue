@@ -1,7 +1,6 @@
 <template>
   <div class="checkoutScreen">
     <Navbar_Component />
-
     <div class="load" v-if="isLoading">
       <LoadingView />
     </div>
@@ -22,22 +21,17 @@
           />
         </div>
         <div class="right">
-          <CardCheckProduct_Component
+          <CheckOutItem_Component
             style="margin-bottom: 3%"
-            class="cardCheck"
-            v-for="item in checkOutItems"
-            :key="item.id"
-            :id="item.id"
-            :imageProduct="item.image"
-            :discountProduct="item.discount"
-            :nameProduct="item.name"
-            :priceProduct="item.price"
-            :quantity="item.quantity"
-            :color-product="item.color"
-            :size-product="item.size"
-            :fromCheckout="true"
-            :showDeleteButton="false"
-          />
+  v-for="item in checkOutItems"
+  :key="item.id"
+  :id="item.id"
+  :imageProduct="item.image"
+  :nameProduct="item.name"
+  :sizeProduct="item.size"
+  :priceProduct="item.price"
+  :quantity="item.quantity"
+/>
           <ConfirmSum_Component />
         </div>
       </div>
@@ -66,19 +60,15 @@
         :location="selectedLocation"
       />
     </div>
-
-    <!-- Display recent total price -->
-    <div v-if="recentTotalPrice > 0" class="recent-order-summary">
-      <h2>Most Recent Order</h2>
-      <p>Total Price: ${{ recentTotalPrice.toFixed(2) }}</p>
-    </div>
   </div>
+
+  
 </template>
 
 <script>
 import Breadcrumb_Component from "@/components/Breadcrumb_Component.vue";
 import Button_Component from "@/components/Button_Component.vue";
-import CardCheckProduct_Component from "@/components/Card/CardCheckProduct_Component.vue";
+import CheckOutItem_Component from "@/components/Card/CheckOutItem_Component.vue";
 import ConfirmSum_Component from "@/components/Card/ConfirmSum_Component.vue";
 import Location_Component from "@/components/Checkout/Location_Component.vue";
 import PaymentMethod_Component from "@/components/Checkout/PaymentMethod_Component.vue";
@@ -98,12 +88,12 @@ export default {
     Breadcrumb_Component,
     Location_Component,
     PaymentMethod_Component,
-    CardCheckProduct_Component,
     Footer_Component,
     Button_Component,
     LoadingView,
     PaymentSuccess_Component,
     ConfirmSum_Component,
+    CheckOutItem_Component,
   },
   setup() {
     const cartStore = useCartStore();

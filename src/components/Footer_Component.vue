@@ -188,47 +188,47 @@ export default {
   color: #7c7676;
 }
 
-/* Responsive adjustments */
-@media (max-width: 1024px) {
+/* Responsive Design */
+@media (max-width: 768px) {
   .container {
+    width: 90%; /* Increase container width on smaller screens */
     flex-direction: column;
     align-items: center;
-    text-align: center;
   }
 
   .leftSide,
   .rightSide {
-    width: 100%; /* Full width on smaller screens */
-    align-items: center;
+    width: 100%;
+    text-align: center;
+  }
+
+  .rightSide {
+    margin-top: 1.5rem;
+  }
+
+  .column {
+    width: 100%;
+    margin-right: 0;
     margin-bottom: 1rem;
+  }
+
+  .logo img {
+    width: 150px; /* Smaller logo on smaller screens */
+  }
+
+  .description p {
+    font-size: 14px;
   }
 
   .contacts {
     justify-content: center;
-  }
-
-  .column {
-    margin-bottom: 1rem; /* Spacing between columns */
+    margin-bottom: 1rem;
   }
 }
 
-@media (max-width: 768px) {
-  .leftSide,
-  .rightSide {
-    width: 100%; /* Full width on smaller screens */
-  }
-
-  .column {
-    margin-right: 0; /* Remove margin-right on small screens */
-    margin-bottom: 1.5rem;
-  }
-
-  .logo img {
-    width: 150px; /* Adjust logo size for small screens */
-  }
-
-  .description p {
-    font-size: 14px; /* Smaller font size for description */
+@media (max-width: 480px) {
+  .footer {
+    padding: 4% 0;
   }
 
   .contacts button {
@@ -239,46 +239,17 @@ export default {
   .copyright p {
     font-size: 12px;
   }
-}
-
-@media (max-width: 480px) {
-  .footer {
-    padding: 4% 0; /* Increase top and bottom padding for mobile */
-  }
-
-  .container {
-    width: 90%;
-  }
-
-  .logo img {
-    width: 120px; /* Smaller logo for mobile */
-  }
-
-  .description p {
-    font-size: 12px; /* Even smaller description font */
-  }
-
-  .contacts button {
-    width: 30px;
-    height: 30px; /* Even smaller social media buttons */
-  }
-
-  .column {
-    width: 100%;
-    margin-bottom: 1rem;
-    text-align: center; /* Center-align columns for mobile */
-  }
 
   .title {
     font-size: 16px;
   }
 
   .column ul li {
-    font-size: 14px; /* Smaller font size for list items */
+    font-size: 14px;
   }
 
-  .copyright p {
-    font-size: 10px;
+  .logo img {
+    width: 120px; /* Even smaller logo on very small screens */
   }
 }
 </style>

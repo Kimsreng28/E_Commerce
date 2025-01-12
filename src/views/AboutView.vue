@@ -44,8 +44,8 @@
 
 <script>
 import Breadcrumb_Component from "@/components/Breadcrumb_Component.vue";
-import Navbar_Component from "@/components/Navbar_Component.vue";
 import Footer_Component from "@/components/Footer_Component.vue";
+import Navbar_Component from "@/components/Navbar_Component.vue";
 import LoadingView from "@/views/LoadingView.vue";
 export default {
   name: "AboutView",

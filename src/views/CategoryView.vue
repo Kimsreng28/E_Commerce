@@ -14,26 +14,48 @@
       <div class="filterProduct">
         <div class="div">
           <div class="select">
-            <Filter_Component @apply-filter="handleFilterChange" @clear-filter="resetFilters"/>
+            <Filter_Component
+              @apply-filter="handleFilterChange"
+              @clear-filter="resetFilters"
+            />
           </div>
           <div v-if="isSearching" class="loadSearch">
             <LoadingView />
           </div>
           <div v-else class="showProduct">
-            <ProductCard_Component v-for="product in displayedProducts" :id="product.id" :key="product.id"
-              :name-product="product.title" :image-product="product.image" :rating-product="product.rating"
-              :price-product="product.price" :size-product="product.size" :color-product="product.color"
-              :stock-product="product.stock" :description-product="product.description"
-              :discount-product="product.discount" :image-details="product.imageDetails" :old-price="product.oldPrice"
-              class="product-card" @click="goToProductDetail(product.id)" />
+            <ProductCard_Component
+              v-for="product in displayedProducts"
+              :id="product.id"
+              :key="product.id"
+              :name-product="product.title"
+              :image-product="product.image"
+              :rating-product="product.rating"
+              :price-product="product.price"
+              :size-product="product.size"
+              :color-product="product.color"
+              :stock-product="product.stock"
+              :description-product="product.description"
+              :discount-product="product.discount"
+              :image-details="product.imageDetails"
+              :old-price="product.oldPrice"
+              class="product-card"
+              @click="goToProductDetail(product.id)"
+            />
           </div>
         </div>
         <div class="loadMore">
           <div v-if="isLoadMoreLoading" class="loadSearch">
             <LoadingView />
           </div>
-          <Button_Component v-else name-button="Load More" color-button="#FFFFFF" background-color-button="#958383"
-            height-button="50px" width-button="200px" @click="loadMoreProducts" />
+          <Button_Component
+            v-else
+            name-button="Load More"
+            color-button="#FFFFFF"
+            background-color-button="#958383"
+            height-button="50px"
+            width-button="200px"
+            @click="loadMoreProducts"
+          />
         </div>
       </div>
 
@@ -148,20 +170,20 @@ export default {
 
     // Function to load more products
     const loadMoreProducts = () => {
-    isLoadMoreLoading.value = true;
+      isLoadMoreLoading.value = true;
 
-    setTimeout(() => {
-      // Calculate the next index based on the number of products displayed
-      const nextIndex = displayedCount.value + 6;  // Display 6 more products
-      displayedCount.value = nextIndex;
+      setTimeout(() => {
+        // Calculate the next index based on the number of products displayed
+        const nextIndex = displayedCount.value + 6; // Display 6 more products
+        displayedCount.value = nextIndex;
 
-      // Update displayed products based on new index
-      console.log("Next index: ", nextIndex);
-      console.log("Displayed products count: ", displayedCount.value);
+        // Update displayed products based on new index
+        console.log("Next index: ", nextIndex);
+        console.log("Displayed products count: ", displayedCount.value);
 
-      isLoadMoreLoading.value = false;  // Set loading to false after 1 second
-    }, 1000); // Simulate loading delay of 1 second
-  };
+        isLoadMoreLoading.value = false; // Set loading to false after 1 second
+      }, 1000); // Simulate loading delay of 1 second
+    };
     // Reset all filters and search query
     const resetFilters = () => {
       filters.value = { ...defaultFilters };

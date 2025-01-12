@@ -63,17 +63,12 @@ import Button_Component from "../Button_Component.vue";
 
 export default {
   name: "ProductCard",
-  components: {
-    Button_Component,
-  },
+  components: { Button_Component },
   props: {
     id: Number,
     imageProduct: String,
     nameProduct: String,
-    ratingProduct: {
-      type: Number,
-      default: 0,
-    },
+    ratingProduct: { type: Number, default: 0 },
     priceProduct: Number,
     discountProduct: String,
     oldPrice: Number,
@@ -85,7 +80,7 @@ export default {
     category: String,
   },
   mounted() {
-    console.log("Received product:", this.nameProduct); // Debugging the received data
+    console.log("Received product:", this.nameProduct);
   },
 
   setup(props) {
@@ -108,20 +103,14 @@ export default {
       return foundProduct;
     });
 
-    // Computed properties
-    const discountProduct = computed(() =>
-      product.value ? product.value.discount : ""
-    );
+    const discountProduct = computed(() => product.value?.discount || "");
     const oldPrice = computed(() => product.value?.oldPrice || "");
-    const descriptionProduct = computed(() =>
-      product.value ? product.value.description : ""
-    );
+    const descriptionProduct = computed(() => product.value?.description || "");
     const imageDetails = computed(() => product.value?.imageDetails || []);
     const sizeProduct = computed(() => product.value?.size || []);
     const colorProduct = computed(() => product.value?.color || []);
     const stockProduct = computed(() => product.value?.stock || "Out of Stock");
 
-    // Handle Add To Wishlist
     const handleAddToWishlist = (event) => {
       event.stopPropagation();
 
@@ -140,13 +129,11 @@ export default {
         colorProduct: props.colorProduct || [],
         sizeProduct: props.sizeProduct || [],
       };
-      console.log("Adding to wishlist:", productToAdd);
 
       wishlistStore.addToWishlist(productToAdd);
       alert("Product added to wishlist!");
     };
 
-    // Handle To Product Detail
     const handleToProductDetail = () => {
       if (!userStore.isLoggedIn) {
         alert("Please sign in or sign up to view product details.");
@@ -171,7 +158,6 @@ export default {
         productStore.addToProductDetail(product);
         alert("Go To Product Detail!");
 
-        // Navigate to product detail by Id when click on product to detail
         router.push({
           name: "productDetail",
           params: { id: props.id, category: props.category },
@@ -193,6 +179,7 @@ export default {
   },
 };
 </script>
+
 <style scoped>
 .discount {
   width: 80%;

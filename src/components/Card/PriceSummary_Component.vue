@@ -22,7 +22,9 @@
 
     <div class="discount">
       <p>Discount:</p>
-      <p v-if="discountPrice > 0" class="negative">- ${{ discountPrice.toFixed(2) }}</p>
+      <p v-if="discountPrice > 0" class="negative">
+        - ${{ discountPrice.toFixed(2) }}
+      </p>
       <p v-else>$0.00</p>
     </div>
     <div class="hr">
@@ -39,19 +41,16 @@
         color-button="#FFFFFF"
         @click="applyCoupon"
       />
-      
     </div>
     <p v-if="invalidCoupon" class="error-message">Invalid coupon code!</p>
     <div class="totalPrice">
       <p>Total:</p>
       <p>${{ calculatedTotalPrice.toFixed(2) }}</p>
     </div>
- 
   </div>
 </template>
 
 <script>
-import { useCartStore } from "@/stores/useCartStore";
 import { computed, ref } from "vue";
 import Button_Component from "../Button_Component.vue";
 
@@ -92,18 +91,18 @@ export default {
     const applyCoupon = () => {
       if (couponCode.value === "DISCOUNT50") {
         let discount = props.subtotalPrice * 0.5;
-        discount = Math.min(discount, 40); 
+        discount = Math.min(discount, 40);
 
         discountPrice.value = discount;
 
         localStorage.setItem("discountPrice", discount.toFixed(2));
 
         invalidCoupon.value = false;
-        
+
         alert(`Coupon Applied! Discount: -$${discount.toFixed(2)}`);
       } else {
         invalidCoupon.value = true;
-        discountPrice.value = 0; 
+        discountPrice.value = 0;
         localStorage.setItem("discountPrice", "0");
       }
     };
@@ -120,7 +119,6 @@ export default {
 </script>
 
 <style scoped>
-
 .error-message {
   color: red;
   font-size: 12px;
@@ -222,39 +220,38 @@ export default {
   font-family: Quicksand, sans-serif;
 }
 
-
 @media (max-width: 768px) {
   .priceSummary {
-    padding: 4%; 
+    padding: 4%;
   }
   .titleSummary p {
-    font-size: 20px; 
+    font-size: 20px;
   }
   .subtotalPrice p,
   .shipping p,
   .discount p,
   .totalPrice p {
-    font-size: 14px; 
+    font-size: 14px;
   }
   .coupon input {
-    max-width: 100%; 
-    height: 40px; 
+    max-width: 100%;
+    height: 40px;
   }
   .totalPrice p {
-    font-size: 18px; 
+    font-size: 18px;
   }
 }
 
 @media (max-width: 480px) {
   .priceSummary {
-    flex-direction: column; 
+    flex-direction: column;
   }
   .coupon {
-    flex-direction: column; 
-    gap: 10px; 
+    flex-direction: column;
+    gap: 10px;
   }
   .coupon input {
-    max-width: 100%; 
+    max-width: 100%;
   }
 }
 </style>

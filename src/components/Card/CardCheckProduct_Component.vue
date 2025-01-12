@@ -25,8 +25,7 @@
       </div>
 
       <div class="quantity">
-
-  <div class="delete" :class="{ hidden: !showDeleteButton }">
+        <div class="delete" :class="{ hidden: !showDeleteButton }">
           <button @click="deleteItem">
             <span class="material-icons">delete</span>
           </button>
@@ -74,7 +73,7 @@ export default {
     },
     showDeleteButton: {
       type: Boolean,
-      default: true, 
+      default: true,
     },
   },
 
@@ -120,18 +119,16 @@ export default {
 </script>
 
 <style scoped>
-
 .delete {
-  min-width: 40px; 
-  min-height: 40px; 
-  display: flex; 
+  min-width: 40px;
+  min-height: 40px;
+  display: flex;
   justify-content: center;
   align-items: center;
 }
 
-
 .delete.hidden {
-  visibility: hidden; 
+  visibility: hidden;
 }
 .colorDisplay {
   width: 20px;
@@ -266,13 +263,6 @@ export default {
   align-items: center;
 }
 
-.delete {
-  width: 100%;
-  height: 20%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
 .delete button {
   width: 100%;
   height: 100%;
@@ -372,10 +362,6 @@ export default {
   .quantityProduct {
     width: 100%;
     margin-top: 2%;
-  }
-
-  .delete button span {
-    font-size: 14px;
   }
 
   .name p,

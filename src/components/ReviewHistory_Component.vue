@@ -5,14 +5,10 @@
       <!-- Loop through displayed reviews with filter -->
       <div
         class="reviewCard"
-        v-for="review in displayedReviews.filter(review => review.image)"
+        v-for="review in displayedReviews.filter((review) => review.image)"
         :key="review.id"
       >
-        <img
-          :src="review.image"
-          alt="Product Image"
-          class="reviewImage"
-        />
+        <img :src="review.image" alt="" class="reviewImage" />
         <div class="cardFooter">
           <p class="command-product">{{ review.comment }}</p>
           <p class="rating">⭐ {{ review.rating }}</p>
@@ -123,5 +119,56 @@ export default {
 .rating {
   font-size: 16px;
   color: #ff9800;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .reviewContainer {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .reviewCard {
+    flex: 0 0 100%;
+    max-width: 100%;
+    height: auto; /* Adjust height on smaller screens */
+  }
+
+  .reviewImage {
+    max-width: 100%;
+    object-fit: cover;
+  }
+
+  .command-product {
+    font-size: 14px;
+  }
+
+  .rating {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .reviewContainer {
+    padding: 10px;
+  }
+
+  .reviewCard {
+    padding: 12px;
+    height: auto;
+  }
+
+  .reviewImage {
+    max-width: 100%;
+    object-fit: contain; /* Adjust image fitting */
+  }
+
+  .command-product {
+    font-size: 13px;
+  }
+
+  .rating {
+    font-size: 13px;
+  }
 }
 </style>

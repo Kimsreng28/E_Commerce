@@ -27,17 +27,17 @@
       <p class="transactionDate">Transaction Date: {{ transactionDate }}</p>
     </div>
     <div class="btn">
-      <router-link to = "/order">
-      <div class="history">
-        <Button_Component
-          name-button="View Order History"
-          width-button="200px"
-          height-button="50px"
-          background-color-button="#564949"
-          color-button="#FFFFFF"
-        />
-      </div>
-    </router-link>
+      <router-link to="/order">
+        <div class="history">
+          <Button_Component
+            name-button="View Order History"
+            width-button="200px"
+            height-button="50px"
+            background-color-button="#564949"
+            color-button="#FFFFFF"
+          />
+        </div>
+      </router-link>
       <div class="returnHome">
         <Button_Component
           name-button="Return to Home"

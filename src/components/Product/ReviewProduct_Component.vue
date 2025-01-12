@@ -109,7 +109,7 @@
                 <img
                   v-if="review.image"
                   :src="review.image"
-                  alt="Review Image"
+                  alt=""
                   style="max-width: 200px"
                 />
               </div>
@@ -126,36 +126,26 @@
 </template>
 
 <script>
+import StarRating from "@/components/StarReview_Component.vue";
 import { useProductStore } from "@/stores/useProductStore";
 import { useReviewStore } from "@/stores/useReviewStore";
 import { useUserSignupStore } from "@/stores/useUserSignupStore";
-import { computed, onMounted, ref, watch } from "vue";
-import ProductCard_Component from "./ProductCard_Component.vue";
-import { useRouter } from "vue-router";
 import LoadingView from "@/views/LoadingView.vue";
-import StarRating from "@/components/StarReview_Component.vue"; // Import the StarRating component
+import { computed, onMounted, ref, watch } from "vue";
+import { useRouter } from "vue-router";
+import ProductCard_Component from "./ProductCard_Component.vue";
 
 export default {
   name: "ReviewProduct_Component",
   components: {
     ProductCard_Component,
     LoadingView,
-    StarRating, // Register the StarRating component
+    StarRating,
   },
-
   props: {
-    productId: {
-      type: [String, Number],
-      required: true,
-    },
-    productTitle: {
-      type: String,
-      required: true,
-    },
-    description: {
-      type: String,
-      required: true, // or false, depending on whether it's mandatory
-    },
+    productId: { type: [String, Number], required: true },
+    productTitle: { type: String, required: true },
+    description: { type: String, required: true },
   },
   setup(props) {
     const router = useRouter();
@@ -165,113 +155,63 @@ export default {
 
     const tabs = ["Details", "RelateItems", "Reviews"];
     const selectedTab = ref("Details");
-    const isEditing = ref(false);
-    const editingIndex = ref(null);
-    const editingComment = ref("");
-    const editingRating = ref(0);
-    const newComment = ref("");
-    const newRating = ref(0);
-    const reviews = ref([]);
-    const isSearching = ref(false);
-    const isLoading = ref(true);
 
     const comment = ref("");
     const rating = ref(0);
     const image = ref(null);
 
+    const isEditing = ref(false);
+    const editingIndex = ref(null);
+    const editingComment = ref("");
+    const editingRating = ref(0);
+
+    const reviews = ref([]);
+    const isSearching = ref(false);
+
     const profileImage = computed(() => userSignupStore.profileImage);
     const firstName = computed(() => userSignupStore.firstName);
     const lastName = computed(() => userSignupStore.lastName);
-    const productDetails = computed(() => {
-      const detail = productStore.products.find((product) => {
-        return product.id == props.productId;
-      });
-      return detail;
-    });
 
-    const relatedProducts = computed(() => {
-      const filteredProducts = productStore.products.filter((product) => {
-        return product.category == productDetails.value.category;
-      });
-      return filteredProducts.length > 0 ? [...filteredProducts] : [];
-    });
-
-    const goToDetail = (productId) => {
-      router.push({ name: "productDetail", params: { id: productId } });
-    };
-
-    const loadReviewsForProduct = () => {
-      const productReviews = reviewStore.reviews.filter(
-        (review) => review.productId === props.productId
-      );
-      reviews.value = productReviews;
-    };
-
-    onMounted(() => {
-      reviewStore.loadReviews();
-      loadReviewsForProduct();
-      setTimeout(() => {
-        isLoading.value = false; // Set loading to false after 3 seconds
-      }, 1000);
-    });
-
-    watch(
-      () => props.productId,
-
-      () => props.category,
-
-      () => loadReviewsForProduct(),
-      { immediate: true }
+    const productDetails = computed(() =>
+      productStore.products.find((product) => product.id == props.productId)
     );
 
-    const postReview = () => {
-      try {
-        // Check if comment and rating are valid
-        if (!comment.value || rating.value < 1 || rating.value > 5) {
-          alert("Please provide a valid comment and rating.");
-          return;
-        }
+    const relatedProducts = computed(() =>
+      productStore.products.filter(
+        (product) => product.category === productDetails.value?.category
+      )
+    );
 
-        // Add the review to the store
-        reviewStore.addReview(
-          props.productId,
-          comment.value,
-          rating.value,
-          image.value || null // Allow the image to be optional
-        );
+    const filteredReviews = computed(() =>
+      reviewStore.reviews.filter(
+        (review) => review.productId === props.productId
+      )
+    );
 
-        // Reset the form fields after submission
-        comment.value = "";
-        rating.value = 0;
-        image.value = [];
+    const goToDetail = (productId) =>
+      router.push({ name: "productDetail", params: { id: productId } });
 
-        alert("Review posted successfully!");
-        loadReviewsForProduct(); // Refresh reviews after adding
-      } catch (error) {
-        alert(error.message);
-      }
+    const loadReviewsForProduct = () => {
+      reviews.value = reviewStore.reviews.filter(
+        (review) => review.productId === props.productId
+      );
     };
 
     const addReview = () => {
-      if (!newComment.value || newRating.value <= 0 || newRating.value > 5) {
-        console.error("Invalid review data.");
+      if (!comment.value || rating.value <= 0 || rating.value > 5) {
+        alert("Please provide a valid comment and rating.");
         return;
       }
-
-      reviewStore.addReview({
-        productId: props.productId,
-        comment: newComment.value,
-        rating: newRating.value,
-        image: image.value || null, // Allow the image to be optional
-        date: new Date().toISOString(),
-      });
-
-      // Reset form
-      newComment.value = "";
-      newRating.value = 0;
+      reviewStore.addReview(
+        props.productId,
+        comment.value,
+        rating.value,
+        image.value
+      );
+      comment.value = "";
+      rating.value = 0;
       image.value = null;
-
-      loadReviewsForProduct(); // Refresh reviews after adding
+      loadReviewsForProduct();
     };
 
     const editReview = (index) => {
@@ -280,7 +220,6 @@ export default {
       editingIndex.value = index;
       editingComment.value = review.comment;
       editingRating.value = review.rating;
-      image.value = review.image; // Load existing image if available
     };
 
     const saveReview = () => {
@@ -290,9 +229,9 @@ export default {
         ...filteredReviews.value[editingIndex.value],
         comment: editingComment.value,
         rating: editingRating.value,
-        image: image.value || filteredReviews.value[editingIndex.value].image, // Optional new or existing image
-        date: new Date().toISOString(),
+        image: image.value || filteredReviews.value[editingIndex.value].image,
       };
+
       reviewStore.updateReview(updatedReview.id, updatedReview);
       loadReviewsForProduct();
       cancelEdit();
@@ -303,7 +242,7 @@ export default {
       editingIndex.value = null;
       editingComment.value = "";
       editingRating.value = 0;
-      image.value = null; // Reset the image value
+      image.value = null;
     };
 
     const deleteReview = (index) => {
@@ -311,70 +250,33 @@ export default {
       reviewStore.deleteReview(reviewId);
     };
 
-    const filteredReviews = computed(() => {
-      return reviewStore.reviews.filter(
-        (review) => review.productId === props.productId
-      );
-    });
-
-    const changeTab = (tab) => {
-      selectedTab.value = tab;
-    };
-
-    function compressImage(file, callback) {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = (event) => {
-        const img = new Image();
-        img.src = event.target.result;
-        img.onload = () => {
-          const canvas = document.createElement("canvas");
-          const ctx = canvas.getContext("2d");
-          const maxWidth = 800; // Maximum width for the compressed image
-          const maxHeight = 800; // Maximum height for the compressed image
-          let width = img.width;
-          let height = img.height;
-
-          if (width > height) {
-            if (width > maxWidth) {
-              height *= maxWidth / width;
-              width = maxWidth;
-            }
-          } else {
-            if (height > maxHeight) {
-              width *= maxHeight / height;
-              height = maxHeight;
-            }
-          }
-
-          canvas.width = width;
-          canvas.height = height;
-          ctx.drawImage(img, 0, 0, width, height);
-          const compressedDataUrl = canvas.toDataURL("image/jpeg", 0.7); // Adjust the quality as needed
-          callback(compressedDataUrl);
-        };
-      };
-    }
-
     const onImageUpload = (event) => {
       const file = event.target.files[0];
       if (file) {
-        compressImage(file, (compressedDataUrl) => {
-          image.value = compressedDataUrl; // Store the compressed base64 representation of the image
-        });
+        const reader = new FileReader();
+        reader.onload = (e) => (image.value = e.target.result);
+        reader.readAsDataURL(file);
       }
     };
+
+    onMounted(() => {
+      reviewStore.loadReviews();
+      loadReviewsForProduct();
+    });
+
+    watch(() => props.productId, loadReviewsForProduct);
 
     return {
       tabs,
       selectedTab,
+      comment,
+      rating,
+      image,
       relatedProducts,
-      reviews,
+      filteredReviews,
       profileImage,
       firstName,
       lastName,
-      newComment,
-      newRating,
       addReview,
       isEditing,
       editingComment,
@@ -383,17 +285,9 @@ export default {
       saveReview,
       cancelEdit,
       deleteReview,
-      changeTab,
-      productDetails,
+      changeTab: (tab) => (selectedTab.value = tab),
       goToDetail,
-      isSearching,
-      isLoading,
-      comment,
-      rating,
-      image,
-      postReview,
       onImageUpload,
-      filteredReviews,
     };
   },
 };

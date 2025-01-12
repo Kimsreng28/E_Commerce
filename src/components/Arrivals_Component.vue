@@ -116,4 +116,49 @@ export default {
   opacity: 1;
   transform: rotateY(0) scale(1);
 }
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+  .arrival-image {
+    max-width: 250px;
+  }
+
+  .arrival-title {
+    font-size: 14px;
+    padding: 4px;
+  }
+}
+
+@media (max-width: 768px) {
+  .arrivals {
+    padding: 0.5rem;
+  }
+
+  .arrival-slide {
+    padding: 5px;
+  }
+
+  .arrival-image {
+    max-width: 200px;
+  }
+
+  .arrival-title {
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 500px) {
+  .arrivals {
+    padding: 0;
+  }
+
+  .arrival-image {
+    max-width: 100%;
+  }
+
+  .arrival-title {
+    font-size: 12px;
+    padding: 3px;
+  }
+}
 </style>

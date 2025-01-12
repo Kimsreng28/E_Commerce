@@ -358,8 +358,15 @@ export default {
   }
 
   .search {
-    width: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 300px;
     margin-top: 1rem;
+  }
+
+  .search input {
+    width: 100%;
   }
 
   .cart {

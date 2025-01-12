@@ -152,11 +152,10 @@ import { useWishlistStore } from "@/stores/useWishlistStore";
 import { computed, ref } from "vue";
 import { useRouter } from "vue-router";
 import Button_Component from "../Button_Component.vue";
+
 export default {
   name: "DetailProduct_Component",
-  components: {
-    Button_Component,
-  },
+  components: { Button_Component },
   props: {
     id: Number,
     imageDetails: Array,
@@ -170,54 +169,34 @@ export default {
     discountProduct: String,
     oldPrice: Number,
     stock: String,
-    quantity: {
-      type: Number,
-      default: 1,
-    },
+    quantity: { type: Number, default: 1 },
   },
   setup(props) {
     const cartStore = useCartStore();
     const wishlistStore = useWishlistStore();
     const router = useRouter();
     const quantity = ref(props.quantity);
-
-    console.log("Received discountProduct:", props.discountProduct);
-    console.log("Received descriptionProduct:", props.descriptionProduct);
-    console.log("Props received in DetailProduct_Component:", props);
-
-    // Default color and size
     const selectedColor = ref(props.colorProduct[0] || "#A0BCE0");
     const selectedSize = ref(props.sizeProduct[0] || "S");
-
-    // image product for 4 image selected
     const imageProduct = ref(props.imageProduct);
+
     const selectImage = (img) => {
       imageProduct.value = img;
     };
 
-    // discount price
-    const discountPrice = computed(() => {
-      return props.discountProduct ? `${props.discountProduct}` : "0%";
-    });
-    console.log("Sending discountPrice to PriceSummary:", discountPrice.value);
-
-    // stock status of product
+    const discountPrice = computed(() => props.discountProduct || "0%");
     const stockQuantity = Number(props.stock);
     const stock = ref(stockQuantity > 0 ? "In Stock" : "Out of Stock");
 
-    // handle quantity increment and decrement
     const incrementQuantity = () => {
       quantity.value += 1;
     };
     const decrementQuantity = () => {
-      if (quantity.value > 1) {
-        quantity.value -= 1;
-      }
+      if (quantity.value > 1) quantity.value -= 1;
     };
 
-    // Handle Add To Cart
     const handleAddToCart = () => {
-      const productToAdd = {
+      cartStore.addToCart({
         id: props.id,
         name: props.nameProduct,
         price: parseFloat(props.priceProduct),
@@ -226,17 +205,13 @@ export default {
         color: selectedColor.value,
         size: selectedSize.value,
         discount: discountPrice.value,
-      };
-
-      cartStore.addToCart(productToAdd);
+      });
       alert("Product added to cart!");
-
       router.push("/cart");
     };
 
-    // Handle Add To Wishlist
     const handleAddToWishlist = () => {
-      const product = {
+      wishlistStore.addToWishlist({
         id: props.id,
         title: props.nameProduct,
         images: props.imageProduct,
@@ -246,9 +221,7 @@ export default {
         quantity: quantity.value,
         color: selectedColor.value,
         size: selectedSize.value,
-      };
-
-      wishlistStore.addToWishlist(product);
+      });
       alert("Product added to wishlist!");
     };
 
@@ -264,7 +237,6 @@ export default {
       stock,
       imageProduct,
       discountPrice,
-      stockQuantity,
     };
   },
 };

@@ -140,7 +140,6 @@ export default {
   justify-content: center;
   align-items: center;
   border: 1px solid #e7e2e2;
-  
 }
 
 .cardImage {

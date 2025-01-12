@@ -99,7 +99,8 @@ export default {
     };
 
     const addLocation = () => {
-      const { fullName, streetAddress, apartment, city, phoneNumber } = newLocation.value;
+      const { fullName, streetAddress, apartment, city, phoneNumber } =
+        newLocation.value;
 
       if (!fullName || !streetAddress || !city || !phoneNumber) {
         alert("Please fill in all required fields.");
@@ -139,8 +140,7 @@ export default {
       const selectedLocation = locations.value[index];
       locationStore.selectedLocation = selectedLocation;
 
-      emit("update:location", selectedLocation);  // Emit to parent
-
+      emit("update:location", selectedLocation); // Emit to parent
     };
 
     return {
@@ -155,7 +155,6 @@ export default {
   },
 };
 </script>
-
 
 <style scoped>
 .location {
@@ -219,7 +218,7 @@ hr {
 }
 .dropdown-enter-to,
 .dropdown-leave-from {
-  max-height: 500px; 
+  max-height: 500px;
   opacity: 1;
 }
 .inputName,

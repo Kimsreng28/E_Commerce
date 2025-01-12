@@ -33,22 +33,21 @@ export default {
     const breadcrumbs = computed(() => {
       const pathArray = route.path.split("/").filter(Boolean);
 
-      return pathArray.map((path, index) => {
-        const fullPath = `/${pathArray.slice(0, index + 1).join("/")}`;
-        const routeMatch = router.resolve(fullPath);
+      return pathArray
+        .map((path, index) => {
+          const fullPath = `/${pathArray.slice(0, index + 1).join("/")}`;
+          const routeMatch = router.resolve(fullPath);
 
-        const lastPathSegment = path.split("/").pop(); 
-        // Use route's meta breadcrumb if available, or fallback to the path name
-        const routeName = routeMatch.meta?.breadcrumb || lastPathSegment;
+          const lastPathSegment = path.split("/").pop();
+          // Use route's meta breadcrumb if available, or fallback to the path name
+          const routeName = routeMatch.meta?.breadcrumb || lastPathSegment;
 
-       
-
-        return {
-          name: routeName.charAt(0).toUpperCase() + routeName.slice(1),
-          path: fullPath,
-        };
-      })
-      .filter(Boolean); 
+          return {
+            name: routeName.charAt(0).toUpperCase() + routeName.slice(1),
+            path: fullPath,
+          };
+        })
+        .filter(Boolean);
     });
 
     return {
@@ -57,6 +56,7 @@ export default {
   },
 };
 </script>
+
 <style scoped>
 .breadcrumb-link {
   font-weight: 500;
@@ -95,7 +95,6 @@ export default {
   content: "";
 }
 
-/* Media Queries for Responsive Design */
 @media (max-width: 768px) {
   .breadcrumb ul {
     justify-content: center; /* Center align breadcrumbs on tablets */

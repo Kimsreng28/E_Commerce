@@ -153,7 +153,6 @@ export default {
       this.selectedColor = null;
       this.selectedSize = null;
       this.priceValue = 100;
-      
     },
     selectSubCategory(subCategory) {
       this.selectedSubCategory = subCategory;
@@ -163,22 +162,22 @@ export default {
     },
     applyFilter() {
       this.$emit("apply-filter", {
-          tab: this.selectedTab,
-          subCategory: this.selectedSubCategory,
-          size: this.selectedSize,
-          price: this.priceValue,
+        tab: this.selectedTab,
+        subCategory: this.selectedSubCategory,
+        size: this.selectedSize,
+        price: this.priceValue,
       });
     },
     clearFilter() {
-    this.selectedTab = "Clothes"; // Reset to default tab
-    this.resetTabSpecificFilters();
-    this.$emit("clear-filter"); // Emit clear filter event
-  },
-  resetTabSpecificFilters() {
-    this.selectedSubCategory = null;
-    this.selectedSize = null;
-    this.priceValue = 100;
-  },
+      this.selectedTab = "Clothes"; // Reset to default tab
+      this.resetTabSpecificFilters();
+      this.$emit("clear-filter"); // Emit clear filter event
+    },
+    resetTabSpecificFilters() {
+      this.selectedSubCategory = null;
+      this.selectedSize = null;
+      this.priceValue = 100;
+    },
   },
 };
 </script>

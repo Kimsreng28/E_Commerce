@@ -22,7 +22,9 @@
 
     <div class="discount">
       <p>Discount:</p>
-      <p v-if="discountPrice > 0" class="negative">- ${{ discountPrice.toFixed(2) }}</p>
+      <p v-if="discountPrice > 0" class="negative">
+        - ${{ discountPrice.toFixed(2) }}
+      </p>
       <p v-else>$0.00</p>
     </div>
     <div class="hr">
@@ -37,8 +39,8 @@
 </template>
 
 <script>
-import { computed, watch, ref } from "vue";
 import { useCartStore } from "@/stores/useCartStore";
+import { computed, ref, watch } from "vue";
 
 export default {
   name: "ConfirmSum_Component",
@@ -53,7 +55,9 @@ export default {
 
     const subtotalPrice = computed(() => cartStore.getSubtotal);
 
-    const discountPrice = ref(parseFloat(localStorage.getItem("discountPrice")) || 0);
+    const discountPrice = ref(
+      parseFloat(localStorage.getItem("discountPrice")) || 0
+    );
 
     const shippingPrice = 0.25;
 
@@ -77,101 +81,98 @@ export default {
 };
 </script>
 
+<style scoped>
+.priceSummary {
+  width: 100%;
+  max-width: 625px;
+  height: auto;
+  border-radius: 10px;
+  border: 1px solid #564949;
+  display: flex;
+  flex-direction: column;
+  padding: 2%;
+}
 
+.titleSummary {
+  width: 100%;
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  margin-top: 2%;
+  padding: 2%;
+}
+.titleSummary p {
+  font-size: 24px;
+  font-weight: bold;
+  color: #000000;
+  font-family: Quicksand, sans-serif;
+}
 
-  <style scoped>
+.subtotalPrice,
+.shipping,
+.discount {
+  padding: 2%;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 2%;
+}
+
+.subtotalPrice p,
+.shipping p,
+.discount p {
+  font-size: 18px;
+  font-weight: 500;
+  color: #564949;
+  font-family: Quicksand, sans-serif;
+}
+
+.hr {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2%;
+}
+.hr hr {
+  width: 100%;
+  margin-top: 1%;
+  background-color: #564949;
+}
+
+.totalPrice {
+  padding: 2%;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 3%;
+}
+.totalPrice p {
+  font-size: 24px;
+  font-weight: 700;
+  color: #131212;
+  font-family: Quicksand, sans-serif;
+}
+
+@media (max-width: 768px) {
   .priceSummary {
-    width: 100%;
-    max-width: 625px;
-    height: auto;
-    border-radius: 10px;
-    border: 1px solid #564949;
-    display: flex;
-    flex-direction: column;
-    padding: 2%;
-  }
-  
-  .titleSummary {
-    width: 100%;
-    display: flex;
-    justify-content: start;
-    align-items: center;
-    margin-top: 2%;
-    padding: 2%;
+    padding: 4%;
   }
   .titleSummary p {
-    font-size: 24px;
-    font-weight: bold;
-    color: #000000;
-    font-family: Quicksand, sans-serif;
+    font-size: 20px;
   }
-  
-  .subtotalPrice,
-  .shipping,
-  .discount {
-    padding: 2%;
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 2%;
-  }
-  
   .subtotalPrice p,
   .shipping p,
-  .discount p {
-    font-size: 18px;
-    font-weight: 500;
-    color: #564949;
-    font-family: Quicksand, sans-serif;
-  }
-  
-  .hr {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 2%;
-  }
-  .hr hr {
-    width: 100%;
-    margin-top: 1%;
-    background-color: #564949;
-  }
-  
-  .totalPrice {
-    padding: 2%;
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 3%;
-  }
+  .discount p,
   .totalPrice p {
-    font-size: 24px;
-    font-weight: 700;
-    color: #131212;
-    font-family: Quicksand, sans-serif;
+    font-size: 14px;
   }
-  
-  @media (max-width: 768px) {
-    .priceSummary {
-      padding: 4%; 
-    }
-    .titleSummary p {
-      font-size: 20px; 
-    }
-    .subtotalPrice p,
-    .shipping p,
-    .discount p,
-    .totalPrice p {
-      font-size: 14px; 
-    }
+}
+
+@media (max-width: 480px) {
+  .priceSummary {
+    flex-direction: column;
   }
-  
-  @media (max-width: 480px) {
-    .priceSummary {
-      flex-direction: column; 
-    }
-  }
-  </style>
-  
+}
+</style>

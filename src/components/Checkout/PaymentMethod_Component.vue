@@ -420,7 +420,7 @@ hr {
   font-weight: 700;
 }
 .showCard span {
-  color: #2C3E50;
+  color: #2c3e50;
   font-size: 24px;
   cursor: pointer;
 }

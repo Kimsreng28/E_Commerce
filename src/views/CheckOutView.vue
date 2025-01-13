@@ -23,16 +23,16 @@
         </div>
         <div class="right">
           <CheckOutItem_Component
-           style="margin-bottom: 3%"
-          v-for="item in checkOutItems"
-  :key="item.id"
-  :id="item.id"
-  :imageProduct="item.image"
-  :nameProduct="item.name"
-  :sizeProduct="item.size"
-  :priceProduct="item.price"
-  :quantity="item.quantity"
-/>
+            style="margin-bottom: 3%"
+            v-for="item in checkOutItems"
+            :key="item.id"
+            :id="item.id"
+            :imageProduct="item.image"
+            :nameProduct="item.name"
+            :sizeProduct="item.size"
+            :priceProduct="item.price"
+            :quantity="item.quantity"
+          />
           <ConfirmSum_Component />
         </div>
       </div>
@@ -88,7 +88,7 @@ export default {
     Location_Component,
     PaymentMethod_Component,
     Footer_Component,
-    Button_Component, 
+    Button_Component,
     LoadingView,
     PaymentSuccess_Component,
     ConfirmSum_Component,
@@ -96,9 +96,14 @@ export default {
   },
   setup() {
     const cartStore = useCartStore();
+    const checkOutStore = useCheckOut();
+    const orderHistoryStore = useOrderHistory();
+
     const isLoading = ref(true);
     const isPaymentSuccess = ref(false);
-    const selectedPaymentMethod = ref("");
+    const selectedPaymentMethod = ref(null);
+    const selectedLocation = ref(null);
+
     const transactionId = ref("TXN123456789");
     const transactionDate = ref(new Date().toLocaleString());
 
@@ -119,10 +124,6 @@ export default {
         localStorage.setItem("discountPrice", "0");
       }
     });
-
-    const checkOutStore = useCheckOut();
-    const orderHistoryStore = useOrderHistory();
-    const selectedLocation = ref("");
 
     onMounted(() => {
       setTimeout(() => {
@@ -190,7 +191,7 @@ export default {
 
       // Clear the cart items after successful payment
       setTimeout(() => {
-      cartStore.clearCart();
+        cartStore.clearCart();
       }, 10000);
 
       setTimeout(() => {

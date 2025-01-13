@@ -97,7 +97,7 @@ const router = createRouter({
       redirect: "/category",
       props: true,
     },
-    
+
     {
       path: "/category/products/:id",
       name: "productDetail",
@@ -114,6 +114,11 @@ const router = createRouter({
       meta: {
         breadcrumb: "Coupon Service",
       },
+    },
+    {
+      path: "/delivery-details/:orderId",
+      name: "DeliveryDetails",
+      component: () => import("../views/DeliveryDetailsView.vue"),
     },
   ],
 });

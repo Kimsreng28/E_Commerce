@@ -23,7 +23,7 @@
                         ${{ (item.price * item.quantity).toFixed(2) }}
                       </h2>
                       <p class="quantity">x{{ item.quantity }}</p>
-                    </div>  
+                    </div>
                   </div>
                   <p style="font-weight: bold">
                     Size: {{ item.size || "N/A" }}
@@ -39,8 +39,8 @@
                   <p class="order-date">{{ order.date }}</p>
                   <div class="deletebutton">
                     <button @click="deleteItem(order.id, item.id)">
-                          <span class="material-icons">delete</span>
-                  </button>
+                      <span class="material-icons">delete</span>
+                    </button>
                   </div>
                 </div>
               </div>
@@ -54,6 +54,7 @@
                 background-color-button="#FFFFFF"
                 height-button="40px"
                 width-button="150px"
+                @click="viewDeliveryDetails(order.id)"
               />
               <Button_Component
                 id="button-border"
@@ -89,6 +90,7 @@
 import Button_Component from "@/components/Button_Component.vue";
 import { useOrderHistory } from "@/stores/useOrderHistory";
 import { onMounted, ref, watch } from "vue";
+import { useRouter } from "vue-router";
 
 export default {
   name: "OrderHistory_Component",
@@ -99,6 +101,7 @@ export default {
     const orderHistoryStore = useOrderHistory();
     const visibleOrders = ref([]);
     const selectedSort = ref("date");
+    const router = useRouter();
 
     const addOrdersSequentially = () => {
       const allOrders = orderHistoryStore.orderHistory;
@@ -161,6 +164,22 @@ export default {
       visibleOrders.value = ordersCopy;
     };
 
+    const viewDeliveryDetails = (orderId) => {
+      const order = orderHistoryStore.orderHistory.find(
+        (order) => order.id === orderId
+      );
+      if (order) {
+        console.log("Delivery Details for Order ID:", orderId, order);
+        // Option 1: Display a modal with the order's delivery details
+        // showModal(order);
+
+        // Option 2: Navigate to a detailed route
+        router.push({ name: "DeliveryDetails", params: { orderId } });
+      } else {
+        alert("Order not found!");
+      }
+    };
+
     watch(selectedSort, sortOrders);
 
     onMounted(() => {
@@ -178,6 +197,7 @@ export default {
       getImageById,
       deleteItem,
       selectedSort,
+      viewDeliveryDetails,
     };
   },
 };

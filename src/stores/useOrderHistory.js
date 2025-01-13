@@ -22,6 +22,8 @@ export const useOrderHistory = defineStore("orderHistory", {
           quantity: item.quantity, // Store product quantity
           image: item.image || "default-image-url.jpg", // Store product image URL
         })),
+        shippingLocation: this.shippingLocation || "N/A", // Add location
+        paymentMethod: this.paymentMethod || "N/A", // Add payment method
       };
 
       // Add the new order to the top of the history (most recent order first)

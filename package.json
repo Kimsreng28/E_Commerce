@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "ecommerce_project_team_a3": "file:",
+    "leaflet": "^1.9.4",
     "pinia": "^2.2.4",
     "primeicons": "^7.0.0",
     "vue": "^3.5.12",

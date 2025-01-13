@@ -7,6 +7,9 @@ export const useOrderHistory = defineStore("orderHistory", {
 
   actions: {
     addOrderFromCheckout(checkoutItems) {
+      if (!Array.isArray(checkoutItems)) {
+        return; // Exit the function if input is invalid
+      }
       const order = {
         id: `TXN${Date.now()}`, // Unique transaction ID
         date: new Date().toLocaleString(), // Purchase date

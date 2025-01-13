@@ -23,7 +23,10 @@
                         ${{ (item.price * item.quantity).toFixed(2) }}
                       </h2>
                       <p class="quantity">x{{ item.quantity }}</p>
-                    </div>
+                      <button @click="deleteItem(order.id, item.id)">
+                          <span class="material-icons">delete</span>
+                      </button>
+                    </div>  
                   </div>
                   <p style="font-weight: bold">
                     Size: {{ item.size || "N/A" }}
@@ -121,6 +124,29 @@ export default {
       return item ? item.image : "default-image-url.jpg";
     };
 
+    const deleteItem = (orderId, itemId) => {
+      const orderIndex = orderHistoryStore.orderHistory.findIndex(
+        (order) => order.id === orderId
+      );
+
+      if (orderIndex !== -1) {
+        const order = orderHistoryStore.orderHistory[orderIndex];
+        order.items = order.items.filter((item) => item.id !== itemId);
+
+        if (order.items.length === 0) {
+          // Remove the entire order if no items are left
+          orderHistoryStore.orderHistory.splice(orderIndex, 1);
+        }
+
+        // Update the visibleOrders and local storage
+        visibleOrders.value = orderHistoryStore.orderHistory;
+        localStorage.setItem(
+          "orderHistory",
+          JSON.stringify(orderHistoryStore.orderHistory)
+        );
+      }
+    };
+
     const sortOrders = () => {
       const ordersCopy = [...visibleOrders.value];
       if (selectedSort.value === "date") {
@@ -136,13 +162,19 @@ export default {
     watch(selectedSort, sortOrders);
 
     onMounted(() => {
-      console.log("Fetched Orders:", orderHistoryStore.orderHistory);
+      // Load orders from local storage
+      const storedOrders = localStorage.getItem("orderHistory");
+      if (storedOrders) {
+        orderHistoryStore.orderHistory = JSON.parse(storedOrders);
+      }
+
       addOrdersSequentially();
     });
 
     return {
       visibleOrders,
       getImageById,
+      deleteItem,
       selectedSort,
     };
   },

@@ -91,6 +91,7 @@ export default {
   display: flex;
   flex-direction: column;
   padding: 2%;
+  margin-top: 5%;
 }
 
 .titleSummary {

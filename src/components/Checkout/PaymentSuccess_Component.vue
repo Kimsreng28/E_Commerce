@@ -38,14 +38,6 @@
           />
         </div>
       </router-link>
-      <div class="returnHome">
-        <Button_Component
-          name-button="Return to Home"
-          width-button="200px"
-          height-button="50px"
-          color-button="#EC2929"
-        />
-      </div>
     </div>
   </div>
 </template>
@@ -127,8 +119,8 @@ export default {
 .btn {
   width: 90%;
   display: flex;
-  flex-direction: row;
-  justify-content: space-between;
+  justify-content: center;
+  align-items: center;
   margin-top: 2%;
   padding: 4%;
 }

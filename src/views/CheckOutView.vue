@@ -23,6 +23,7 @@
         </div>
         <div class="right">
           <CheckOutItem_Component
+           style="margin-bottom: 3%"
           v-for="item in checkOutItems"
   :key="item.id"
   :id="item.id"
@@ -188,7 +189,9 @@ export default {
       orderHistoryStore.addOrderFromCheckout(order);
 
       // Clear the cart items after successful payment
+      setTimeout(() => {
       cartStore.clearCart();
+      }, 10000);
 
       setTimeout(() => {
         isPaymentSuccess.value = false;

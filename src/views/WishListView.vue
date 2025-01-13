@@ -9,7 +9,24 @@
     <div v-else>
       <Breadcrumb_Component />
 
-      <div class="title">
+      <!-- Display this block if the wishlist is empty -->
+      <div v-if="sortedWishlist.length === 0" class="emptyWishlist">
+        <img src="@/assets/images/Wishlist/empty-wishlist.jpg" alt="Empty Wishlist" class="emptyImage" />
+        <p class="emptyMessage">Your wishlist is empty.</p>
+        <Button_Component
+          class="shopNowBtn"
+          name-button="Shop Now"
+          backgroundColor-button="#958383"
+          height-button="50px"
+          width-button="200px"
+          color-button="#FFFFFF"
+          @click="goToCategoryProduct"
+        />
+      </div>
+
+      <!-- Display wishlist items if not empty -->
+      <div v-else>
+        <div class="title">
         <p>Wish List</p>
 
         <Button_Component
@@ -23,47 +40,50 @@
         />
       </div>
 
-      <div class="showItemCount">
-        <p>Showing List: {{ sortedWishlist.length }} Item(s)</p>
-        <div class="sortBy">
-          <label for="sort-options">Sort By:</label>
-          <select id="sort-options" v-model="selectedSort">
-            <option value="date">Time</option>
-            <option value="name">Name</option>
-          </select>
+        <div class="showItemCount">
+          <p>Showing List: {{ sortedWishlist.length }} Item(s)</p>
+          <div class="sortBy">
+            <label for="sort-options">Sort By:</label>
+            <select id="sort-options" v-model="selectedSort">
+              <option value="date">Time</option>
+              <option value="name">Name</option>
+            </select>
+          </div>
         </div>
-      </div>
 
-      <div class="wishList" v-if="sortedWishlist.length > 0">
-        <CardWistList_Component
-          class="cardWistList"
-          v-for="item in sortedWishlist"
-          :key="item.id"
-          :id="item.id"
-          :imageWistList="item.images"
-          :discountProduct="item.productDiscount"
-          :productName="item.title"
-          :oldPrice="item.oldPrice"
-          :currentPrice="item.price"
-          :colorProduct="Array.isArray(item.color) ? item.color : [item.color]"
-          :sizeProduct="item.size"
+        <div class="wishList">
+          <CardWistList_Component
+            class="cardWistList"
+            v-for="item in sortedWishlist"
+            :key="item.id"
+            :id="item.id"
+            :imageWistList="item.images"
+            :discountProduct="item.productDiscount"
+            :productName="item.title"
+            :oldPrice="item.oldPrice"
+            :currentPrice="item.price"
+            :colorProduct="Array.isArray(item.color) ? item.color : [item.color]"
+            :sizeProduct="item.size"
+          />
+        </div>
+
+        <Button_Component
+          class="view"
+          name-button="View All"
+          backgroundColor-button="#958383"
+          height-button="50px"
+          width-button="200px"
+          color-button="#FFFFFF"
+          @click="goToCategoryProduct"
         />
       </div>
-
-      <Button_Component
-        class="view"
-        name-button="View All"
-        backgroundColor-button="#958383"
-        height-button="50px"
-        width-button="200px"
-        color-button="#FFFFFF"
-        @click="goToCategoryProduct"
-      />
 
       <Footer_Component class="footer" />
     </div>
   </div>
 </template>
+
+
 
 <script>
 import Breadcrumb_Component from "@/components/Breadcrumb_Component.vue";
@@ -89,10 +109,10 @@ export default {
   setup() {
     const isLoading = ref(true);
 
-    // Simulate a loading state
+
     onMounted(() => {
       setTimeout(() => {
-        isLoading.value = false; // Set loading to false after 1 second
+        isLoading.value = false;
       }, 1000);
     });
 
@@ -156,6 +176,33 @@ export default {
 </script>
 
 <style scoped>
+.emptyWishlist {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  margin: 50px 0;
+}
+
+.emptyImage {
+  max-width: 225px;
+  margin-bottom: 20px;
+}
+
+.emptyMessage {
+  font-family: Saira, sans-serif;
+  font-size: 32px;
+  font-weight: bold;
+  color: #564949;
+  margin-bottom: 20px;
+}
+
+.shopNowBtn {
+  border: none;
+  border-radius: 10px;
+}
+
 .load {
   display: flex;
   justify-content: center;

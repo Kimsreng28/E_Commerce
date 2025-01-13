@@ -23,9 +23,6 @@
                         ${{ (item.price * item.quantity).toFixed(2) }}
                       </h2>
                       <p class="quantity">x{{ item.quantity }}</p>
-                      <button @click="deleteItem(order.id, item.id)">
-                          <span class="material-icons">delete</span>
-                      </button>
                     </div>  
                   </div>
                   <p style="font-weight: bold">
@@ -40,6 +37,11 @@
                     ></div>
                   </div>
                   <p class="order-date">{{ order.date }}</p>
+                  <div class="deletebutton">
+                    <button @click="deleteItem(order.id, item.id)">
+                          <span class="material-icons">delete</span>
+                  </button>
+                  </div>
                 </div>
               </div>
             </div>
@@ -187,6 +189,13 @@ export default {
   border-radius: 8px;
 }
 
+.deletebutton {
+  background-color: transparent;
+  border: none;
+  display: flex;
+  justify-content: end;
+  cursor: pointer;
+}
 .button-row {
   display: flex;
   justify-content: flex-end;

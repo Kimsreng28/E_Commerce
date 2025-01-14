@@ -16,8 +16,9 @@ export const useUserSignupStore = defineStore("userSignup", {
 
   getters: {
     // Define your getters here
-    isLoggedIn() {
-      return !!this.currentUser;
+    isLoggedIn(state) {
+      console.log("Current user:", state.currentUser);
+      return !!state.currentUser;
     },
     firstName: (state) => state.currentUser?.firstName || "",
     lastName: (state) => state.currentUser?.lastName || "",

@@ -149,6 +149,7 @@
 <script>
 import { useCartStore } from "@/stores/useCartStore";
 import { useWishlistStore } from "@/stores/useWishlistStore";
+import { useUserSignupStore } from "@/stores/useUserSignupStore";
 import { computed, ref } from "vue";
 import { useRouter } from "vue-router";
 import Button_Component from "../Button_Component.vue";
@@ -175,6 +176,8 @@ export default {
     const cartStore = useCartStore();
     const wishlistStore = useWishlistStore();
     const router = useRouter();
+    const useStore = useUserSignupStore();
+
     const quantity = ref(props.quantity);
     const selectedColor = ref(props.colorProduct[0] || "#A0BCE0");
     const selectedSize = ref(props.sizeProduct[0] || "S");
@@ -195,7 +198,14 @@ export default {
       if (quantity.value > 1) quantity.value -= 1;
     };
 
-    const handleAddToCart = () => {
+    const handleAddToCart = (event) => {
+      event.stopPropagation();
+      if (!useStore.isLoggedIn) {
+        alert("Please login to add product to cart!");
+        router.push("/signIn");
+        return;
+      }
+
       cartStore.addToCart({
         id: props.id,
         name: props.nameProduct,
@@ -210,7 +220,14 @@ export default {
       router.push("/cart");
     };
 
-    const handleAddToWishlist = () => {
+    const handleAddToWishlist = (event) => {
+      event.stopPropagation();
+      if (!useStore.isLoggedIn) {
+        alert("Please login to add product to wishlist!");
+        router.push("/signIn");
+        return;
+      }
+
       wishlistStore.addToWishlist({
         id: props.id,
         title: props.nameProduct,

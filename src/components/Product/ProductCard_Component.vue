@@ -134,35 +134,37 @@ export default {
       alert("Product added to wishlist!");
     };
 
-    const handleToProductDetail = () => {
+    const handleToProductDetail = (event) => {
+      event.stopPropagation();
+
       if (!userStore.isLoggedIn) {
         alert("Please sign in or sign up to view product details.");
         router.push("/signIn");
-      } else {
-        const product = {
-          id: props.id,
-          title: props.nameProduct,
-          image: props.imageProduct,
-          description: descriptionProduct.value,
-          price: props.priceProduct,
-          rating: props.ratingProduct,
-          size: sizeProduct.value,
-          color: colorProduct.value,
-          imageDetails: imageDetails.value,
-          stock: stockProduct.value,
-          productDiscount: discountProduct.value,
-          oldPrice: oldPrice.value,
-          category: props.category,
-        };
-
-        productStore.addToProductDetail(product);
-        alert("Go To Product Detail!");
-
-        router.push({
-          name: "productDetail",
-          params: { id: props.id, category: props.category },
-        });
+        return;
       }
+      const product = {
+        id: props.id,
+        title: props.nameProduct,
+        image: props.imageProduct,
+        description: descriptionProduct.value,
+        price: props.priceProduct,
+        rating: props.ratingProduct,
+        size: sizeProduct.value,
+        color: colorProduct.value,
+        imageDetails: imageDetails.value,
+        stock: stockProduct.value,
+        productDiscount: discountProduct.value,
+        oldPrice: oldPrice.value,
+        category: props.category,
+      };
+
+      productStore.addToProductDetail(product);
+      alert("Go To Product Detail!");
+
+      router.push({
+        name: "productDetail",
+        params: { id: props.id, category: props.category },
+      });
     };
 
     return {

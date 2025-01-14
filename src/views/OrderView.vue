@@ -8,9 +8,16 @@
     <div class="container" v-else>
       <Breadcrumb_Component />
 
-<!-- Show this block if the order history is empty -->
-<div v-if="orderHistoryStore.orderHistory.length === 0" class="emptyOrder">
-        <img src="@/assets/images/Order/empty-order.png" alt="No Orders" class="emptyImage" />
+      <!-- Show this block if the order history is empty -->
+      <div
+        v-if="orderHistoryStore.orderHistory.length === 0"
+        class="emptyOrder"
+      >
+        <img
+          src="@/assets/images/Order/empty-order.png"
+          alt="No Orders"
+          class="emptyImage"
+        />
         <p class="emptyMessage">You have no orders yet.</p>
         <Button_Component
           class="shopNowBtn"
@@ -23,11 +30,11 @@
         />
       </div>
 
-       <!-- Show order history if it exists -->
-       <div v-else>
+      <!-- Show order history if it exists -->
+      <div v-else>
         <div class="title">
-        <p>Ordered</p>
-      </div>
+          <p>Ordered</p>
+        </div>
         <OrderHistory_Component />
       </div>
     </div>
@@ -44,9 +51,9 @@ import Navbar_Component from "@/components/Navbar_Component.vue";
 import OrderHistory_Component from "@/components/OrderHistory_Component.vue";
 import { useCartStore } from "@/stores/useCartStore";
 import { useCheckOut } from "@/stores/useCheckOut";
-import { useRouter } from "vue-router";
 import { useOrderHistory } from "@/stores/useOrderHistory";
 import { onMounted, ref } from "vue";
+import { useRouter } from "vue-router";
 import LoadingView from "./LoadingView.vue";
 
 export default {
@@ -75,8 +82,6 @@ export default {
         orderHistoryStore.addOrderFromCheckout(checkoutStore.checkOut);
         checkoutStore.clearCheckOut();
       }
-
-      cartStore.clearCart();
 
       setTimeout(() => {
         isLoading.value = false;

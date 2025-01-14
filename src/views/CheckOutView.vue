@@ -202,7 +202,7 @@ export default {
       // Clear the cart items after successful payment
       setTimeout(() => {
         cartStore.clearCart();
-      }, 10000);
+      }, 3000);
 
       setTimeout(() => {
         isPaymentSuccess.value = false;

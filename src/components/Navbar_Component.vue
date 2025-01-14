@@ -257,23 +257,7 @@ export default {
   font-size: 18px;
   color: #000000;
 }
-.wishlist-count {
-  position: relative;
-  top: -10px;
-  right: 20px;
-  width: 15px;
-  height: 15px;
-  border-radius: 50%;
-  background-color: rgb(228, 21, 21);
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.wishlist-count p {
-  color: rgb(173, 169, 169);
-  font-size: 14px;
-}
+.wishlist-count,
 .cart-count {
   position: relative;
   top: -10px;
@@ -282,13 +266,16 @@ export default {
   height: 15px;
   border-radius: 50%;
   background-color: rgb(228, 21, 21);
+  transition: none;
   display: flex;
   justify-content: center;
   align-items: center;
 }
+.wishlist-count p,
 .cart-count p {
   color: rgb(173, 169, 169);
   font-size: 14px;
+  margin: 0;
 }
 
 .profile-image img {

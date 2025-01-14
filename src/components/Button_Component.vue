@@ -56,13 +56,13 @@ export default {
   border: none;
   border-radius: 10px;
   cursor: pointer;
-  box-shadow: inset 0 0px 0px #04ed84;
+  box-shadow: inset 0 0px 0px #554343;
   -webkit-transition: ease-out 0.5s;
   -moz-transition: ease-out 0.5s;
 }
 .button button:hover {
   transition: ease-out 0.6s;
-  box-shadow: inset 0 100px 0px #04ed84;
+  box-shadow: inset 0 100px 0px #554343;
 }
 /* Responsive Design */
 @media (max-width: 768px) {

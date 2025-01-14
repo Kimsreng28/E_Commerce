@@ -193,7 +193,7 @@ input.error-border {
   width: 50%;
   height: auto;
   justify-content: center;
-  background: linear-gradient(180deg, #57bdf3 0%, #41a0d3 100%);
+  background-image: url("@/assets/images/Background/ecommerce-bg.png") ;
   border-radius: 1%;
   box-shadow: 0 7px 5px rgba(0, 0, 0, 0.1);
 }
@@ -219,7 +219,7 @@ input.error-border {
   font-size: 32px;
   font-family: Quicksand, sans-serif;
   font-weight: bold;
-  background: -webkit-linear-gradient(#1b1c1b, #3a5fce);
+  background: -webkit-linear-gradient(#1b1c1b, #554343);
   background-clip: text;
   -webkit-text-fill-color: transparent;
 }
@@ -360,13 +360,13 @@ input.error-border {
   font-size: 16px;
   font-family: Quicksand, sans-serif;
   font-weight: bold;
-  box-shadow: inset 0 0px 0px 0 #0272fa;
+  box-shadow: inset 0 0px 0px 0 #554343;
   transition: background-color 0.3s, ease-out 0.5s;
   -webkit-transition: ease-out 0.5s;
   -moz-transition: ease-out 0.5s;
 }
 .login button:hover {
-  box-shadow: inset 0 100px 0px 0 #0272fa;
+  box-shadow: inset 0 100px 0px 0 #554343;
 }
 
 .goSignUp {
@@ -387,11 +387,11 @@ input.error-border {
   font-size: 12px;
   font-family: Quicksand, sans-serif;
   font-weight: bold;
-  color: #3980fa;
+  color: #554343;
   cursor: pointer;
 }
 .goSignUp h1:hover {
-  color: #1500ff;
+  color: #554343;
 }
 
 .text {
@@ -423,8 +423,8 @@ input.error-border {
   align-items: center;
 }
 .imageEcommerce img {
-  width: 80%;
-  height: 80%;
+  width: 100%;
+  height: 100%;
   object-fit: cover;
   object-position: center;
 }

@@ -39,6 +39,15 @@
 
       <div class="payNow">
         <Button_Component
+          class="cancel"
+          name-button="Cancel"
+          color-button="#000000"
+          background-color-button="#FFFFFF"
+          height-button="50px"
+          width-button="200px"
+          @click="handleCancel"
+        />
+        <Button_Component
           name-button="Pay Now"
           color-button="#FFFFFF"
           background-color-button="#958383"
@@ -67,13 +76,14 @@
 <script>
 import Breadcrumb_Component from "@/components/Breadcrumb_Component.vue";
 import Button_Component from "@/components/Button_Component.vue";
-import CheckOutItem_Component from "@/components/Card/CheckOutItem_Component.vue";
-import ConfirmSum_Component from "@/components/Card/ConfirmSum_Component.vue";
+import CheckOutItem_Component from "@/components/Checkout/CheckOutItem_Component.vue";
+import ConfirmSum_Component from "@/components/Checkout/ConfirmSum_Component.vue";
 import Location_Component from "@/components/Checkout/Location_Component.vue";
 import PaymentMethod_Component from "@/components/Checkout/PaymentMethod_Component.vue";
 import PaymentSuccess_Component from "@/components/Checkout/PaymentSuccess_Component.vue";
 import Footer_Component from "@/components/Footer_Component.vue";
 import Navbar_Component from "@/components/Navbar_Component.vue";
+import router from "@/router";
 import { useCartStore } from "@/stores/useCartStore";
 import { useCheckOut } from "@/stores/useCheckOut";
 import { useOrderHistory } from "@/stores/useOrderHistory";
@@ -199,6 +209,10 @@ export default {
       }, 5000);
     };
 
+    const handleCancel = () => {
+      router.push("/cart");
+    };
+
     return {
       isLoading,
       isPaymentSuccess,
@@ -210,6 +224,7 @@ export default {
       handlePayNow,
       totalPrice,
       selectedLocation,
+      handleCancel,
     };
   },
   computed: {
@@ -323,6 +338,11 @@ export default {
   justify-content: center;
   align-items: center;
   margin-top: 5%;
+  gap: 20px;
+}
+.cancel {
+  border: #7b7474 1px solid;
+  border-radius: 10px;
 }
 
 @media (max-width: 480px) {

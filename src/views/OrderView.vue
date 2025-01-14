@@ -49,7 +49,6 @@ import Button_Component from "@/components/Button_Component.vue";
 import Footer_Component from "@/components/Footer_Component.vue";
 import Navbar_Component from "@/components/Navbar_Component.vue";
 import OrderHistory_Component from "@/components/OrderHistory_Component.vue";
-import { useCartStore } from "@/stores/useCartStore";
 import { useCheckOut } from "@/stores/useCheckOut";
 import { useOrderHistory } from "@/stores/useOrderHistory";
 import { onMounted, ref } from "vue";
@@ -70,7 +69,6 @@ export default {
     const isLoading = ref(true);
     const orderHistoryStore = useOrderHistory();
     const checkoutStore = useCheckOut();
-    const cartStore = useCartStore();
     const router = useRouter();
     // Redirect to the shop page
     const goToShop = () => {

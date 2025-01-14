@@ -280,7 +280,7 @@ h1 {
 }
 
 .loadMore {
-  margin-left: 40%;
+  margin-left: 32%;
   margin-top: 3%;
   margin-bottom: 5%;
 }

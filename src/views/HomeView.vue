@@ -569,22 +569,24 @@ export default {
   transition: opacity 1s ease-in-out; /* Smooth fade-in */
 }
 .reviewHistory {
-  width: auto;
-  height: 400px; /* Ensure the height is fixed */
-  margin-top: 2%;
-  margin-left: 2%;
+  width: 100%;
+  height: 400px; 
+  margin: 2% 0 0 2%;
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
   gap: 2%;
-  overflow-x: hidden; /* Enable horizontal scrolling */
+  overflow-x: auto; /* Enable horizontal scrolling */
   overflow-y: hidden; /* Hide vertical overflow (optional) */
-  padding: 0; /* Avoid unnecessary space causing scroll issues */
-  box-sizing: border-box;
   cursor: grab;
   scroll-behavior: smooth;
-  user-select: none;
   transition: all 0.3s;
+}
+.reviewHistory:active {
+  cursor: grabbing; /* Indication when dragging */
+}
+.reviewHistory::-webkit-scrollbar {
+  display: none; /* Hide scrollbar */
 }
 
 /* Media Queries for Responsiveness */

@@ -234,7 +234,7 @@ export default {
   width: 50%;
   height: auto;
   justify-content: center;
-  background: linear-gradient(180deg, #57bdf3 0%, #41a0d3 100%);
+  background-image: url("@/assets/images/Background/ecommerce-bg.png");
   border-radius: 1%;
   box-shadow: 0 7px 5px rgba(0, 0, 0, 0.1);
 }
@@ -260,7 +260,7 @@ export default {
   font-size: 32px;
   font-family: Quicksand, sans-serif;
   font-weight: bold;
-  background: -webkit-linear-gradient(#1b1c1b, #3a5fce);
+  background: -webkit-linear-gradient(#1b1c1b, #554343);
   background-clip: text;
   -webkit-text-fill-color: transparent;
 }
@@ -414,7 +414,7 @@ export default {
   cursor: pointer;
   width: 50%;
   color: #ffffff;
-  background: #3980fa;
+  background: #958383;
   border: 1px solid #d9d9d9;
   font-size: 16px;
   font-family: Quicksand, sans-serif;
@@ -446,7 +446,7 @@ export default {
   font-size: 12px;
   font-family: Quicksand, sans-serif;
   font-weight: bold;
-  color: #3980fa;
+  color: #958383;
   cursor: pointer;
 }
 .goSignUp h1:hover {
@@ -482,8 +482,8 @@ export default {
   align-items: center;
 }
 .imageEcommerce img {
-  width: 80%;
-  height: 80%;
+  width: 100%;
+  height: 100%;
   object-fit: cover;
   object-position: center;
 }

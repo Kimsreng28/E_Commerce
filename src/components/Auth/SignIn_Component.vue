@@ -193,7 +193,7 @@ input.error-border {
   width: 50%;
   height: auto;
   justify-content: center;
-  background-image: url("@/assets/images/Background/ecommerce-bg.png") ;
+  background-image: url("@/assets/images/Background/ecommerce-bg.png");
   border-radius: 1%;
   box-shadow: 0 7px 5px rgba(0, 0, 0, 0.1);
 }
@@ -391,7 +391,7 @@ input.error-border {
   cursor: pointer;
 }
 .goSignUp h1:hover {
-  color: #554343;
+  color: #1500ff;
 }
 
 .text {
